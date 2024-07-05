@@ -1,0 +1,4 @@
+#Sat Jun 22 13:55:31 EAT 2024
+base.0=C\:\\Users\\Yarie\\Desktop\\gasaw\\polio\\polio\\build\\app\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

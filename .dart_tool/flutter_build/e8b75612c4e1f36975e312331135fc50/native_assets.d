@@ -1,0 +1,1 @@
+ C:\\Users\\Yarie\\Desktop\\gasaw\\polio\\polio\\.dart_tool\\flutter_build\\e8b75612c4e1f36975e312331135fc50\\native_assets.yaml: 
