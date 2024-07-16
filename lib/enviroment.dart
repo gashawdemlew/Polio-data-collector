@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:camera_app/ReviewPage.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/home_page.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
+import 'package:camera_app/pushMessage.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -53,6 +55,11 @@ class EnvironmentMetrologyForm extends StatefulWidget {
   final String specimenCondition;
   final String residualParalysis;
 
+  final String phoneNo;
+
+  final String first_name;
+  final String last_name;
+
   @override
   EnvironmentMetrologyForm({
     required this.resources1,
@@ -89,6 +96,9 @@ class EnvironmentMetrologyForm extends StatefulWidget {
     required this.specimenCondition,
     required this.stool2DaysAfterOnset,
     required this.residualParalysis,
+    required this.first_name,
+    required this.last_name,
+    required this.phoneNo,
   });
   _EnvironmentMetrologyFormState createState() =>
       _EnvironmentMetrologyFormState();
@@ -241,7 +251,6 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                buildArgumentDisplay(),
                 TextFormField(
                   controller: city,
                   keyboardType: TextInputType.number,
@@ -325,83 +334,90 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 ),
                 SizedBox(height: 16.0),
                 Container(
-                    width: 370,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Submit form data
-                        // print('Form submitted!');
-                        // print(
-                        //     'Daily Average Temperature: $_dailyAverageTemperature');
-                        // print('Daily Rainfall: $_dailyRainfall');
-                        // print('Daily Humidity: $_dailyHumidity');
-                        // print('Daily Soil Moisture: $_dailySoilMoisture');
+                  width: 370,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Create a map to hold the form data
+                      Map<String, String> formData = {
+                        'City': city.text,
+                        'Temperature': tempController.text,
+                        'Rainfall': rainfallController.text,
+                        'Humidity': humidityController.text,
+                        'Snow': snow.text,
+                        'Soil Moisture': soilMoistureController.text,
+                        // Add any other fields you want to include
+                      };
 
-                        // Call API to fetch weather data
-                        // fetchWeatherData();
+                      // Navigate to the Review Page and pass the form data and required arguments
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PushMessage(
+                            // formData: formData,
+                            // resources: widget.resources1,
+                            rainfall: rainfallController.text,
+                            snow: snow.text,
+                            humidity: humidityController.text,
+                            tempreture: tempController.text,
+                            latitude: widget.latitude,
+                            longitude: widget.longitude,
+                            // name: widget.name,
+                            gender: widget.gender,
+                            dateofbirth: widget.dateofbirth,
+                            epid_number: widget.epid_number,
+                            first_name: widget.first_name,
+                            last_name: widget.last_name,
+                            zone: widget.zone,
+                            region: widget.region,
+                            woreda: widget.woreda,
+                            feverAtOnset: widget.feverAtOnset,
+                            flaccidParalysis: widget.flaccidParalysis,
+                            paralysisProgressed: widget.paralysisProgressed,
+                            asymmetric: widget.asymmetric,
+                            siteOfParalysis: widget.siteOfParalysis,
+                            totalOPVDoses: widget.totalOPVDoses,
+                            admittedToHospital: widget.admittedToHospital,
+                            dateOfAdmission: widget.dateOfAdmission,
+                            medicalRecordNo: widget.medicalRecordNo,
+                            facilityName: widget.facilityName,
+                            dateStool1: widget.dateStool1,
+                            dateStool2: widget.dateStool2,
+                            daysAfterOnset: widget.daysAfterOnset,
+                            stool1DateCollected: widget.stool1DateCollected,
+                            stool2DateCollected: widget.stool2DateCollected,
+                            stool1DaysAfterOnset: widget.stool1DaysAfterOnset,
+                            stool1DateSentToLab: widget.stool1DateSentToLab,
+                            stool2DateSentToLab: widget.stool2DateSentToLab,
+                            stool1DateReceivedByLab:
+                                widget.stool1DateReceivedByLab,
+                            stool2DateReceivedByLab:
+                                widget.stool2DateReceivedByLab,
+                            caseOrContact: widget.caseOrContact,
+                            specimenCondition: widget.specimenCondition,
+                            stool2DaysAfterOnset: widget.stool2DaysAfterOnset,
+                            residualParalysis: widget.residualParalysis,
 
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const CameraPage()));
-                      },
-                      child: Text('Next'),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor:
-                            CustomColors.testColor1, // Change the text color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8.0), // Adjust the border radius
+                            phoneNo: widget.phoneNo,
+                          ),
                         ),
-                        elevation: 14, // Add elevation
+                      );
+                    },
+                    child: Text('Next'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: CustomColors.testColor1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ))
+                      elevation: 14,
+                    ),
+                  ),
+                )
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildArgumentDisplay() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Latitude: ${widget.latitude}'),
-        Text('Longitude: ${widget.longitude}'),
-        Text('Epid Number: ${widget.epid_number}'),
-        Text('Name: ${widget.name}'),
-        Text('Gender: ${widget.gender}'),
-        Text('Date of Birth: ${widget.dateofbirth}'),
-        Text('Region: ${widget.region}'),
-        Text('Zone: ${widget.zone}'),
-        Text('Woreda: ${widget.woreda}'),
-        Text('Fever At Onset: ${widget.feverAtOnset}'),
-        Text('Flaccid Paralysis: ${widget.flaccidParalysis}'),
-        Text('Paralysis Progressed: ${widget.paralysisProgressed}'),
-        Text('Asymmetric: ${widget.asymmetric}'),
-        Text('Site of Paralysis: ${widget.siteOfParalysis}'),
-        Text('Total OPV Doses: ${widget.totalOPVDoses}'),
-        Text('Admitted to Hospital: ${widget.admittedToHospital}'),
-        Text('Date of Admission: ${widget.dateOfAdmission}'),
-        Text('Medical Record No: ${widget.medicalRecordNo}'),
-        Text('Facility Name: ${widget.facilityName}'),
-        Text('Date Stool 1: ${widget.dateStool1}'),
-        Text('Date Stool 2: ${widget.dateStool2}'),
-        Text('Days After Onset: ${widget.daysAfterOnset}'),
-        Text('Stool 1 Date Collected: ${widget.stool1DateCollected}'),
-        Text('Stool 2 Date Collected: ${widget.stool2DateCollected}'),
-        Text('Stool 1 Days After Onset: ${widget.stool1DaysAfterOnset}'),
-        Text('Stool 2 Days After Onset: ${widget.stool2DaysAfterOnset}'),
-        Text('Stool 1 Date Sent to Lab: ${widget.stool1DateSentToLab}'),
-        Text('Stool 2 Date Sent to Lab: ${widget.stool2DateSentToLab}'),
-        Text('Stool 1 Date Received by Lab: ${widget.stool1DateReceivedByLab}'),
-        Text('Stool 2 Date Received by Lab: ${widget.stool2DateReceivedByLab}'),
-        Text('Case or Contact: ${widget.caseOrContact}'),
-        Text('Specimen Condition: ${widget.specimenCondition}'),
-        Text('Residual Paralysis: ${widget.residualParalysis}'),
-      ],
     );
   }
 }

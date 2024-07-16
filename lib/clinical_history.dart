@@ -13,6 +13,10 @@ class ClinicalHistoryForm extends StatefulWidget {
   final String epid_number;
 
   final String name;
+  final String first_name;
+  final String last_name;
+
+  final String phoneNo;
 
   final String gender;
   final String dateofbirth;
@@ -25,12 +29,15 @@ class ClinicalHistoryForm extends StatefulWidget {
   const ClinicalHistoryForm(
       {required this.resources1,
       required this.latitude,
+      required this.phoneNo,
       required this.longitude,
       required this.name,
       required this.gender,
       required this.dateofbirth,
       required this.zone,
       required this.region,
+      required this.first_name,
+      required this.last_name,
       required this.epid_number,
       required this.woreda});
 
@@ -607,30 +614,32 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => StoolSpecimensForm34(
-                                  resources1: widget.resources1,
-                                  latitude: widget.latitude.toString(),
-                                  longitude: widget.longitude.toString(),
-                                  epid_number: widget.epid_number,
-                                  name: widget.name,
-                                  gender: widget.gender,
-                                  dateofbirth: widget.dateofbirth,
-                                  region: widget.region,
-                                  zone: widget.zone.toString(),
-                                  woreda: widget.woreda,
-                                  feverAtOnset: _feverAtOnset,
-                                  flaccidParalysis: _flaccidParalysis,
-                                  paralysisProgressed: _paralysisProgressed,
-                                  asymmetric: _asymmetric,
-                                  siteOfParalysis: _siteOfParalysis,
-                                  totalOPVDoses: _totalOPVDoses,
-                                  admittedToHospital: _admittedToHospital,
-                                  dateOfAdmission: _dateOfAdmission.toString(),
-                                  medicalRecordNo: _medicalRecordNo,
-                                  facilityName: _facilityName,
-                                  dateStool1: _dateStool1.toString(),
-                                  dateStool2: _dateStool2.toString(),
-                                  daysAfterOnset: _daysAfterOnset.toString(),
-                                )));
+                                resources1: widget.resources1,
+                                latitude: widget.latitude.toString(),
+                                longitude: widget.longitude.toString(),
+                                epid_number: widget.epid_number,
+                                name: widget.name,
+                                gender: widget.gender,
+                                dateofbirth: widget.dateofbirth,
+                                region: widget.region,
+                                zone: widget.zone.toString(),
+                                woreda: widget.woreda,
+                                feverAtOnset: _feverAtOnset,
+                                flaccidParalysis: _flaccidParalysis,
+                                paralysisProgressed: _paralysisProgressed,
+                                asymmetric: _asymmetric,
+                                siteOfParalysis: _siteOfParalysis,
+                                totalOPVDoses: _totalOPVDoses,
+                                admittedToHospital: _admittedToHospital,
+                                dateOfAdmission: _dateOfAdmission.toString(),
+                                medicalRecordNo: _medicalRecordNo,
+                                facilityName: _facilityName,
+                                dateStool1: _dateStool1.toString(),
+                                dateStool2: _dateStool2.toString(),
+                                daysAfterOnset: _daysAfterOnset.toString(),
+                                phoneNo: widget.phoneNo,
+                                first_name: widget.first_name,
+                                last_name: widget.last_name)));
                   },
                   child: Text(
                       widget.resources1?.patientDemographic()["next"] ?? ''),

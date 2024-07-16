@@ -9,6 +9,11 @@ class StoolSpecimensForm34 extends StatefulWidget {
   final LanguageResources? resources1;
   final String latitude;
   final String longitude;
+  final String phoneNo;
+
+  final String first_name;
+
+  final String last_name;
 
   final String epid_number;
 
@@ -60,6 +65,9 @@ class StoolSpecimensForm34 extends StatefulWidget {
     required this.dateStool1,
     required this.dateStool2,
     required this.daysAfterOnset,
+    required this.first_name,
+    required this.last_name,
+    required this.phoneNo,
   });
   @override
   _StoolSpecimensFormState createState() => _StoolSpecimensFormState();
@@ -418,48 +426,67 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm34> {
                     ),
                   ),
                   SizedBox(height: 8.0),
-                  Row(
+                  Column(
                     children: [
-                      Expanded(
-                        child: RadioListTile(
-                          title: Text(
-                              widget.resources1?.stoolSpecimen()["case"] ?? ""),
-                          value: 'Case',
-                          groupValue: _caseOrContact,
-                          onChanged: (value) {
-                            setState(() {
-                              _caseOrContact = value.toString();
-                            });
-                          },
-                        ),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Expanded(
+                            child: RadioListTile(
+                              title: Text(
+                                  widget.resources1?.stoolSpecimen()["case"] ??
+                                      ""),
+                              value: 'Case',
+                              groupValue: _caseOrContact,
+                              onChanged: (value) {
+                                Future.delayed(Duration.zero, () {
+                                  setState(() {
+                                    _caseOrContact = value.toString();
+                                  });
+                                });
+                              },
+                            ),
+                          );
+                        },
                       ),
-                      Expanded(
-                        child: RadioListTile(
-                          title: Text(
-                              widget.resources1?.stoolSpecimen()["contact"] ??
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Expanded(
+                            child: RadioListTile(
+                              title: Text(widget.resources1
+                                      ?.stoolSpecimen()["contact"] ??
                                   ""),
-                          value: 'Contact',
-                          groupValue: _caseOrContact,
-                          onChanged: (value) {
-                            setState(() {
-                              _caseOrContact = value.toString();
-                            });
-                          },
-                        ),
+                              value: 'Contact',
+                              groupValue: _caseOrContact,
+                              onChanged: (value) {
+                                Future.delayed(Duration.zero, () {
+                                  setState(() {
+                                    _caseOrContact = value.toString();
+                                  });
+                                });
+                              },
+                            ),
+                          );
+                        },
                       ),
-                      Expanded(
-                        child: RadioListTile(
-                          title: Text(
-                              widget.resources1?.stoolSpecimen()["community"] ??
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Expanded(
+                            child: RadioListTile(
+                              title: Text(widget.resources1
+                                      ?.stoolSpecimen()["community"] ??
                                   ""),
-                          value: 'Community',
-                          groupValue: _caseOrContact,
-                          onChanged: (value) {
-                            setState(() {
-                              _caseOrContact = value.toString();
-                            });
-                          },
-                        ),
+                              value: 'Community',
+                              groupValue: _caseOrContact,
+                              onChanged: (value) {
+                                Future.delayed(Duration.zero, () {
+                                  setState(() {
+                                    _caseOrContact = value.toString();
+                                  });
+                                });
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -535,52 +562,53 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm34> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => FollowUpExaminationForm(
-                                    resources1: widget.resources1,
-                                    latitude: widget.latitude.toString(),
-                                    longitude: widget.longitude.toString(),
-                                    epid_number: widget.epid_number,
-                                    name: widget.name,
-                                    gender: widget.gender,
-                                    dateofbirth: widget.dateofbirth,
-                                    region: widget.region,
-                                    zone: widget.zone.toString(),
-                                    woreda: widget.woreda,
-                                    feverAtOnset: widget.feverAtOnset,
-                                    flaccidParalysis: widget.flaccidParalysis,
-                                    paralysisProgressed:
-                                        widget.paralysisProgressed,
-                                    asymmetric: widget.asymmetric,
-                                    siteOfParalysis: widget.siteOfParalysis,
-                                    totalOPVDoses: widget.totalOPVDoses,
-                                    admittedToHospital:
-                                        widget.admittedToHospital,
-                                    dateOfAdmission:
-                                        widget.dateOfAdmission.toString(),
-                                    medicalRecordNo: widget.medicalRecordNo,
-                                    facilityName: widget.facilityName,
-                                    dateStool1: widget.dateStool1.toString(),
-                                    dateStool2: widget.dateStool2.toString(),
-                                    daysAfterOnset:
-                                        widget.daysAfterOnset.toString(),
-                                    stool1DateCollected:
-                                        _stool1DateCollected.toString(),
-                                    stool2DateCollected:
-                                        _stool2DateCollected.toString(),
-                                    stool1DaysAfterOnset:
-                                        _stool1DaysAfterOnset.toString(),
-                                    stool2DaysAfterOnset:
-                                        _stool2DaysAfterOnset.toString(),
-                                    stool1DateSentToLab:
-                                        _stool1DateSentToLab.toString(),
-                                    stool2DateSentToLab:
-                                        _stool2DateSentToLab.toString(),
-                                    stool1DateReceivedByLab:
-                                        _stool1DateReceivedByLab.toString(),
-                                    stool2DateReceivedByLab:
-                                        _stool2DateReceivedByLab.toString(),
-                                    caseOrContact: _caseOrContact,
-                                    specimenCondition: _specimenCondition,
-                                  )));
+                                  resources1: widget.resources1,
+                                  latitude: widget.latitude.toString(),
+                                  longitude: widget.longitude.toString(),
+                                  epid_number: widget.epid_number,
+                                  name: widget.name,
+                                  gender: widget.gender,
+                                  dateofbirth: widget.dateofbirth,
+                                  region: widget.region,
+                                  zone: widget.zone.toString(),
+                                  woreda: widget.woreda,
+                                  feverAtOnset: widget.feverAtOnset,
+                                  flaccidParalysis: widget.flaccidParalysis,
+                                  paralysisProgressed:
+                                      widget.paralysisProgressed,
+                                  asymmetric: widget.asymmetric,
+                                  siteOfParalysis: widget.siteOfParalysis,
+                                  totalOPVDoses: widget.totalOPVDoses,
+                                  admittedToHospital: widget.admittedToHospital,
+                                  dateOfAdmission:
+                                      widget.dateOfAdmission.toString(),
+                                  medicalRecordNo: widget.medicalRecordNo,
+                                  facilityName: widget.facilityName,
+                                  dateStool1: widget.dateStool1.toString(),
+                                  dateStool2: widget.dateStool2.toString(),
+                                  daysAfterOnset:
+                                      widget.daysAfterOnset.toString(),
+                                  stool1DateCollected:
+                                      _stool1DateCollected.toString(),
+                                  stool2DateCollected:
+                                      _stool2DateCollected.toString(),
+                                  stool1DaysAfterOnset:
+                                      _stool1DaysAfterOnset.toString(),
+                                  stool2DaysAfterOnset:
+                                      _stool2DaysAfterOnset.toString(),
+                                  stool1DateSentToLab:
+                                      _stool1DateSentToLab.toString(),
+                                  stool2DateSentToLab:
+                                      _stool2DateSentToLab.toString(),
+                                  stool1DateReceivedByLab:
+                                      _stool1DateReceivedByLab.toString(),
+                                  stool2DateReceivedByLab:
+                                      _stool2DateReceivedByLab.toString(),
+                                  caseOrContact: _caseOrContact,
+                                  specimenCondition: _specimenCondition,
+                                  phoneNo: widget.phoneNo,
+                                  first_name: widget.first_name,
+                                  last_name: widget.last_name)));
                     },
                     child: Text(
                         widget.resources1?.patientDemographic()["next"] ?? ''),

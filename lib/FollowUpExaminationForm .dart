@@ -45,6 +45,11 @@ class FollowUpExaminationForm extends StatefulWidget {
   final String stool2DateReceivedByLab;
   final String caseOrContact;
   final String specimenCondition;
+  final String phoneNo;
+
+  final String first_name;
+
+  final String last_name;
 
   @override
   FollowUpExaminationForm({
@@ -81,6 +86,9 @@ class FollowUpExaminationForm extends StatefulWidget {
     required this.caseOrContact,
     required this.specimenCondition,
     required this.stool2DaysAfterOnset,
+    required this.first_name,
+    required this.last_name,
+    required this.phoneNo,
   });
   @override
   _FollowUpExaminationFormState createState() =>
@@ -344,7 +352,10 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                                   caseOrContact: widget.caseOrContact,
                                   specimenCondition: widget.specimenCondition,
                                   residualParalysis:
-                                      _residualParalysis.toString())));
+                                      _residualParalysis.toString(),
+                                  phoneNo: widget.phoneNo,
+                                  first_name: widget.first_name,
+                                  last_name: widget.last_name)));
                     },
                     child: Text(
                         widget.resources1?.patientDemographic()["next"] ?? ''),

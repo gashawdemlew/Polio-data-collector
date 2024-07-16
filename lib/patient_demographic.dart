@@ -37,6 +37,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
   String? _selectedRegion;
   String? _selectedZone;
   String? _selectedWoreda;
+  String? _selectedGender;
+
   Map<String, Map<String, List<String>>> locationData = {
     'Amhara': {
       'North Gonder': ['Debark', 'Dabat'],
@@ -125,6 +127,13 @@ class _PatientdemographicState extends State<Patientdemographic> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController EPID_Number = TextEditingController();
   final TextEditingController names = TextEditingController();
+  final TextEditingController first_name = TextEditingController();
+
+  final TextEditingController last_name = TextEditingController();
+  final TextEditingController phoneNo = TextEditingController();
+
+  // final TextEditingController names = TextEditingController();
+
   final TextEditingController Gender = TextEditingController();
   final TextEditingController Date_of_birth = TextEditingController();
 
@@ -308,9 +317,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: names,
-                decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["name"] ?? ''}',
-                    '${widget.resources1?.patientDemographic()["name"] ?? ''}'),
+                decoration: ThemeHelper().textInputDecoration('first Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -320,13 +327,36 @@ class _PatientdemographicState extends State<Patientdemographic> {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                controller: Gender,
-                decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["gender"] ?? ''}',
-                    '${widget.resources1?.patientDemographic()["gender"] ?? ''} '),
+                controller: last_name,
+                decoration: ThemeHelper().textInputDecoration('Last Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter Enter Gender';
+                    return 'Please enter an Patients Name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              DropdownButtonFormField<String>(
+                hint: Text('Select Gender'),
+                value: _selectedGender,
+                dropdownColor: Colors.white,
+                items: ['Male', 'Female'].map((String gender) {
+                  return DropdownMenuItem<String>(
+                    value: gender,
+                    child: Text(gender),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    _selectedGender = newValue;
+                  });
+                },
+                decoration: ThemeHelper()
+                    .textInputDecoration('Gender', 'Select Gender'),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select your gender';
                   }
                   return null;
                 },
@@ -345,23 +375,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 },
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
-                controller: Province,
-                // decoration: InputDecoration(labelText: 'Tendername Name'),
-                decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["province"] ?? ''}',
-                    '${widget.resources1?.patientDemographic()["province"] ?? ''}'),
-
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Enter your Province';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButton<String>(
+              DropdownButtonFormField<String>(
                 hint: Text('Select Region'),
+                dropdownColor: Colors.white,
                 value: _selectedRegion,
                 items: locationData.keys.map((String region) {
                   return DropdownMenuItem<String>(
@@ -376,11 +392,23 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     _selectedWoreda = null; // Reset the woreda dropdown
                   });
                 },
+                decoration: ThemeHelper().textInputDecoration(
+                  'Region',
+                  'Select Region',
+                ),
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a region';
+                  }
+                  return null;
+                },
               ),
+              const SizedBox(height: 16.0),
               if (_selectedRegion != null)
-                DropdownButton<String>(
+                DropdownButtonFormField<String>(
                   hint: Text('Select Zone'),
                   value: _selectedZone,
+                  dropdownColor: Colors.white,
                   items:
                       locationData[_selectedRegion!]!.keys.map((String zone) {
                     return DropdownMenuItem<String>(
@@ -394,10 +422,22 @@ class _PatientdemographicState extends State<Patientdemographic> {
                       _selectedWoreda = null; // Reset the woreda dropdown
                     });
                   },
+                  decoration: ThemeHelper().textInputDecoration(
+                    'Zone',
+                    'Select Zone',
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a zone';
+                    }
+                    return null;
+                  },
                 ),
+              const SizedBox(height: 16.0),
               if (_selectedZone != null)
-                DropdownButton<String>(
+                DropdownButtonFormField<String>(
                   hint: Text('Select Woreda'),
+                  dropdownColor: Colors.white,
                   value: _selectedWoreda,
                   items: locationData[_selectedRegion!]![_selectedZone!]!
                       .map((String woreda) {
@@ -410,6 +450,16 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     setState(() {
                       _selectedWoreda = newValue;
                     });
+                  },
+                  decoration: ThemeHelper().textInputDecoration(
+                    'Woreda',
+                    'Select Woreda',
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a woreda';
+                    }
+                    return null;
                   },
                 ),
               const SizedBox(height: 16.0),
@@ -424,11 +474,14 @@ class _PatientdemographicState extends State<Patientdemographic> {
                         MaterialPageRoute(
                             builder: (context) => ClinicalHistoryForm(
                                   resources1: widget.resources1,
+                                  first_name: first_name.text,
+                                  last_name: last_name.text,
+                                  phoneNo: phoneNo.text,
                                   latitude: latitude.toString(),
                                   longitude: longitude.toString(),
                                   epid_number: EPID_Number.text,
                                   name: names.text,
-                                  gender: Gender.text,
+                                  gender: _selectedGender ?? '',
                                   dateofbirth: Date_of_birth.text,
                                   region: _selectedRegion.toString(),
                                   zone: _selectedZone.toString(),

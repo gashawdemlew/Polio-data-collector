@@ -10,7 +10,7 @@ class ApiService {
     required String lastName,
     required String phoneNo,
     required String zone,
-  required String woreda,
+    required String woreda,
     required String lat,
     required String long,
     required String userRole,

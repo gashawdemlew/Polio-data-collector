@@ -15,6 +15,7 @@ import 'package:camera_app/patient_demographic.dart';
 import 'package:camera_app/register_login.dart';
 import 'package:camera_app/stole_speciement.dart';
 import 'package:camera_app/user_list.dart';
+import 'package:camera_app/viewMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -121,7 +122,7 @@ class Drawer45 extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => labCatagory(),
+                      builder: (context) => ViewMessage(),
                     ),
                   ); // Add your navigation logic here
                 },
