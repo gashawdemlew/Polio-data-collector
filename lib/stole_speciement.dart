@@ -343,196 +343,196 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm34> {
                   Text(
                     'Selected Date (Stool 2): ${_stool2DateSentToLab != null ? _stool2DateSentToLab!.toString().split(' ')[0] : "Not selected"}',
                   ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    'Date stool received by Lab:',
-                    style: TextStyle(
-                      fontSize: 26.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Text('Stool 1:'),
-                  SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: _stool1DateReceivedByLab ?? DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          _stool1DateReceivedByLab = picked;
-                        });
-                      }
-                    },
-                    child: Text(
-                        widget.resources1?.stoolSpecimen()["selectDate"] ?? ''),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor:
-                          CustomColors.testColor1, // Change the text color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the border radius
-                      ),
-                      elevation: 14, // Add elevation
-                    ),
-                  ),
-                  Text(
-                    '${widget.resources1?.stoolSpecimen()["selectedDateStool1"] ?? ''}: ${_stool1DateReceivedByLab != null ? _stool1DateReceivedByLab!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ''}"}',
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(widget.resources1?.patientDemographic()["stool2"] ?? ''),
-                  SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: _stool2DateReceivedByLab ?? DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-                      if (picked != null) {
-                        setState(() {
-                          _stool2DateReceivedByLab = picked;
-                        });
-                      }
-                    },
-                    child: Text(
-                        widget.resources1?.stoolSpecimen()["selectDate"] ?? ''),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor:
-                          CustomColors.testColor1, // Change the text color
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the border radius
-                      ),
-                      elevation: 14, // Add elevation
-                    ),
-                  ),
-                  Text(
-                    '${widget.resources1?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DateReceivedByLab != null ? _stool2DateReceivedByLab!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ""}"}',
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    widget.resources1?.stoolSpecimen()["CaseorContact"] ?? "",
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Column(
-                    children: [
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Expanded(
-                            child: RadioListTile(
-                              title: Text(
-                                  widget.resources1?.stoolSpecimen()["case"] ??
-                                      ""),
-                              value: 'Case',
-                              groupValue: _caseOrContact,
-                              onChanged: (value) {
-                                Future.delayed(Duration.zero, () {
-                                  setState(() {
-                                    _caseOrContact = value.toString();
-                                  });
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Expanded(
-                            child: RadioListTile(
-                              title: Text(widget.resources1
-                                      ?.stoolSpecimen()["contact"] ??
-                                  ""),
-                              value: 'Contact',
-                              groupValue: _caseOrContact,
-                              onChanged: (value) {
-                                Future.delayed(Duration.zero, () {
-                                  setState(() {
-                                    _caseOrContact = value.toString();
-                                  });
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          return Expanded(
-                            child: RadioListTile(
-                              title: Text(widget.resources1
-                                      ?.stoolSpecimen()["community"] ??
-                                  ""),
-                              value: 'Community',
-                              groupValue: _caseOrContact,
-                              onChanged: (value) {
-                                Future.delayed(Duration.zero, () {
-                                  setState(() {
-                                    _caseOrContact = value.toString();
-                                  });
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.0),
-                  Text(
-                    widget.resources1
-                            ?.stoolSpecimen()["Specimenconditiononreceipt"] ??
-                        "",
-                    style: TextStyle(
-                      fontSize: 26.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8.0),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: RadioListTile(
-                          title: Text(
-                            widget.resources1?.stoolSpecimen()["good"] ?? "",
-                          ),
-                          value: 'Good',
-                          groupValue: _specimenCondition,
-                          onChanged: (value) {
-                            setState(() {
-                              _specimenCondition = value.toString();
-                            });
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: RadioListTile(
-                          title: Text(
-                            widget.resources1?.stoolSpecimen()["bad"] ?? "",
-                          ),
-                          value: 'Bad',
-                          groupValue: _specimenCondition,
-                          onChanged: (value) {
-                            setState(() {
-                              _specimenCondition = value.toString();
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                  // SizedBox(height: 16.0),
+                  // Text(
+                  //   'Date stool received by Lab:',
+                  //   style: TextStyle(
+                  //     fontSize: 26.0,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 8.0),
+                  // Text('Stool 1:'),
+                  // SizedBox(height: 8.0),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     final DateTime? picked = await showDatePicker(
+                  //       context: context,
+                  //       initialDate: _stool1DateReceivedByLab ?? DateTime.now(),
+                  //       firstDate: DateTime(1900),
+                  //       lastDate: DateTime.now(),
+                  //     );
+                  //     if (picked != null) {
+                  //       setState(() {
+                  //         _stool1DateReceivedByLab = picked;
+                  //       });
+                  //     }
+                  //   },
+                  //   child: Text(
+                  //       widget.resources1?.stoolSpecimen()["selectDate"] ?? ''),
+                  //   style: ElevatedButton.styleFrom(
+                  //     foregroundColor: Colors.white,
+                  //     backgroundColor:
+                  //         CustomColors.testColor1, // Change the text color
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(
+                  //           8.0), // Adjust the border radius
+                  //     ),
+                  //     elevation: 14, // Add elevation
+                  //   ),
+                  // ),
+                  // Text(
+                  //   '${widget.resources1?.stoolSpecimen()["selectedDateStool1"] ?? ''}: ${_stool1DateReceivedByLab != null ? _stool1DateReceivedByLab!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ''}"}',
+                  // ),
+                  // SizedBox(height: 16.0),
+                  // Text(widget.resources1?.patientDemographic()["stool2"] ?? ''),
+                  // SizedBox(height: 8.0),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     final DateTime? picked = await showDatePicker(
+                  //       context: context,
+                  //       initialDate: _stool2DateReceivedByLab ?? DateTime.now(),
+                  //       firstDate: DateTime(1900),
+                  //       lastDate: DateTime.now(),
+                  //     );
+                  //     if (picked != null) {
+                  //       setState(() {
+                  //         _stool2DateReceivedByLab = picked;
+                  //       });
+                  //     }
+                  //   },
+                  //   child: Text(
+                  //       widget.resources1?.stoolSpecimen()["selectDate"] ?? ''),
+                  //   style: ElevatedButton.styleFrom(
+                  //     foregroundColor: Colors.white,
+                  //     backgroundColor:
+                  //         CustomColors.testColor1, // Change the text color
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(
+                  //           8.0), // Adjust the border radius
+                  //     ),
+                  //     elevation: 14, // Add elevation
+                  //   ),
+                  // ),
+                  // Text(
+                  //   '${widget.resources1?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DateReceivedByLab != null ? _stool2DateReceivedByLab!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ""}"}',
+                  // ),
+                  SizedBox(height: 36.0),
+                  // Text(
+                  //   widget.resources1?.stoolSpecimen()["CaseorContact"] ?? "",
+                  //   style: TextStyle(
+                  //     fontSize: 16.0,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 8.0),
+                  // Column(
+                  //   children: [
+                  //     LayoutBuilder(
+                  //       builder: (context, constraints) {
+                  //         return Expanded(
+                  //           child: RadioListTile(
+                  //             title: Text(
+                  //                 widget.resources1?.stoolSpecimen()["case"] ??
+                  //                     ""),
+                  //             value: 'Case',
+                  //             groupValue: _caseOrContact,
+                  //             onChanged: (value) {
+                  //               Future.delayed(Duration.zero, () {
+                  //                 setState(() {
+                  //                   _caseOrContact = value.toString();
+                  //                 });
+                  //               });
+                  //             },
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //     LayoutBuilder(
+                  //       builder: (context, constraints) {
+                  //         return Expanded(
+                  //           child: RadioListTile(
+                  //             title: Text(widget.resources1
+                  //                     ?.stoolSpecimen()["contact"] ??
+                  //                 ""),
+                  //             value: 'Contact',
+                  //             groupValue: _caseOrContact,
+                  //             onChanged: (value) {
+                  //               Future.delayed(Duration.zero, () {
+                  //                 setState(() {
+                  //                   _caseOrContact = value.toString();
+                  //                 });
+                  //               });
+                  //             },
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //     LayoutBuilder(
+                  //       builder: (context, constraints) {
+                  //         return Expanded(
+                  //           child: RadioListTile(
+                  //             title: Text(widget.resources1
+                  //                     ?.stoolSpecimen()["community"] ??
+                  //                 ""),
+                  //             value: 'Community',
+                  //             groupValue: _caseOrContact,
+                  //             onChanged: (value) {
+                  //               Future.delayed(Duration.zero, () {
+                  //                 setState(() {
+                  //                   _caseOrContact = value.toString();
+                  //                 });
+                  //               });
+                  //             },
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 16.0),
+                  // Text(
+                  //   widget.resources1
+                  //           ?.stoolSpecimen()["Specimenconditiononreceipt"] ??
+                  //       "",
+                  //   style: TextStyle(
+                  //     fontSize: 26.0,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                  // SizedBox(height: 8.0),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: RadioListTile(
+                  //         title: Text(
+                  //           widget.resources1?.stoolSpecimen()["good"] ?? "",
+                  //         ),
+                  //         value: 'Good',
+                  //         groupValue: _specimenCondition,
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             _specimenCondition = value.toString();
+                  //           });
+                  //         },
+                  //       ),
+                  //     ),
+                  //     Expanded(
+                  //       child: RadioListTile(
+                  //         title: Text(
+                  //           widget.resources1?.stoolSpecimen()["bad"] ?? "",
+                  //         ),
+                  //         value: 'Bad',
+                  //         groupValue: _specimenCondition,
+                  //         onChanged: (value) {
+                  //           setState(() {
+                  //             _specimenCondition = value.toString();
+                  //           });
+                  //         },
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {

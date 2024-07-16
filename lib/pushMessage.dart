@@ -1,6 +1,8 @@
 import 'package:camera_app/ReviewPage.dart';
+import 'package:camera_app/color.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PushMessage extends StatefulWidget {
   final String latitude;
@@ -108,7 +110,12 @@ class _MyFormState extends State<PushMessage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Form'),
+        title: Text(
+          'Push Message Form',
+          style: GoogleFonts.splineSans(
+              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        backgroundColor: CustomColors.testColor1,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,6 +134,9 @@ class _MyFormState extends State<PushMessage> {
                   return null;
                 },
               ),
+              SizedBox(
+                height: 16,
+              ),
               TextFormField(
                 controller: _lastNameController,
                 decoration: ThemeHelper().textInputDecoration('Last Name'),
@@ -136,6 +146,9 @@ class _MyFormState extends State<PushMessage> {
                   }
                   return null;
                 },
+              ),
+              SizedBox(
+                height: 16,
               ),
               TextFormField(
                 controller: _woredaController,
@@ -147,6 +160,9 @@ class _MyFormState extends State<PushMessage> {
                   return null;
                 },
               ),
+              SizedBox(
+                height: 16,
+              ),
               TextFormField(
                 controller: _zoneController,
                 decoration: ThemeHelper().textInputDecoration('Zone'),
@@ -156,6 +172,9 @@ class _MyFormState extends State<PushMessage> {
                   }
                   return null;
                 },
+              ),
+              SizedBox(
+                height: 16,
               ),
               TextFormField(
                 controller: _regionController,
@@ -167,6 +186,9 @@ class _MyFormState extends State<PushMessage> {
                   return null;
                 },
               ),
+              SizedBox(
+                height: 16,
+              ),
               TextFormField(
                 controller: _healthOfficerNameController,
                 decoration:
@@ -177,6 +199,9 @@ class _MyFormState extends State<PushMessage> {
                   }
                   return null;
                 },
+              ),
+              SizedBox(
+                height: 16,
               ),
               TextFormField(
                 controller: _healthOfficerPhoneController,
@@ -248,7 +273,19 @@ class _MyFormState extends State<PushMessage> {
                     );
                   }
                 },
-                child: Text('Submit'),
+                child: Text(
+                  'Submit',
+                ),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor:
+                      CustomColors.testColor1, // Change the text color
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(8.0), // Adjust the border radius
+                  ),
+                  elevation: 14, // Add elevation
+                ),
               ),
             ],
           ),
