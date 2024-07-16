@@ -13,7 +13,7 @@ class ViewMessage extends StatelessWidget {
       title: 'Clinic Message Display',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Roboto', // Use a more visually appealing font
+        fontFamily: 'Roboto',
       ),
       home: ClinicMessagePage(),
     );
@@ -62,20 +62,38 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
       appBar: AppBar(
         title: Text('Clinic Message Display'),
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.lightBlueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Add a header image or logo
           Container(
-            height: 150,
-            color: Colors.blue,
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue, Colors.lightBlueAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              ),
+            ),
             child: Center(
               child: Text(
                 'Clinic Messages',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -84,17 +102,17 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
           SizedBox(height: 16.0),
           if (_isLoading)
             Center(
-              child: CircularProgressIndicator(), // Show a loading spinner
+              child: CircularProgressIndicator(),
             )
           else
             Expanded(
-              child: ListView.separated(
+              child: ListView.builder(
+                padding: EdgeInsets.all(16.0),
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
                   return GestureDetector(
                     onTap: () {
-                      // Navigate to another page when the ListTile is tapped
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -106,54 +124,55 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                         ),
                       );
                     },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.0,
-                        horizontal: 24.0,
+                    child: Card(
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                      decoration: BoxDecoration(
-                        color: message['status'] == 'unseen'
-                            ? Colors.green[300]
-                            : Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${message['first_name'] ?? 'N/A'} ${message['last_name'] ?? 'N/A'}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      elevation: 4.0,
+                      child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              message['status'] == 'unseen'
+                                  ? Icons.mark_email_unread
+                                  : Icons.mark_email_read,
+                              color: message['status'] == 'unseen'
+                                  ? Colors.green
+                                  : Colors.blue,
+                              size: 40.0,
+                            ),
+                            SizedBox(width: 16.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${message['first_name'] ?? 'N/A'} ${message['last_name'] ?? 'N/A'}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.0),
+                                  Text(
+                                    'EPID: ${message['epid_number'] ?? 'N/A'}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                'EPID: ${message['epid_number'] ?? 'N/A'}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Icon(Icons.chevron_right, color: Colors.grey[600]),
-                        ],
+                            ),
+                            Icon(Icons.chevron_right, color: Colors.grey[600]),
+                          ],
+                        ),
                       ),
                     ),
                   );
                 },
-                separatorBuilder: (context, index) => SizedBox(height: 16.0),
               ),
             ),
         ],
@@ -167,53 +186,31 @@ class AnotherPage extends StatelessWidget {
   final String lastName;
   final String epid;
 
-  AnotherPage({
-    required this.firstName,
-    required this.lastName,
-    required this.epid,
-  });
+  AnotherPage(
+      {required this.firstName, required this.lastName, required this.epid});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Category  Page'),
-        centerTitle: true,
+        title: Text('$firstName $lastName'),
       ),
-      body: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'First Name: $firstName',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'EPID: $epid',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(height: 16.0),
-              Text(
-                'Last Name: $lastName',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                'EPID: $epid',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+            // Add more details as needed
+          ],
         ),
-      ]),
+      ),
     );
   }
 }
