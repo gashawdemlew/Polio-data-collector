@@ -1,7 +1,9 @@
 import 'package:camera_app/home.dart';
+import 'package:camera_app/image.dart';
 import 'package:camera_app/login.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:camera_app/sqflite/database_helper.dart';
+import 'package:camera_app/video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,7 +60,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: email.isEmpty ? LoginPage() : PolioDashboard(),
+      home: email.isEmpty ? MyVideoApp() : PolioDashboard(),
     );
   }
 }

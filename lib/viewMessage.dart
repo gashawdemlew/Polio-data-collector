@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'package:camera_app/color.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+
+import 'Laboratory Information_Final classification  .dart';
 
 void main() {
   runApp(ViewMessage());
@@ -56,22 +60,34 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
     }
   }
 
+  // Future<void> _handleMessageTap(Map<String, dynamic> message) async {
+  //   // Perform any additional logic or navigation here
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => AnotherPage(
+  //         firstName: message['first_name'] ?? 'N/A',
+  //         lastName: message['last_name'] ?? 'N/A',
+  //         epid: message['epid_number'] ?? 'N/A',
+  //       ),
+  //     ),
+  //   );
+
+  // Update the message status to 'seen'
+  // await _updateMessageStatus(message['id'], 'seen');
+  // }
+
+  Future<void> _updateMessageStatus(int push_id) async {
+    final response = await http.put(
+      Uri.parse('http://localhost:7476/clinic/messages23/$push_id'),
+      body: jsonEncode({}),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Clinic Message Display'),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.lightBlueAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -113,6 +129,10 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                   final message = _messages[index];
                   return GestureDetector(
                     onTap: () {
+                      int push_id = int.parse(message['push_id'].toString());
+
+// Call the function with the parsed integer
+                      _updateMessageStatus(push_id);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -193,7 +213,12 @@ class AnotherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$firstName $lastName'),
+        title: Text(
+          '$firstName $lastName',
+          style: GoogleFonts.splineSans(
+              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        backgroundColor: CustomColors.testColor1,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -207,6 +232,58 @@ class AnotherPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 132, vertical: 20),
+                      backgroundColor: CustomColors.testColor1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      "Stool  1",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                LaboratoryFinalClassificationForm()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 132, vertical: 20),
+                      backgroundColor: Colors.teal,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      "Stool  2",
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             // Add more details as needed
           ],
         ),

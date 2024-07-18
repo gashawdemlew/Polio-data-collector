@@ -101,7 +101,6 @@ class ReviewPage extends StatelessWidget {
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         "epid_number": epid_number,
-
         "latitude": latitude,
         "longitude": longitude,
         "first_name": first_name,
@@ -125,8 +124,6 @@ class ReviewPage extends StatelessWidget {
         "date_stool_1_collected": stool1DateCollected,
         "date_stool_2_collected": stool2DateCollected,
         "date_after_onset": daysAfterOnset,
-        // "date_stool_1_collected": stool1DaysAfterOnset,
-        // "date_stool_2_collected": stool2DaysAfterOnset,
         "date_stool_1_sent_lab": stool1DateSentToLab,
         "date_stool_2_sent_lab": stool2DateSentToLab,
         "case_contact": caseOrContact,
