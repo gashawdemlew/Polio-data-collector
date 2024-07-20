@@ -1,4 +1,1 @@
-class Api {
-  static String url = "http://192.168.1.9/student/flutter_login/register.php";
-  static String regis = "http://192.168.1.9/student/flutter_login/register.php";
-}
+String baseUrl = "http://192.168.239.120:7476/";

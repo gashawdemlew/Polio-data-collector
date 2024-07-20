@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'package:camera_app/mo/api.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl =
-      'http://localhost:7476/user'; // Replace with your API URL
+  // Replace with your API URL
 
   static Future<Map<String, dynamic>> createUser({
     required String firstName,
@@ -16,7 +16,7 @@ class ApiService {
     required String userRole,
     required String password,
   }) async {
-    final url = Uri.parse('$baseUrl/create');
+    final url = Uri.parse('${baseUrl}user/create');
     final response = await http.post(
       url,
       headers: {
@@ -46,7 +46,8 @@ class ApiService {
     required String phoneNo,
     required String password,
   }) async {
-    final url = Uri.parse('http://localhost:7476/user/login');
+    final url = Uri.parse('${baseUrl}user/login');
+    print(url);
     final response = await http.post(
       url,
       headers: {

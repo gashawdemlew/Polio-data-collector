@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
-class ReviewPage extends StatelessWidget {
-  // final String resources;
+class ReviewPage extends StatefulWidget {
   final String latitude;
+  final String videoPath;
+  final String imagePath;
   final String longitude;
   final String first_name;
   final String last_name;
@@ -45,12 +50,12 @@ class ReviewPage extends StatelessWidget {
   final String snow;
   final String epid_number;
   final String hofficer_name;
-
   final String hofficer_phonno;
 
   ReviewPage({
-    // required this.resources,
     required this.latitude,
+    required this.imagePath,
+    required this.videoPath,
     required this.longitude,
     required this.first_name,
     required this.last_name,
@@ -93,155 +98,215 @@ class ReviewPage extends StatelessWidget {
     required this.hofficer_phonno,
   });
 
-  Future<void> postClinicalData() async {
-    final url = 'http://localhost:7476/clinic/post';
+  @override
+  _ReviewPageState createState() => _ReviewPageState();
+}
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        "epid_number": epid_number,
-        "latitude": latitude,
-        "longitude": longitude,
-        "first_name": first_name,
-        "phonNo": phoneNo,
-        "last_name": last_name,
-        "gender": gender,
-        "dateofbirth": dateofbirth,
-        "region": region,
-        "zone": zone,
-        "woreda": woreda,
-        "fever_at_onset": feverAtOnset,
-        "flaccid_sudden_paralysis": flaccidParalysis,
-        "paralysis_progressed": paralysisProgressed,
-        "asymmetric": asymmetric,
-        "site_of_paralysis": siteOfParalysis,
-        "total_opv_doses": totalOPVDoses,
-        "admitted_to_hospital": admittedToHospital,
-        "date_of_admission": dateOfAdmission,
-        "medical_record_no": medicalRecordNo,
-        "facility_name": facilityName,
-        "date_stool_1_collected": stool1DateCollected,
-        "date_stool_2_collected": stool2DateCollected,
-        "date_after_onset": daysAfterOnset,
-        "date_stool_1_sent_lab": stool1DateSentToLab,
-        "date_stool_2_sent_lab": stool2DateSentToLab,
-        "case_contact": caseOrContact,
-        "stool1DaysAfterOnset": stool1DaysAfterOnset,
-        "stool2DaysAfterOnset": stool2DaysAfterOnset,
-        "stool1DateReceivedByLab": stool1DateReceivedByLab,
-        "stool2DateReceivedByLab": stool2DateReceivedByLab,
-        "specimenCondition": specimenCondition,
-        "residual_paralysis": residualParalysis,
-        "tempreture": tempreture,
-        "rainfall": rainfall,
-        "humidity": humidity,
-        "snow": snow,
-        "hofficer_name": hofficer_name,
-        'hofficer_phonno': hofficer_phonno
-      }),
-    );
+class _ReviewPageState extends State<ReviewPage> {
+  bool isSaving = false;
+
+  Future<void> postClinicalData(BuildContext context) async {
+    setState(() {
+      isSaving = true; // Start saving
+    });
+
+    final url = '${baseUrl}clinic/create';
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+
+    request.headers['Content-Type'] = 'multipart/form-data';
+
+    // Adding JSON fields
+    request.fields.addAll({
+      "epid_number": widget.epid_number,
+      "latitude": widget.latitude,
+      "longitude": widget.longitude,
+      "first_name": widget.first_name,
+      "phonNo": widget.phoneNo,
+      "last_name": widget.last_name,
+      "gender": widget.gender,
+      "dateofbirth": widget.dateofbirth,
+      "region": widget.region,
+      "zone": widget.zone,
+      "woreda": widget.woreda,
+      "fever_at_onset": widget.feverAtOnset,
+      "flaccid_sudden_paralysis": widget.flaccidParalysis,
+      "paralysis_progressed": widget.paralysisProgressed,
+      "asymmetric": widget.asymmetric,
+      "site_of_paralysis": widget.siteOfParalysis,
+      "total_opv_doses": widget.totalOPVDoses.toString(),
+      "admitted_to_hospital": widget.admittedToHospital,
+      "date_of_admission": widget.dateOfAdmission,
+      "medical_record_no": widget.medicalRecordNo,
+      "facility_name": widget.facilityName,
+      "date_stool_1_collected": widget.stool1DateCollected,
+      "date_stool_2_collected": widget.stool2DateCollected,
+      "date_after_onset": widget.daysAfterOnset,
+      "date_stool_1_sent_lab": widget.stool1DateSentToLab,
+      "date_stool_2_sent_lab": widget.stool2DateSentToLab,
+      "case_contact": widget.caseOrContact,
+      "stool1DaysAfterOnset": widget.stool1DaysAfterOnset,
+      "stool2DaysAfterOnset": widget.stool2DaysAfterOnset,
+      "stool1DateReceivedByLab": widget.stool1DateReceivedByLab,
+      "stool2DateReceivedByLab": widget.stool2DateReceivedByLab,
+      "specimenCondition": widget.specimenCondition,
+      "residual_paralysis": widget.residualParalysis,
+      "tempreture": widget.tempreture,
+      "rainfall": widget.rainfall,
+      "humidity": widget.humidity,
+      "snow": widget.snow,
+      "hofficer_name": widget.hofficer_name,
+      'hofficer_phonno': widget.hofficer_phonno,
+    });
+
+    // Adding image file
+    if (widget.imagePath.isNotEmpty) {
+      var imageFile = File(widget.imagePath);
+      var imageMimeType = lookupMimeType(widget.imagePath) ?? 'image/jpeg';
+
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+        contentType: MediaType.parse(imageMimeType),
+      ));
+    }
+
+    // Adding video file
+    if (widget.videoPath.isNotEmpty) {
+      var videoFile = File(widget.videoPath);
+      var videoMimeType = lookupMimeType(widget.videoPath) ?? 'video/mp4';
+
+      request.files.add(await http.MultipartFile.fromPath(
+        'video',
+        videoFile.path,
+        contentType: MediaType.parse(videoMimeType),
+      ));
+    }
+
+    var response = await request.send();
 
     if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Data submitted successfully')),
+      );
       print('Data posted successfully');
     } else {
-      print('Failed to post data: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to post data: ${response.statusCode}')),
+      );
+      print('Failed to post data: ${response.statusCode}');
     }
+
+    setState(() {
+      isSaving = false; // Stop saving
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Review Data')),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+      appBar: AppBar(title: Text('Review Data')),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (isSaving)
+                CircularProgressIndicator() // Show progress indicator
+              else ...[
                 Text('Review your data'),
                 SizedBox(height: 20),
                 ListTile(
                     title: Text('Epidemic Number'),
-                    subtitle: Text(epid_number)),
-                ListTile(title: Text('Gender'), subtitle: Text(gender)),
+                    subtitle: Text(widget.epid_number)),
+                ListTile(title: Text('Gender'), subtitle: Text(widget.gender)),
                 ListTile(
-                    title: Text('Date of Birth'), subtitle: Text(dateofbirth)),
-                ListTile(title: Text('Zone'), subtitle: Text(zone)),
-                ListTile(title: Text('Region'), subtitle: Text(region)),
-                ListTile(title: Text('Woreda'), subtitle: Text(woreda)),
+                    title: Text('Date of Birth'),
+                    subtitle: Text(widget.dateofbirth)),
+                ListTile(title: Text('Zone'), subtitle: Text(widget.zone)),
+                ListTile(title: Text('Region'), subtitle: Text(widget.region)),
+                ListTile(title: Text('Woreda'), subtitle: Text(widget.woreda)),
                 ListTile(
                     title: Text('Fever At Onset'),
-                    subtitle: Text(feverAtOnset)),
+                    subtitle: Text(widget.feverAtOnset)),
                 ListTile(
                     title: Text('Flaccid Paralysis'),
-                    subtitle: Text(flaccidParalysis)),
+                    subtitle: Text(widget.flaccidParalysis)),
                 ListTile(
                     title: Text('Paralysis Progressed'),
-                    subtitle: Text(paralysisProgressed)),
-                ListTile(title: Text('Asymmetric'), subtitle: Text(asymmetric)),
+                    subtitle: Text(widget.paralysisProgressed)),
+                ListTile(
+                    title: Text('Asymmetric'),
+                    subtitle: Text(widget.asymmetric)),
                 ListTile(
                     title: Text('Site of Paralysis'),
-                    subtitle: Text(siteOfParalysis)),
+                    subtitle: Text(widget.siteOfParalysis)),
                 ListTile(
                     title: Text('Total OPV Doses'),
-                    subtitle: Text(totalOPVDoses.toString())),
+                    subtitle: Text(widget.totalOPVDoses.toString())),
                 ListTile(
                     title: Text('Admitted to Hospital'),
-                    subtitle: Text(admittedToHospital)),
+                    subtitle: Text(widget.admittedToHospital)),
                 ListTile(
                     title: Text('Date of Admission'),
-                    subtitle: Text(dateOfAdmission)),
+                    subtitle: Text(widget.dateOfAdmission)),
                 ListTile(
                     title: Text('Medical Record No'),
-                    subtitle: Text(medicalRecordNo)),
+                    subtitle: Text(widget.medicalRecordNo)),
                 ListTile(
-                    title: Text('Facility Name'), subtitle: Text(facilityName)),
+                    title: Text('Facility Name'),
+                    subtitle: Text(widget.facilityName)),
                 ListTile(
-                    title: Text('Date Stool 1'), subtitle: Text(dateStool1)),
+                    title: Text('Date Stool 1'),
+                    subtitle: Text(widget.dateStool1)),
                 ListTile(
-                    title: Text('Date Stool 2'), subtitle: Text(dateStool2)),
+                    title: Text('Date Stool 2'),
+                    subtitle: Text(widget.dateStool2)),
                 ListTile(
                     title: Text('Days After Onset'),
-                    subtitle: Text(daysAfterOnset)),
+                    subtitle: Text(widget.daysAfterOnset)),
                 ListTile(
                     title: Text('Stool 1 Date Collected'),
-                    subtitle: Text(stool1DateCollected)),
+                    subtitle: Text(widget.stool1DateCollected)),
                 ListTile(
                     title: Text('Stool 2 Date Collected'),
-                    subtitle: Text(stool2DateCollected)),
+                    subtitle: Text(widget.stool2DateCollected)),
                 ListTile(
                     title: Text('Stool 1 Days After Onset'),
-                    subtitle: Text(stool1DaysAfterOnset)),
+                    subtitle: Text(widget.stool1DaysAfterOnset)),
                 ListTile(
                     title: Text('Stool 1 Date Sent to Lab'),
-                    subtitle: Text(stool1DateSentToLab)),
+                    subtitle: Text(widget.stool1DateSentToLab)),
                 ListTile(
                     title: Text('Stool 2 Date Sent to Lab'),
-                    subtitle: Text(stool2DateSentToLab)),
+                    subtitle: Text(widget.stool2DateSentToLab)),
                 ListTile(
                     title: Text('Stool 1 Date Received by Lab'),
-                    subtitle: Text(stool1DateReceivedByLab)),
+                    subtitle: Text(widget.stool1DateReceivedByLab)),
                 ListTile(
                     title: Text('Stool 2 Date Received by Lab'),
-                    subtitle: Text(stool2DateReceivedByLab)),
+                    subtitle: Text(widget.stool2DateReceivedByLab)),
                 ListTile(
                     title: Text('Case or Contact'),
-                    subtitle: Text(caseOrContact)),
+                    subtitle: Text(widget.caseOrContact)),
                 ListTile(
                     title: Text('Specimen Condition'),
-                    subtitle: Text(specimenCondition)),
+                    subtitle: Text(widget.specimenCondition)),
                 ListTile(
                     title: Text('Stool 2 Days After Onset'),
-                    subtitle: Text(stool2DaysAfterOnset)),
+                    subtitle: Text(widget.stool2DaysAfterOnset)),
                 ListTile(
                     title: Text('Residual Paralysis'),
-                    subtitle: Text(residualParalysis)),
-                ListTile(title: Text('First Name'), subtitle: Text(first_name)),
-                ListTile(title: Text('Last Name'), subtitle: Text(last_name)),
-                ListTile(title: Text('Phone No'), subtitle: Text(phoneNo)),
+                    subtitle: Text(widget.residualParalysis)),
+                ListTile(
+                    title: Text('First Name'),
+                    subtitle: Text(widget.first_name)),
+                ListTile(
+                    title: Text('Last Name'), subtitle: Text(widget.last_name)),
+                ListTile(
+                    title: Text('Phone No'), subtitle: Text(widget.phoneNo)),
                 ElevatedButton(
-                  onPressed: () {
-                    postClinicalData();
+                  onPressed: () async {
+                    await postClinicalData(context);
                   },
                   child: Text('Submit'),
                   style: ElevatedButton.styleFrom(
@@ -254,8 +319,10 @@ class ReviewPage extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

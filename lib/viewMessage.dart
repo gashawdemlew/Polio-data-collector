@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +45,7 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
       _isLoading = true;
     });
     final response =
-        await http.get(Uri.parse('http://localhost:7476/clinic/getMessage676'));
+        await http.get(Uri.parse('${baseUrl}clinic/getMessage676'));
     if (response.statusCode == 200) {
       setState(() {
         _messages = List<Map<String, dynamic>>.from(jsonDecode(response.body));
@@ -78,11 +79,25 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
   // }
 
   Future<void> _updateMessageStatus(int push_id) async {
-    final response = await http.put(
-      Uri.parse('http://localhost:7476/clinic/messages23/$push_id'),
-      body: jsonEncode({}),
-      headers: {'Content-Type': 'application/json'},
-    );
+    try {
+      final url = '${baseUrl}clinic/messages23/$push_id';
+      print('Sending PUT request to: $url');
+
+      final response = await http.put(
+        Uri.parse(url),
+        body: jsonEncode({}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('Message status updated successfully');
+      } else {
+        print(
+            'Error updating message status: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating message status: $e');
+    }
   }
 
   @override
@@ -237,7 +252,14 @@ class AnotherPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                LaboratoryFinalClassificationForm(epid: epid)),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       padding:
                           EdgeInsets.symmetric(horizontal: 132, vertical: 20),
@@ -261,7 +283,7 @@ class AnotherPage extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                LaboratoryFinalClassificationForm()),
+                                LaboratoryFinalClassificationForm(epid: epid)),
                       );
                     },
                     style: ElevatedButton.styleFrom(

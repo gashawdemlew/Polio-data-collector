@@ -1,10 +1,16 @@
-import 'package:camera_app/color.dart';
-import 'package:camera_app/enviroment.dart';
-import 'package:camera_app/languge/LanguageResources.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'color.dart';
+import 'languge/LanguageResources.dart';
 
 class LaboratoryFinalClassificationForm extends StatefulWidget {
+  final String epid;
+
+  LaboratoryFinalClassificationForm({required this.epid});
   @override
   _LaboratoryFinalClassificationFormState createState() =>
       _LaboratoryFinalClassificationFormState();
@@ -20,6 +26,7 @@ class _LaboratoryFinalClassificationFormState
   String _finalCellCultureResult = '';
   DateTime? _dateFinalCellCultureResults;
   String _finalCombinedITDResult = '';
+
   void init() {
     setState(() {
       _selectedLanguage = languge;
@@ -36,12 +43,42 @@ class _LaboratoryFinalClassificationFormState
     });
   }
 
+  Future<void> _submitForm() async {
+    final url =
+        Uri.parse('${baseUrl}clinic/create'); // Update with your server URL
+
+    final body = json.encode({
+      'epid_number': widget.epid,
+      'true_afp': _trueAFP,
+      'final_cell_culture_result': _finalCellCultureResult,
+      'date_cell_culture_result':
+          _dateFinalCellCultureResults?.toIso8601String(),
+      'final_combined_itd_result': _finalCombinedITDResult,
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        print('Form submitted successfully!');
+      } else {
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (error) {
+      print('Error submitting form: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "LaboratoryInformation/FinalClassificationForm",
+          "${widget.epid}",
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -49,7 +86,6 @@ class _LaboratoryFinalClassificationFormState
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),
-        // color: Theme.of(context),
         child: SingleChildScrollView(
           child: Card(
             elevation: 4.0,
@@ -168,13 +204,11 @@ class _LaboratoryFinalClassificationFormState
                     child: Text('Select Date'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor:
-                          CustomColors.testColor1, // Change the text color
+                      backgroundColor: CustomColors.testColor1,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the border radius
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      elevation: 14, // Add elevation
+                      elevation: 14,
                     ),
                   ),
                   Text(
@@ -237,32 +271,16 @@ class _LaboratoryFinalClassificationFormState
                   SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => EnvironmentMetrologyForm(
-                      //               resources1: resource12,
-                      //             )));
-                      // Submit form data
-                      print('Form submitted!');
-                      print('True AFP: $_trueAFP');
-                      print(
-                          'Final Cell Culture Result: $_finalCellCultureResult');
-                      print(
-                          'Date Final Cell Culture Results: $_dateFinalCellCultureResults');
-                      print(
-                          'Final Combined ITD Result: $_finalCombinedITDResult');
+                      _submitForm();
                     },
                     child: Text('Next'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor:
-                          CustomColors.testColor1, // Change the text color
+                      backgroundColor: CustomColors.testColor1,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            8.0), // Adjust the border radius
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      elevation: 14, // Add elevation
+                      elevation: 14,
                     ),
                   ),
                 ],

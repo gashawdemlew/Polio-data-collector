@@ -398,6 +398,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mime",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/mime-1.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "nm",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/nm-0.5.0",
       "packageUri": "lib/",
@@ -680,7 +686,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-07-16T13:14:50.498860Z",
+  "generated": "2024-07-18T15:05:04.976244Z",
   "generator": "pub",
   "generatorVersion": "3.6.0-36.0.dev",
   "flutterRoot": "file:///C:/flutter/flutter",

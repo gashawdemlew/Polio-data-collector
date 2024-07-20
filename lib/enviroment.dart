@@ -217,7 +217,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
         city.text = data['data'][0]['city_name'].toString();
 
         tempController.text = data['data'][0]['temp'].toString();
-        rainfallController.text = data['data'][0]['precip'].toString();
+        // rainfallController.text = data['data'][0]['precip'].toString();
         humidityController.text = data['data'][0]['rh'].toString();
         snow.text = data['data'][0]['snow'].toString();
 

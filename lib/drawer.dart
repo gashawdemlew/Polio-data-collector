@@ -6,6 +6,7 @@ import 'package:camera_app/clinical_history.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/controler/FileListPage.dart';
 import 'package:camera_app/customform.dart';
+import 'package:camera_app/demographyByVolunter.dart';
 import 'package:camera_app/enviroment.dart';
 import 'package:camera_app/lab_catagories.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
@@ -70,6 +71,14 @@ class Drawer45 extends StatelessWidget {
                       size: 40,
                     ),
                   ),
+                  Text(
+                    '$userType',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 24,
+                    ),
+                  ),
+
                   if (userType == "Health Officer")
                     Text(
                       languge == "Amharic" ? "የጤና መኮንን" : 'Health Officer ',
@@ -78,30 +87,23 @@ class Drawer45 extends StatelessWidget {
                         fontSize: 24,
                       ),
                     ),
-                  if (userType == "Volunteers")
-                    Text(
-                      languge == "Amharic" ? "በጎ ፈቃደኞች" : 'Voluntaries ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
-                    ),
-                  if (userType == "Laboratorist")
-                    ListTile(
-                      leading: Icon(Icons.ad_units_rounded, color: Colors.blue),
-                      title: Text(
-                        languge == "Amharic" ? "መነሻ" : 'EPHI labratory ',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                LaboratoryFinalClassificationForm(),
-                          ),
-                        ); // Add your navigation logic here
-                      },
-                    ),
+
+                  // if (userType == "Laboratorist")
+                  //   ListTile(
+                  //     leading: Icon(Icons.ad_units_rounded, color: Colors.blue),
+                  //     title: Text(
+                  //       languge == "Amharic" ? "መነሻ" : 'EPHI labratory ',
+                  //       style: TextStyle(color: Colors.blue),
+                  //     ),
+                  //     onTap: () {
+                  //       Navigator.of(context).push(
+                  //         MaterialPageRoute(
+                  //           builder: (context) =>
+                  //               LaboratoryFinalClassificationForm(),
+                  //         ),
+                  //       ); // Add your navigation logic here
+                  //     },
+                  //   ),
                   Text(
                     email,
                     style: TextStyle(
@@ -175,7 +177,7 @@ class Drawer45 extends StatelessWidget {
                 style: TextStyle(color: const Color.fromARGB(255, 36, 40, 43)),
               ),
               children: <Widget>[
-                if (userType == "Health Officer" || userType == "Volunteers")
+                if (userType == "Health Officer")
                   ListTile(
                     leading: Icon(Icons.arrow_right, color: Colors.blue),
                     title: Text(
@@ -192,7 +194,7 @@ class Drawer45 extends StatelessWidget {
                       ); // Add your navigation logic here
                     },
                   ),
-                if (userType == "Health Officer" || userType == "Volunteers")
+                if (userType == "Health Officer")
                   ListTile(
                     leading: Icon(Icons.arrow_right, color: Colors.blue),
                     title: Text(
@@ -218,7 +220,7 @@ class Drawer45 extends StatelessWidget {
                       // ); // Add your navigation logic here
                     },
                   ),
-                if (userType == "Health Officer" || userType == "Volunteers")
+                if (userType == "Health Officer")
                   ListTile(
                     leading: Icon(Icons.arrow_right, color: Colors.blue),
                     title: Text(
@@ -250,7 +252,7 @@ class Drawer45 extends StatelessWidget {
                       ); // Add your navigation logic here
                     },
                   ),
-                if (userType == "Health Officer" || userType == "Volunteers")
+                if (userType == "Health Officer")
                   ListTile(
                     leading: Icon(Icons.arrow_right, color: Colors.blue),
                     title: Text(
@@ -270,7 +272,7 @@ class Drawer45 extends StatelessWidget {
               ],
             ),
             Divider(color: Colors.blue),
-            if (email == "Health Officer" || email == "Volunteers")
+            if (email == "Health Officer")
               ListTile(
                 leading: Icon(Icons.camera, color: Colors.blue),
                 title: Text(
@@ -285,9 +287,9 @@ class Drawer45 extends StatelessWidget {
                   ); // Add your navigation logic here
                 },
               ),
-            if (userType == "Health Officer" || userType == "Volunteers")
+            if (userType == "Health Officer")
               ListTile(
-                leading: Icon(Icons.video_call, color: Colors.blue),
+                leading: Icon(Icons.list, color: Colors.blue),
                 title: Text(
                   resources1?.drawer()["video"] ?? '',
                   style: TextStyle(color: Colors.blue),
@@ -296,6 +298,21 @@ class Drawer45 extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => videoHome(),
+                    ),
+                  ); // Add your navigation logic here
+                },
+              ),
+            if (userType == "Volunteers")
+              ListTile(
+                leading: Icon(Icons.video_call, color: Colors.blue),
+                title: Text(
+                  'Demographi by Volunter',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DemographicForm(),
                     ),
                   ); // Add your navigation logic here
                 },
@@ -309,20 +326,6 @@ class Drawer45 extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 // Add your navigation logic here
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_right, color: Colors.blue),
-              title: Text(
-                "Custom Form",
-                style: TextStyle(color: Colors.blue),
-              ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CustomForm(),
-                  ),
-                ); // Add your navigation logic here
               },
             ),
             ListTile(

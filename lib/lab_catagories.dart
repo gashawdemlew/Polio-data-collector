@@ -34,30 +34,30 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            CategoryCard(
-              title: 'Stool 1',
-              color: Colors.blue,
-            onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          LaboratoryFinalClassificationForm()),
-                );
-              },
-            ),
-            CategoryCard(
-              title: 'Stool 2',
-              color: Colors.green,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          LaboratoryFinalClassificationForm()),
-                );
-              },
-            ),
+            // CategoryCard(
+            //   title: 'Stool 1',
+            //   color: Colors.blue,
+            // onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) =>
+            //               LaboratoryFinalClassificationForm()),
+            //     );
+            //   },
+            // ),
+            // CategoryCard(
+            //   title: 'Stool 2',
+            //   color: Colors.green,
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(
+            //           builder: (context) =>
+            //               LaboratoryFinalClassificationForm()),
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),
