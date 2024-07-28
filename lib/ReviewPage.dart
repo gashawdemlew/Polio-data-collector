@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/qrcode_example.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReviewPage extends StatefulWidget {
   final String latitude;
@@ -104,6 +107,29 @@ class ReviewPage extends StatefulWidget {
 
 class _ReviewPageState extends State<ReviewPage> {
   bool isSaving = false;
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  String? first_name;
+  String? phoneNo;
+
+  void _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? first_name = prefs.getString('first_name');
+    String? phoneNo = prefs.getString('phoneNo');
+    if (first_name != null) {
+      _emailController.text = first_name;
+    }
+    if (phoneNo != null) {
+      _passwordController.text = phoneNo;
+    }
+  }
 
   Future<void> postClinicalData(BuildContext context) async {
     setState(() {
@@ -124,7 +150,7 @@ class _ReviewPageState extends State<ReviewPage> {
       "phonNo": widget.phoneNo,
       "last_name": widget.last_name,
       "gender": widget.gender,
-      "dateofbirth": widget.dateofbirth,
+      "dateofbirth": widget.dateofbirth.toString(),
       "region": widget.region,
       "zone": widget.zone,
       "woreda": widget.woreda,
@@ -151,11 +177,11 @@ class _ReviewPageState extends State<ReviewPage> {
       "specimenCondition": widget.specimenCondition,
       "residual_paralysis": widget.residualParalysis,
       "tempreture": widget.tempreture,
-      "rainfall": widget.rainfall,
+      "rainfall": DateTime.now().toString(),
       "humidity": widget.humidity,
       "snow": widget.snow,
-      "hofficer_name": widget.hofficer_name,
-      'hofficer_phonno': widget.hofficer_phonno,
+      "hofficer_name": _emailController.text,
+      'hofficer_phonno': _passwordController.text,
     });
 
     // Adding image file
@@ -188,11 +214,43 @@ class _ReviewPageState extends State<ReviewPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Data submitted successfully')),
       );
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => QRCodeScreen(
+      //       first_name: widget.first_name,
+      //       last_name: widget.last_name,
+      //       woreda: widget.woreda,
+      //       zone: widget.zone,
+      //       region: widget.region,
+      //       hofficer_name: widget.hofficer_name,
+      //       hofficer_phonno: widget.hofficer_phonno,
+      //     ),
+      //   ),
+      // );
+
       print('Data posted successfully');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to post data: ${response.statusCode}')),
       );
+
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => QRCodeScreen(
+      //       first_name: widget.first_name,
+      //       last_name: widget.last_name,
+      //       woreda: widget.woreda,
+      //       zone: widget.zone,
+      //       region: widget.region,
+      //       hofficer_name: widget.hofficer_name,
+      //       hofficer_phonno: widget.hofficer_phonno,
+      //     ),
+      //   ),
+      // );
+
       print('Failed to post data: ${response.statusCode}');
     }
 
@@ -307,6 +365,19 @@ class _ReviewPageState extends State<ReviewPage> {
                 ElevatedButton(
                   onPressed: () async {
                     await postClinicalData(context);
+
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => QRCodeScreen(
+                    //               first_name: widget.first_name,
+                    //               last_name: widget.last_name,
+                    //               woreda: widget.woreda,
+                    //               zone: widget.zone,
+                    //               region: widget.region,
+                    //               hofficer_name: widget.hofficer_name,
+                    //               hofficer_phonno: widget.hofficer_phonno,
+                    //             )));
                   },
                   child: Text('Submit'),
                   style: ElevatedButton.styleFrom(

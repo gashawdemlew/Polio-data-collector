@@ -1,4 +1,5 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:camera_app/register_login.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<dynamic>> fetchUsers() async {
-    final response =
-        await http.get(Uri.parse('http://localhost:7476/user/getAllUser'));
+    final response = await http
+        .get(Uri.parse('https://testgithub.polioantenna.org/user/getAllUser'));
 
     if (response.statusCode == 200) {
       return json.decode(response.body);

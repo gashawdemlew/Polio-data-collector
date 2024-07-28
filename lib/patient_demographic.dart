@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:camera_app/clinical_history.dart';
 import 'package:camera_app/drawer.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/mo/constan.dart';
 import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
@@ -19,13 +20,12 @@ import 'package:intl/intl.dart';
 import '../../util/color/color.dart';
 import '../../util/common/theme_helper.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final dio = Dio();
 
 class Patientdemographic extends StatefulWidget {
-  final LanguageResources? resources1;
-
-  const Patientdemographic({required this.resources1});
+  // const Patientdemographic({});
 
   @override
   _PatientdemographicState createState() => _PatientdemographicState();
@@ -38,6 +38,10 @@ class _PatientdemographicState extends State<Patientdemographic> {
   String? _selectedZone;
   String? _selectedWoreda;
   String? _selectedGender;
+  LanguageResources? resource12;
+  LanguageResources? resource;
+
+  String _selectedLanguage = "English";
 
   Map<String, Map<String, List<String>>> locationData = {
     'Amhara': {
@@ -134,14 +138,16 @@ class _PatientdemographicState extends State<Patientdemographic> {
 
   // final TextEditingController names = TextEditingController();
 
-  final TextEditingController Gender = TextEditingController();
   final TextEditingController Date_of_birth = TextEditingController();
 
   final TextEditingController Province = TextEditingController();
   final TextEditingController District = TextEditingController();
+  final _dateController = TextEditingController();
 
   String _empId = '';
   String _oId = '';
+  String languge = "ccc";
+  LanguageResources? resources;
 
   late DateTime currentDate;
   late String formattedDate;
@@ -149,50 +155,20 @@ class _PatientdemographicState extends State<Patientdemographic> {
   @override
   void initState() {
     super.initState();
-    _loadSavedValues();
     getCurrentLocation();
-    fetchLastEpidNumber();
-    print(_lastEpidNumber);
+    _loadUserDetails();
+    _loadLanguage45();
     currentDate = DateTime.now();
     formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+    _loadLanguage().then((_) {
+      setState(() {
+        _selectedLanguage = languge;
+        resources = LanguageResources(languge);
+      });
+    });
   }
 
   TextEditingController _epidNumberController = TextEditingController();
-  String _lastEpidNumber = 'Loading...';
-  Future<void> fetchLastEpidNumber() async {
-    try {
-      final response =
-          await http.get(Uri.parse('http://localhost:7476/last-epid-number'));
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        String lastEpidNumber = jsonData['lastEpidNumber'];
-
-        // Extract the numeric part of the epid_number
-        final numericPart =
-            int.parse(lastEpidNumber.replaceAll(RegExp(r'[^0-9]'), ''));
-
-        // Increment the numeric part
-        final nextEpidNumber = numericPart + 1;
-
-        // Format the next epid_number back to the desired format
-        final formattedNextEpidNumber =
-            'E-${nextEpidNumber.toString().padLeft(3, '0')}';
-
-        setState(() {
-          _lastEpidNumber = formattedNextEpidNumber;
-          _epidNumberController.text = _lastEpidNumber;
-        });
-      } else {
-        throw Exception('Failed to fetch last epid_number');
-      }
-    } catch (error) {
-      print('Error fetching last epid_number: $error');
-    }
-  }
-
-  Future<void> _loadSavedValues() async {
-    setState(() {});
-  }
 
   final currentDate56 = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -217,6 +193,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
       setState(() {
         latitude = locationData.latitude ?? 0.0;
         longitude = locationData.longitude ?? 0.0;
+        print(latitude);
       });
 
       print('Latitude: $latitude, Longitude: $longitude');
@@ -227,32 +204,107 @@ class _PatientdemographicState extends State<Patientdemographic> {
     }
   }
 
-  Future<void> _submitForm45() async {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedRegion == null ||
-          _selectedZone == null ||
-          _selectedWoreda == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Please select region, zone, and woreda')),
-        );
-        return;
-      }
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
+    if (mounted) {
+      setState(() {
+        languge = storedLanguage;
+      });
+    }
+  }
 
-      // Get current date
-      final currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  Future<void> _loadLanguage45() async {
+    // Simulate language loading
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      resources = LanguageResources(languge); // or "English"
+      resource12 = resources;
+    });
+  }
 
-      // Format the complete epid_number
-      final completeEpidNumber =
-          '$_selectedRegion-$_selectedZone-$_selectedWoreda-$currentDate-${_epidNumberController.text}';
+  Map<String, dynamic> userDetails = {};
 
-      // You can now use completeEpidNumber for further processing or submission
-      print('Complete EPID Number: $completeEpidNumber');
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      // Example code to show the complete epid number (replace this with your actual form submission logic)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Complete EPID Number: $completeEpidNumber')),
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+      };
+    });
+  }
+
+  bool isSubmitting = false;
+  String epid_Number = "";
+  Future<void> _submitForm() async {
+    final url = Uri.parse('${baseUrl}clinic/prtientdemographi');
+
+    final body = json.encode({
+      'latitude': latitude,
+      'longitude': longitude,
+      'first_name': first_name.text,
+      'last_name': last_name.text,
+      'phoneNo': phoneNo.text,
+      "gender": _selectedGender,
+      "dateofbirth": Date_of_birth.text,
+      "region": _selectedRegion,
+      "user_id": userDetails['id'],
+      "zone": _selectedZone,
+      "woreda": _selectedWoreda
+    });
+
+    setState(() {
+      isSubmitting = true;
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
       );
+
+      if (response.statusCode == 201) {
+        final responseBody =
+            json.decode(response.body); // Decode the response body
+
+        setState(() {
+          epid_Number = responseBody['epid_number'];
+        });
+        print(epid_Number);
+        print('Form submitted successfully!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Form submitted successfully!')),
+        );
+
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ClinicalHistoryForm(epid_Number: epid_Number),
+            ));
+      } else {
+        print('Failed to submit form: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit form: ${response.body}')),
+        );
+      }
+    } catch (error) {
+      print('Error submitting form: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error submitting form: $error')),
+      );
+    } finally {
+      setState(() {
+        isSubmitting = false;
+      });
     }
   }
 
@@ -262,7 +314,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
       // drawer: Drawer45(),
       appBar: AppBar(
         title: Text(
-          widget.resources1?.patientDemographic()["Patientdemographic"] ?? '',
+          resources?.patientDemographic()["Patientdemographic"] ?? '',
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -278,8 +330,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 readOnly: true, // make it read-only
                 controller: TextEditingController(text: latitude.toString()),
                 decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["latitude"] ?? ''}',
-                    '${widget.resources1?.patientDemographic()["latitude"] ?? ''}'),
+                    '${resources?.patientDemographic()["latitude"] ?? ''}',
+                    '${resources?.patientDemographic()["latitude"] ?? ''}'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Longitude is required';
@@ -292,8 +344,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 readOnly: true, // make it read-only
                 controller: TextEditingController(text: longitude.toString()),
                 decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["longitude"] ?? ''}',
-                    '${widget.resources1?.patientDemographic()["longitude"] ?? ''}'),
+                    '${resources?.patientDemographic()["longitude"] ?? ''}',
+                    '${resources?.patientDemographic()["longitude"] ?? ''}'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Longitude is required';
@@ -303,20 +355,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
               ),
               const SizedBox(height: 16.0),
               TextFormField(
-                controller: _epidNumberController,
-                decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["epidNumber"] ?? ''} ',
-                    '${widget.resources1?.patientDemographic()["epidNumber"] ?? ''}'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an EPID_Number';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: names,
+                controller: first_name,
                 decoration: ThemeHelper().textInputDecoration('first Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -332,6 +371,17 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: phoneNo,
+                decoration: ThemeHelper().textInputDecoration('Phone No'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an Phon No';
                   }
                   return null;
                 },
@@ -362,17 +412,28 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 },
               ),
               const SizedBox(height: 16.0),
-              TextFormField(
+              TextField(
                 controller: Date_of_birth,
-                decoration: ThemeHelper().textInputDecoration(
-                    '${widget.resources1?.patientDemographic()["dateOfBirth"] ?? ''} ',
-                    '${widget.resources1?.patientDemographic()["dateOfBirth"] ?? ''} '),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter Enter Date of birth ';
+                readOnly: true,
+                onTap: () async {
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime(2100),
+                  );
+
+                  if (pickedDate != null) {
+                    setState(() {
+                      Date_of_birth.text = pickedDate
+                          .toString()
+                          .split(' ')[0]; // Only the date part
+                    });
                   }
-                  return null;
                 },
+                decoration: ThemeHelper().textInputDecoration(
+                    '${resources?.patientDemographic()["dateOfBirth"] ?? ''} ',
+                    '${resources?.patientDemographic()["dateOfBirth"] ?? ''} '),
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
@@ -468,28 +529,35 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 width: 370,
                 child: ElevatedButton(
                   onPressed: () {
-                    _submitForm45();
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ClinicalHistoryForm(
-                                  resources1: widget.resources1,
-                                  first_name: first_name.text,
-                                  last_name: last_name.text,
-                                  phoneNo: phoneNo.text,
-                                  latitude: latitude.toString(),
-                                  longitude: longitude.toString(),
-                                  epid_number: EPID_Number.text,
-                                  name: names.text,
-                                  gender: _selectedGender ?? '',
-                                  dateofbirth: Date_of_birth.text,
-                                  region: _selectedRegion.toString(),
-                                  zone: _selectedZone.toString(),
-                                  woreda: _selectedZone.toString(),
-                                )));
+                    _submitForm();
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => ClinicalHistoryForm(
+                    //               epid_Number: epid_Number,
+                    //               // resources1: widget.resources1,
+                    //               // first_name: first_name.text,
+                    //               // last_name: last_name.text,
+                    //               // phoneNo: phoneNo.text,
+                    //               // latitude: latitude.toString(),
+                    //               // longitude: longitude.toString(),
+                    //               // epid_number: EPID_Number.text,
+                    //               // name: names.text,
+                    //               // gender: _selectedGender ?? '',
+                    //               // dateofbirth: Date_of_birth.text,
+                    //               // region: _selectedRegion.toString(),
+                    //               // zone: _selectedZone.toString(),
+                    //               // woreda: _selectedZone.toString(),
+                    //             )));
                   },
                   child: Text(
-                      widget.resources1?.patientDemographic()["next"] ?? ''),
+                    isSubmitting ? 'Saving...' : 'Submit',
+                  ),
+                  //  isSubmitting ? Text('Saving...') : Text('Submit'),
+
+                  //
+                  // Text(
+                  //     widget.resources1?.patientDemographic()["next"] ?? ''),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor:

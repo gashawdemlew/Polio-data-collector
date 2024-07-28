@@ -13,12 +13,16 @@ import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/login.dart';
 import 'package:camera_app/main.dart';
 import 'package:camera_app/patient_demographic.dart';
+import 'package:camera_app/qr_scanner.dart';
 import 'package:camera_app/register_login.dart';
+import 'package:camera_app/sessionPage.dart';
+import 'package:camera_app/sms.dart';
 import 'package:camera_app/stole_speciement.dart';
 import 'package:camera_app/user_list.dart';
 import 'package:camera_app/viewMessage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity/connectivity.dart';
 
 class Drawer45 extends StatelessWidget {
   final LanguageResources? resources1;
@@ -34,7 +38,7 @@ class Drawer45 extends StatelessWidget {
   _removeUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    await prefs.remove('userType');
+    // await prefs.remove('userType');
     await prefs.remove('email');
   }
 
@@ -42,10 +46,24 @@ class Drawer45 extends StatelessWidget {
     await Future.delayed(Duration(seconds: 1));
   }
 
-  // 'Admin',
-  // 'Health Officer',
-  // 'Volunteers',
-  // 'Laboratorist'
+  Future<void> _checkConnectivityAndNavigate(BuildContext context) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DemographicForm(),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SMS(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -71,14 +89,6 @@ class Drawer45 extends StatelessWidget {
                       size: 40,
                     ),
                   ),
-                  Text(
-                    '$userType',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 24,
-                    ),
-                  ),
-
                   if (userType == "Health Officer")
                     Text(
                       languge == "Amharic" ? "የጤና መኮንን" : 'Health Officer ',
@@ -87,23 +97,6 @@ class Drawer45 extends StatelessWidget {
                         fontSize: 24,
                       ),
                     ),
-
-                  // if (userType == "Laboratorist")
-                  //   ListTile(
-                  //     leading: Icon(Icons.ad_units_rounded, color: Colors.blue),
-                  //     title: Text(
-                  //       languge == "Amharic" ? "መነሻ" : 'EPHI labratory ',
-                  //       style: TextStyle(color: Colors.blue),
-                  //     ),
-                  //     onTap: () {
-                  //       Navigator.of(context).push(
-                  //         MaterialPageRoute(
-                  //           builder: (context) =>
-                  //               LaboratoryFinalClassificationForm(),
-                  //         ),
-                  //       ); // Add your navigation logic here
-                  //     },
-                  //   ),
                   Text(
                     email,
                     style: TextStyle(
@@ -118,13 +111,28 @@ class Drawer45 extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.home, color: Colors.blue),
                 title: Text(
-                  languge == "Amharic" ? "ላብራቶሪ" : 'Labratory ',
+                  languge == "Amharic" ? "Message" : 'Message ',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => ViewMessage(),
+                    ),
+                  ); // Add your navigation logic here
+                },
+              ),
+            if (userType == "Laboratorist")
+              ListTile(
+                leading: Icon(Icons.home, color: Colors.blue),
+                title: Text(
+                  languge == "Amharic" ? "Read QrCode" : 'Read QrCode ',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => QRViewExample(),
                     ),
                   ); // Add your navigation logic here
                 },
@@ -144,21 +152,6 @@ class Drawer45 extends StatelessWidget {
                   ); // Add your navigation logic here
                 },
               ),
-            if (userType == "Health Officer")
-              ListTile(
-                leading: Icon(Icons.arrow_right, color: Colors.blue),
-                title: Text(
-                  languge == "Amharic" ? "መልእክት" : 'Message ',
-                  style: TextStyle(color: Colors.blue),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => JHJ(),
-                    ),
-                  ); // Add your navigation logic here
-                },
-              ),
             ListTile(
               leading: Icon(Icons.account_circle, color: Colors.blue),
               title: Text(
@@ -170,108 +163,132 @@ class Drawer45 extends StatelessWidget {
                 // Add your navigation logic here
               },
             ),
-            ExpansionTile(
-              leading: Icon(Icons.category, color: Colors.blue),
-              title: Text(
-                resources1?.drawer()["categories"] ?? '',
-                style: TextStyle(color: const Color.fromARGB(255, 36, 40, 43)),
-              ),
-              children: <Widget>[
-                if (userType == "Health Officer")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["patientDemographic"] ?? '',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => Patientdemographic(
-                            resources1: resources1,
+
+            if (userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.arrow_right, color: Colors.blue),
+                title: Text(
+                  "create  New petient",
+                  // resources1?.drawer()["patientDemographic"] ?? '',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Patientdemographic(
+                          // resources1: resources1,
                           ),
-                        ),
-                      ); // Add your navigation logic here
-                    },
-                  ),
-                if (userType == "Health Officer")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["clinicalHistory"] ?? '',
-                      style: TextStyle(color: Colors.blue),
                     ),
-                    onTap: () {},
-                  ),
-                if (userType == "Health Officer")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["stoolSpecimen"] ?? '',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => StoolSpecimensForm34(
-                      //       resources1: resources1,
-                      //     ),
-                      //   ),
-                      // ); // Add your navigation logic here
-                    },
-                  ),
-                if (userType == "Health Officer")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["followUp"] ?? '',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => FollowUpExaminationForm(
-                      //       resources1: resources1,
-                      //     ),
-                      //   ),
-                      // ); // Add your navigation logic here
-                    },
-                  ),
-                if (userType == "Laboratorist")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["LaboratoryInformation"] ?? '',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => labCatagory(),
-                        ),
-                      ); // Add your navigation logic here
-                    },
-                  ),
-                if (userType == "Health Officer")
-                  ListTile(
-                    leading: Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      resources1?.drawer()["environmentalMethodology"] ?? '',
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //     builder: (context) => EnvironmentMetrologyForm(
-                      //       resources1: resources1,
-                      //     ),
-                      //   ),
-                      // ); // Add your navigation logic here
-                    },
-                  ),
-              ],
-            ),
-            Divider(color: Colors.blue),
+                  ); // Add your navigation logic here
+                },
+              ),
+            // ExpansionTile(
+            //   leading: Icon(Icons.category, color: Colors.blue),
+            //   title: Text(
+            //     resources1?.drawer()["categories"] ?? '',
+            //     style: TextStyle(color: const Color.fromARGB(255, 36, 40, 43)),
+            //   ),
+            //   children: <Widget>[
+            //     if (userType == "Health Officer")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["patientDemographic"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           Navigator.of(context).push(
+            //             MaterialPageRoute(
+            //               builder: (context) => Patientdemographic(
+            //                   // resources1: resources1,
+            //                   ),
+            //             ),
+            //           ); // Add your navigation logic here
+            //         },
+            //       ),
+            //     if (userType == "Health Officer")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["clinicalHistory"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           // Navigator.of(context).push(
+            //           //   MaterialPageRoute(
+            //           //     builder: (context) => ClinicalHistoryForm(),
+            //           //   ),
+            //           // ); // Add your navigation logic here
+            //         },
+            //       ),
+            //     if (userType == "Health Officer")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["stoolSpecimen"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           // Navigator.of(context).push(
+            //           //   MaterialPageRoute(
+            //           //     builder: (context) => StoolSpecimensForm34(
+            //           //       resources1: resources1,
+            //           //     ),
+            //           //   ),
+            //           // ); // Add your navigation logic here
+            //         },
+            //       ),
+            //     if (userType == "Health Officer")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["followUp"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           // Navigator.of(context).push(
+            //           //   MaterialPageRoute(
+            //           //     builder: (context) => FollowUpExaminationForm(
+            //           //       resources1: resources1,
+            //           //     ),
+            //           //   ),
+            //           // ); // Add your navigation logic here
+            //         },
+            //       ),
+            //     if (userType == "Laboratorist")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["LaboratoryInformation"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           Navigator.of(context).push(
+            //             MaterialPageRoute(
+            //               builder: (context) => labCatagory(),
+            //             ),
+            //           ); // Add your navigation logic here
+            //         },
+            //       ),
+            //     if (userType == "Health Officer")
+            //       ListTile(
+            //         leading: Icon(Icons.arrow_right, color: Colors.blue),
+            //         title: Text(
+            //           resources1?.drawer()["environmentalMethodology"] ?? '',
+            //           style: TextStyle(color: Colors.blue),
+            //         ),
+            //         onTap: () {
+            //           // Navigator.of(context).push(
+            //           //   MaterialPageRoute(
+            //           //     builder: (context) => EnvironmentMetrologyForm(
+            //           //       resources1: resources1,
+            //           //     ),
+            //           //   ),
+            //           // ); // Add your navigation logic here
+            //         },
+            //       ),
+            //   ],
+            // ),
             if (email == "Health Officer")
               ListTile(
                 leading: Icon(Icons.camera, color: Colors.blue),
@@ -287,36 +304,32 @@ class Drawer45 extends StatelessWidget {
                   ); // Add your navigation logic here
                 },
               ),
-            if (userType == "Health Officer")
-              ListTile(
-                leading: Icon(Icons.list, color: Colors.blue),
-                title: Text(
-                  resources1?.drawer()["video"] ?? '',
-                  style: TextStyle(color: Colors.blue),
-                ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => videoHome(),
-                    ),
-                  ); // Add your navigation logic here
-                },
-              ),
             if (userType == "Volunteers")
               ListTile(
                 leading: Icon(Icons.video_call, color: Colors.blue),
                 title: Text(
-                  'Demographi by Volunter',
+                  'Demographic ',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () => _checkConnectivityAndNavigate(context),
+              ),
+            if (userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.arrow_right, color: Colors.blue),
+                title: Text(
+                  'Incomplete Petient Records',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => DemographicForm(),
+                      builder: (context) => DataListPage(),
                     ),
                   ); // Add your navigation logic here
                 },
               ),
+            Divider(color: Colors.blue),
+
             ListTile(
               leading: Icon(Icons.settings, color: Colors.blue),
               title: Text(

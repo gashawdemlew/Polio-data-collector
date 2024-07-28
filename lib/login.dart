@@ -1,9 +1,10 @@
-import 'package:camera_app/services/api_service.dart';
 import 'package:flutter/material.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/polioDashboard.dart';
+import 'package:camera_app/services/api_service.dart';
 
 void main() {
   runApp(MyApp78());
@@ -34,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String? _selectedLanguage = 'English'; // Default value
+  bool _isLoading = false; // Loading state variable
 
   @override
   void initState() {
@@ -70,16 +72,92 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
-      // Validation passed, perform login action
-      // For now, just display a snackbar
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logging in...'),
-        ),
-      );
+      ConnectivityResult connectivityResult =
+          await (Connectivity().checkConnectivity());
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      if (connectivityResult == ConnectivityResult.none) {
+        // No internet connection, try login with shared preferences
+        String storedPhoneNo = prefs.getString('phoneNo') ?? '';
+        String storedPassword = prefs.getString('password') ?? '';
+
+        if (_emailController.text == storedPhoneNo &&
+            _passwordController.text == storedPassword) {
+          // Successful login with stored credentials
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PolioDashboard()),
+          );
+        } else {
+          // Credentials do not match
+          _showErrorDialog('Invalid credentials from local storage.');
+        }
+      } else {
+        // Internet connection available, try login with API
+
+        setState(() {
+          _isLoading = true;
+        });
+        try {
+          if (_emailController.text == "admin@gmail.com" &&
+              _passwordController.text == "admin@gmail.com") {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PolioDashboard()));
+          } else {
+            final response = await ApiService.loginUser(
+              phoneNo: _emailController.text,
+              password: _passwordController.text,
+            );
+            print(
+                'Login successful: ${response['message']}   ${response['token']}');
+            print('Response:   ${response}');
+
+            // Save credentials to shared preferences
+            await prefs.setString('email', _emailController.text);
+            await prefs.setString('userType', response['user_role'] ?? "");
+            await prefs.setString('first_name', response['first_name'] ?? "");
+            await prefs.setString('phoneNo', response['phoneNo'] ?? "");
+            await prefs.setString('zone', response['zone'] ?? "");
+            await prefs.setString('woreda', response['woreda'] ?? "");
+            await prefs.setInt('id', response['user_id'] ?? 0);
+            await prefs.setString('userType', response['user_role'] ?? "");
+            await prefs.setString('password', response['password'] ?? "");
+
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PolioDashboard()));
+          }
+        } catch (e) {
+          print('Error: $e');
+          _showErrorDialog('Login failed: $e');
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -162,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _emailController,
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'Phone No',
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -206,66 +284,28 @@ class _LoginPageState extends State<LoginPage> {
                   validator: _validatePassword,
                 ),
                 SizedBox(height: 50.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      if (_emailController.text == "admin@gmail.com" &&
-                          _passwordController.text == "admin@gmail.com") {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PolioDashboard()));
-                      } else {
-                        final response = await ApiService.loginUser(
-                          phoneNo: _emailController.text,
-                          password: _passwordController.text,
-                        );
-                        print(
-                            'Login successful: ${response['message']}   ${response['token']}');
-                        print('Response:   ${response}');
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setString('email', _emailController.text);
-                        await prefs.setString(
-                            'userType', response['user_role'] ?? "");
-                        await prefs.setString(
-                            'first_name', response['first_name'] ?? "");
-                        await prefs.setString(
-                            'phoneNo', response['phoneNo'] ?? "");
-                        await prefs.setString('zone', response['zone'] ?? "");
-                        await prefs.setString(
-                            'woreda', response['woreda'] ?? "");
-                        await prefs.setString('zone', response['zone'] ?? "");
-                        await prefs.setInt('id', response['id'] ?? 0);
-
-                        await prefs.setString(
-                            'userType', response['user_role'] ?? "");
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PolioDashboard()));
-                      }
-                    } catch (e) {
-                      print('Error: $e');
-                    }
-                    // Perform login validation here
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: CustomColors.testColor1,
-                    elevation: 5,
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                  ),
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ),
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : ElevatedButton(
+                        onPressed: _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: CustomColors.testColor1,
+                          elevation: 5,
+                          padding: EdgeInsets.symmetric(vertical: 15.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                SizedBox(height: 20.0),
               ],
             ),
           ),

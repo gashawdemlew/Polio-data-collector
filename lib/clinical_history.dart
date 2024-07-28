@@ -1,45 +1,52 @@
+import 'dart:convert';
+
 import 'package:camera_app/color.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/stole_speciement.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class ClinicalHistoryForm extends StatefulWidget {
-  final LanguageResources? resources1;
-  final String latitude;
-  final String longitude;
+  final String epid_Number;
 
-  final String epid_number;
+  // final LanguageResources? resources1;
+  // final String latitude;
+  // final String longitude;
 
-  final String name;
-  final String first_name;
-  final String last_name;
+  // final String epid_number;
 
-  final String phoneNo;
+  // final String name;
+  // final String first_name;
+  // final String last_name;
 
-  final String gender;
-  final String dateofbirth;
-  final String region;
-  final String zone;
+  // final String phoneNo;
 
-  final String woreda;
+  // final String gender;
+  // final String dateofbirth;
+  // final String region;
+  // final String zone;
+
+  // final String woreda;
 
   @override
-  const ClinicalHistoryForm(
-      {required this.resources1,
-      required this.latitude,
-      required this.phoneNo,
-      required this.longitude,
-      required this.name,
-      required this.gender,
-      required this.dateofbirth,
-      required this.zone,
-      required this.region,
-      required this.first_name,
-      required this.last_name,
-      required this.epid_number,
-      required this.woreda});
+  const ClinicalHistoryForm({
+    // required this.latitude,
+    // required this.phoneNo,
+    // required this.longitude,
+    // required this.name,
+    // required this.gender,
+    // required this.dateofbirth,
+    // required this.zone,
+    // required this.region,
+    // required this.first_name,
+    // required this.last_name,
+    // required this.epid_number,
+    required this.epid_Number,
+  });
 
   _ClinicalHistoryFormState createState() => _ClinicalHistoryFormState();
 }
@@ -58,13 +65,143 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
   DateTime? _dateStool1;
   DateTime? _dateStool2;
   DateTime? _daysAfterOnset;
+  String languge = "ccc";
+  LanguageResources? resources;
+  String _selectedLanguage = "English";
+  LanguageResources? resource12;
+
+  late DateTime currentDate;
+  late String formattedDate;
+  void initState() {
+    super.initState();
+    // getCurrentLocation();
+    _loadUserDetails();
+    _loadLanguage45();
+    currentDate = DateTime.now();
+    // formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+    _loadLanguage().then((_) {
+      setState(() {
+        _selectedLanguage = languge;
+        resources = LanguageResources(languge);
+      });
+    });
+  }
+
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
+    if (mounted) {
+      setState(() {
+        languge = storedLanguage;
+      });
+    }
+  }
+
+  Future<void> _loadLanguage45() async {
+    // Simulate language loading
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      resources = LanguageResources(languge); // or "English"
+      resource12 = resources;
+    });
+  }
+
+  Map<String, dynamic> userDetails = {};
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+      };
+    });
+  }
+
+  bool isSubmitting = false;
+
+  Future<void> _submitForm() async {
+    final url = Uri.parse('${baseUrl}clinic/clinicalHistory');
+
+    //      fever_at_onset,
+    // flaccid_sudden_paralysis,
+    // paralysis_progressed,
+    // asymmetric,
+    // site_of_paralysis,
+    // total_opv_doses,
+    // admitted_to_hospital,
+    // date_of_admission,
+    // medical_record_no,
+    // facility_name,
+
+    final body = json.encode({
+      "epid_number": widget.epid_Number,
+      'fever_at_onset': _feverAtOnset,
+      'flaccid_sudden_paralysis': _flaccidParalysis,
+      'paralysis_progressed': _paralysisProgressed,
+      'asymmetric': _asymmetric,
+      'site_of_paralysis': _siteOfParalysis,
+      "total_opv_doses": _totalOPVDoses,
+      "admitted_to_hospital": _admittedToHospital,
+      "date_of_admission": _dateOfAdmission.toString(),
+      "user_id": userDetails['id'],
+      "medical_record_no": _medicalRecordNo,
+      "facility_name": _facilityName,
+    });
+
+    setState(() {
+      isSubmitting = true;
+    });
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 201) {
+        print('Form submitted successfully!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Form submitted successfully!')),
+        );
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  StoolSpecimensForm34(epid_Number: widget.epid_Number),
+            ));
+      } else {
+        print('Failed to submit form: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit form: ${response.body}')),
+        );
+      }
+    } catch (error) {
+      print('Error submitting form: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error submitting form: $error')),
+      );
+    } finally {
+      setState(() {
+        isSubmitting = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.resources1?.clinicalHistory()["clinicalhistoryform"] ?? "",
+          '${widget.epid_Number}',
+          // resources?.clinicalHistory()["clinicalhistoryform"] ?? "",
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -80,7 +217,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  widget.resources1?.clinicalHistory()["dateAfterOnset"] ?? "",
+                  resources?.clinicalHistory()["dateAfterOnset"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -101,8 +238,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       });
                     }
                   },
-                  child: Text(
-                      widget.resources1?.clinicalHistory()["selectDate"] ?? ""),
+                  child: Text(resources?.clinicalHistory()["selectDate"] ?? ""),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor:
@@ -115,9 +251,9 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   ),
                 ),
                 Text(
-                    "${widget.resources1?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset ?? "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ""}"}"),
+                    "${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset ?? "${resources?.stoolSpecimen()["notSelected"] ?? ""}"}"),
                 Text(
-                  widget.resources1?.clinicalHistory()["feverAtOnset"] ?? "",
+                  resources?.clinicalHistory()["feverAtOnset"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -129,7 +265,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     Expanded(
                       child: RadioListTile(
                         title: Text(
-                          widget.resources1?.clinicalHistory()["yes"] ?? "",
+                          resources?.clinicalHistory()["yes"] ?? "",
                         ),
                         value: 'Yes',
                         groupValue: _feverAtOnset,
@@ -142,8 +278,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                     Expanded(
                       child: RadioListTile(
-                        title: Text(
-                            widget.resources1?.clinicalHistory()["no"] ?? ""),
+                        title: Text(resources?.clinicalHistory()["no"] ?? ""),
                         value: 'No',
                         groupValue: _feverAtOnset,
                         onChanged: (value) {
@@ -157,8 +292,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1
-                          ?.clinicalHistory()["flaccidAndSuddenParalysis"] ??
+                  resources?.clinicalHistory()["flaccidAndSuddenParalysis"] ??
                       "",
                   style: TextStyle(
                     fontSize: 16.0,
@@ -171,7 +305,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     Expanded(
                       child: RadioListTile(
                         title: Text(
-                          widget.resources1?.clinicalHistory()["yes"] ?? "",
+                          resources?.clinicalHistory()["yes"] ?? "",
                         ),
                         value: 'Yes',
                         groupValue: _flaccidParalysis,
@@ -185,7 +319,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     Expanded(
                       child: RadioListTile(
                         title: Text(
-                          widget.resources1?.clinicalHistory()["no"] ?? "",
+                          resources?.clinicalHistory()["no"] ?? "",
                         ),
                         value: 'No',
                         groupValue: _flaccidParalysis,
@@ -200,8 +334,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1?.clinicalHistory()["paralysisProgressed"] ??
-                      "",
+                  resources?.clinicalHistory()["paralysisProgressed"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -213,7 +346,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     Expanded(
                       child: RadioListTile(
                         title: Text(
-                          widget.resources1?.clinicalHistory()["yes"] ?? "",
+                          resources?.clinicalHistory()["yes"] ?? "",
                         ),
                         value: 'Yes',
                         groupValue: _paralysisProgressed,
@@ -227,7 +360,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     Expanded(
                       child: RadioListTile(
                         title: Text(
-                          widget.resources1?.clinicalHistory()["no"] ?? "",
+                          resources?.clinicalHistory()["no"] ?? "",
                         ),
                         value: 'No',
                         groupValue: _paralysisProgressed,
@@ -242,7 +375,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1?.clinicalHistory()["asymmetric"] ?? "",
+                  resources?.clinicalHistory()["asymmetric"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -253,8 +386,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   children: [
                     Expanded(
                       child: RadioListTile(
-                        title: Text(
-                            widget.resources1?.clinicalHistory()["yes"] ?? ""),
+                        title: Text(resources?.clinicalHistory()["yes"] ?? ""),
                         value: 'Yes',
                         groupValue: _asymmetric,
                         onChanged: (value) {
@@ -266,8 +398,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                     Expanded(
                       child: RadioListTile(
-                        title: Text(
-                            widget.resources1?.clinicalHistory()["no"] ?? ""),
+                        title: Text(resources?.clinicalHistory()["no"] ?? ""),
                         value: 'No',
                         groupValue: _asymmetric,
                         onChanged: (value) {
@@ -281,7 +412,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1?.clinicalHistory()["siteOfParalysis"] ?? "",
+                  resources?.clinicalHistory()["siteOfParalysis"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -292,9 +423,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CheckboxListTile(
-                      title: Text(
-                          widget.resources1?.clinicalHistory()["leftArm"] ??
-                              ""),
+                      title:
+                          Text(resources?.clinicalHistory()["leftArm"] ?? ""),
                       value: _siteOfParalysis.contains('Left arm'),
                       onChanged: (value) {
                         setState(() {
@@ -308,9 +438,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       },
                     ),
                     CheckboxListTile(
-                      title: Text(
-                          widget.resources1?.clinicalHistory()["rightArm"] ??
-                              ""),
+                      title:
+                          Text(resources?.clinicalHistory()["rightArm"] ?? ""),
                       value: _siteOfParalysis.contains('Right arm'),
                       onChanged: (value) {
                         setState(() {
@@ -324,9 +453,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       },
                     ),
                     CheckboxListTile(
-                      title: Text(
-                          widget.resources1?.clinicalHistory()["leftLeg"] ??
-                              ""),
+                      title:
+                          Text(resources?.clinicalHistory()["leftLeg"] ?? ""),
                       value: _siteOfParalysis.contains('Left leg'),
                       onChanged: (value) {
                         setState(() {
@@ -340,9 +468,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       },
                     ),
                     CheckboxListTile(
-                      title: Text(
-                          widget.resources1?.clinicalHistory()["rightLeg"] ??
-                              ""),
+                      title:
+                          Text(resources?.clinicalHistory()["rightLeg"] ?? ""),
                       value: _siteOfParalysis.contains('Right leg'),
                       onChanged: (value) {
                         setState(() {
@@ -359,7 +486,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1?.clinicalHistory()["totalOpvDoses"] ?? "",
+                  resources?.clinicalHistory()["totalOpvDoses"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -373,13 +500,12 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      ' ${widget.resources1?.clinicalHistory()["EntertotalOPVdose"] ?? ""}',
-                      ' ${widget.resources1?.clinicalHistory()["EntertotalOPVdose"] ?? ""} '),
+                      ' ${resources?.clinicalHistory()["EntertotalOPVdose"] ?? ""}',
+                      ' ${resources?.clinicalHistory()["EntertotalOPVdose"] ?? ""} '),
                 ),
                 SizedBox(height: 16.0),
                 Text(
-                  widget.resources1?.clinicalHistory()["admittedToHospital"] ??
-                      "",
+                  resources?.clinicalHistory()["admittedToHospital"] ?? "",
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
@@ -390,8 +516,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   children: [
                     Expanded(
                       child: RadioListTile(
-                        title: Text(
-                            widget.resources1?.clinicalHistory()["yes"] ?? ""),
+                        title: Text(resources?.clinicalHistory()["yes"] ?? ""),
                         value: 'Yes',
                         groupValue: _admittedToHospital,
                         onChanged: (value) {
@@ -403,8 +528,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                     Expanded(
                       child: RadioListTile(
-                        title: Text(
-                            widget.resources1?.clinicalHistory()["no"] ?? ""),
+                        title: Text(resources?.clinicalHistory()["no"] ?? ""),
                         value: 'No',
                         groupValue: _admittedToHospital,
                         onChanged: (value) {
@@ -419,8 +543,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 if (_admittedToHospital == 'Yes') ...[
                   SizedBox(height: 16.0),
                   Text(
-                    widget.resources1?.clinicalHistory()["DateofAdmission"] ??
-                        "",
+                    resources?.clinicalHistory()["DateofAdmission"] ?? "",
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -442,11 +565,11 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       }
                     },
                     child: Text(
-                      widget.resources1?.stoolSpecimen()["selectDate"] ?? "",
+                      resources?.stoolSpecimen()["selectDate"] ?? "",
                     ),
                   ),
                   Text(
-                    '${widget.resources1?.stoolSpecimen()["selectedDate"] ?? ""}: ${_dateOfAdmission ?? "Not selected"}',
+                    '${resources?.stoolSpecimen()["selectedDate"] ?? ""}: ${_dateOfAdmission ?? "Not selected"}',
                   ),
                   SizedBox(height: 16.0),
                   TextFormField(
@@ -457,9 +580,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: widget.resources1
-                              ?.clinicalHistory()["MedicalRecordNo"] ??
-                          "",
+                      labelText:
+                          resources?.clinicalHistory()["MedicalRecordNo"] ?? "",
                     ),
                   ),
                   SizedBox(height: 16.0),
@@ -471,9 +593,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: widget.resources1
-                              ?.clinicalHistory()["FacilityName"] ??
-                          "",
+                      labelText:
+                          resources?.clinicalHistory()["FacilityName"] ?? "",
                     ),
                   ),
                 ],
@@ -594,6 +715,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 SizedBox(height: 56.0),
                 ElevatedButton(
                   onPressed: () {
+                    _submitForm();
                     // Submit form data
                     print('Form submitted!');
                     print('Fever at onset: $_feverAtOnset');
@@ -610,39 +732,43 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     print('Date stool collected (Stool 1): $_dateStool1');
                     print('Date stool collected (Stool 2): $_dateStool2');
                     print('Days after onset (Stool 1): $_daysAfterOnset');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StoolSpecimensForm34(
-                                resources1: widget.resources1,
-                                latitude: widget.latitude.toString(),
-                                longitude: widget.longitude.toString(),
-                                epid_number: widget.epid_number,
-                                name: widget.name,
-                                gender: widget.gender,
-                                dateofbirth: widget.dateofbirth,
-                                region: widget.region,
-                                zone: widget.zone.toString(),
-                                woreda: widget.woreda,
-                                feverAtOnset: _feverAtOnset,
-                                flaccidParalysis: _flaccidParalysis,
-                                paralysisProgressed: _paralysisProgressed,
-                                asymmetric: _asymmetric,
-                                siteOfParalysis: _siteOfParalysis,
-                                totalOPVDoses: _totalOPVDoses,
-                                admittedToHospital: _admittedToHospital,
-                                dateOfAdmission: _dateOfAdmission.toString(),
-                                medicalRecordNo: _medicalRecordNo,
-                                facilityName: _facilityName,
-                                dateStool1: _dateStool1.toString(),
-                                dateStool2: _dateStool2.toString(),
-                                daysAfterOnset: _daysAfterOnset.toString(),
-                                phoneNo: widget.phoneNo,
-                                first_name: widget.first_name,
-                                last_name: widget.last_name)));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => StoolSpecimensForm34(
+                    // resources1: widget.resources1,
+                    // latitude: widget.latitude.toString(),
+                    // longitude: widget.longitude.toString(),
+                    // epid_number: widget.epid_number,
+                    // name: widget.name,
+                    // gender: widget.gender,
+                    // dateofbirth: widget.dateofbirth,
+                    // region: widget.region,
+                    // zone: widget.zone.toString(),
+                    // woreda: widget.woreda,
+                    // feverAtOnset: _feverAtOnset,
+                    // flaccidParalysis: _flaccidParalysis,
+                    // paralysisProgressed: _paralysisProgressed,
+                    // asymmetric: _asymmetric,
+                    // siteOfParalysis: _siteOfParalysis,
+                    // totalOPVDoses: _totalOPVDoses,
+                    // admittedToHospital: _admittedToHospital,
+                    // dateOfAdmission: _dateOfAdmission.toString(),
+                    // medicalRecordNo: _medicalRecordNo,
+                    // facilityName: _facilityName,
+                    // dateStool1: _dateStool1.toString(),
+                    // dateStool2: _dateStool2.toString(),
+                    // daysAfterOnset: _daysAfterOnset.toString(),
+                    // phoneNo: widget.phoneNo,
+                    // first_name: widget.first_name,
+                    // last_name: widget.last_name
+
+                    // )));
                   },
                   child: Text(
-                      widget.resources1?.patientDemographic()["next"] ?? ''),
+                    isSubmitting ? 'Saving...' : 'Submit',
+                  ),
+                  // child: Text(resources?.patientDemographic()["next"] ?? ''),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor:

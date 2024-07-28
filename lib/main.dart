@@ -1,13 +1,15 @@
 import 'package:camera_app/home.dart';
 import 'package:camera_app/image.dart';
+import 'package:camera_app/kk.dart';
 import 'package:camera_app/login.dart';
 import 'package:camera_app/polioDashboard.dart';
+import 'package:camera_app/qrcode_example.dart';
+import 'package:camera_app/sms.dart';
 import 'package:camera_app/sqflite/database_helper.dart';
 import 'package:camera_app/video.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:camera_app/controler/upload_file_server.dart';
 import 'home_page.dart';
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/lab_form.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -255,9 +256,7 @@ class AnotherPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LaboratoryFinalClassificationForm(epid: epid)),
+                        MaterialPageRoute(builder: (context) => LabForm()),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -281,9 +280,7 @@ class AnotherPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LaboratoryFinalClassificationForm(epid: epid)),
+                        MaterialPageRoute(builder: (context) => LabForm()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

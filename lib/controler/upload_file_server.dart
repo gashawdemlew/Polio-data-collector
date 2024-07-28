@@ -22,22 +22,22 @@ class _UpdateFileState extends State<UpdateFile> {
   late String error;
 
   Future<bool> uploadFile(BuildContext context, File file, String title) async {
-    if (await hasInternetConnection()) {
-      // Online: Try to upload
-      return await _uploadFileToServer(context, file, title);
-    } else {
-      // Offline: Save to SQLite
-      await DatabaseHelper().insertMedia(title, file.path);
-      Fluttertoast.showToast(
-        msg: "No internet connection. File saved locally.",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        backgroundColor: Colors.black87,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-      return false;
-    }
+    // if (await hasInternetConnection()) {
+    //   // Online: Try to upload
+    //   return await _uploadFileToServer(context, file, title);
+    // } else {
+    // Offline: Save to SQLite
+    await DatabaseHelper().insertMedia(title, file.path);
+    Fluttertoast.showToast(
+      msg: "No internet connection. File saved locally.",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      backgroundColor: Colors.black87,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+    return false;
+    // }
   }
 
   Future<bool> _uploadFileToServer(
@@ -109,15 +109,13 @@ class _UpdateFileState extends State<UpdateFile> {
   }
 
   Future<void> retryPendingUploads(BuildContext context) async {
-    if (await hasInternetConnection()) {
-      List<Map<String, dynamic>> pendingMedia =
-          await DatabaseHelper().getPendingMedia();
-      for (var media in pendingMedia) {
-        File file = File(media['filePath']);
-        bool success = await _uploadFileToServer(context, file, media['title']);
-        if (success) {
-          await DatabaseHelper().updateMediaStatus(media['id']);
-        }
+    List<Map<String, dynamic>> pendingMedia =
+        await DatabaseHelper().getPendingMedia();
+    for (var media in pendingMedia) {
+      File file = File(media['filePath']);
+      bool success = await _uploadFileToServer(context, file, media['title']);
+      if (success) {
+        await DatabaseHelper().updateMediaStatus(media['id']);
       }
     }
   }
