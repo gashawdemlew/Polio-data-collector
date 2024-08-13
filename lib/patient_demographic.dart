@@ -45,7 +45,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
 
   Map<String, Map<String, List<String>>> locationData = {
     'Amhara': {
-      'North Gonder': ['Debark', 'Dabat'],
+      'NorthGonder': ['Debark', 'Dabat'],
       'East Gojam': [
         'Bahirdar',
         'Debremarkos',
@@ -53,8 +53,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
         'Mota',
         'Dejen'
       ],
-      'South Wollo': ['Dessie', 'Kombolcha', 'Bati', 'Debre Tabor'],
-      'North Shewa': ['Debre Berhan', 'Ankober', 'Wuchale', 'Ginchi'],
+      'SouthWollo': ['Dessie', 'Kombolcha', 'Bati', 'Debre Tabor'],
+      'NorthShewa': ['DebreBerhan', 'Ankober', 'Wuchale', 'Ginchi'],
     },
     'Oromia': {
       'West Arsi Zone': [
@@ -64,15 +64,15 @@ class _PatientdemographicState extends State<Patientdemographic> {
         'Asella',
         'Robe'
       ],
-      'East Shewa Zone': ['Adama', 'Bishoftu', 'Mojo', 'Zeway', 'Dera'],
+      'EastShewa': ['Adama', 'Bishoftu', 'Mojo', 'Zeway', 'Dera'],
       'Jimma Zone': ['Jimma', 'Agaro', 'Limu Kosa', 'Sekoru', 'Gumii'],
       'Bale Zone': ['Robe', 'Ginnir', 'Goba', 'Delo Mena', 'Sinana'],
       'West Wollega': ['Nekemte', 'Gimbi', 'Dambi Dolo', 'Dembi Dolo', 'Gutin'],
     },
     'Tigray': {
-      'North Tigray': ['Shire', 'Axum', 'Adwa', 'Adi Remets', 'Zalambessa'],
-      'Central Tigray': ['Mekelle', 'Adigrat', 'Quiha', 'Wukro', 'Hawzien'],
-      'Western Tigray': [
+      'NorthTigray': ['Shire', 'Axum', 'Adwa', 'Adi Remets', 'Zalambessa'],
+      'CentralTigray': ['Mekelle', 'Adigrat', 'Quiha', 'Wukro', 'Hawzien'],
+      'WesternTigray': [
         'Humera',
         'Sheraro',
         'Dansha',
@@ -90,12 +90,12 @@ class _PatientdemographicState extends State<Patientdemographic> {
       'Zone 5': ['Ewa', 'Yalo', 'Mille', 'Chifra', 'Afdera'],
       'Zone 4': ['Semera', 'Afrera', 'Dalol', 'Berahle', 'Hamedela'],
     },
-    'Benishangul-Gumuz': {
+    'Benishangul': {
       'Assosa Zone': ['Assosa', 'Bambasi', 'Kurmuk', 'Menge', 'Chagni'],
       'Metekel Zone': ['Pawe', 'Guba', 'Galgalla', 'Bure', 'Shehedi'],
       'Kamashi Zone': ['Asosa', 'Guba Koricha', 'Dibate', 'Beyeda', 'Mandura'],
     },
-    'Southern Nations, Nationalities, and Peoples': {
+    'South': {
       'Sidama Zone': [
         'Hawassa',
         'Yirgalem',
@@ -103,29 +103,23 @@ class _PatientdemographicState extends State<Patientdemographic> {
         'Dilla',
         'Aleta Wendo'
       ],
-      'Wolaita Zone': ['Sodo', 'Boditi', 'Areka', 'Wolaita Sodo', 'Sawla'],
-      'Gurage Zone': ['Butajira', 'Welkite', 'Silti', 'Endegagn', 'Cheha'],
+      'Wolaita': ['Sodo', 'Boditi', 'Areka', 'Wolaita Sodo', 'Sawla'],
+      'Gurage': ['Butajira', 'Welkite', 'Silti', 'Endegagn', 'Cheha'],
     },
     'Gambela': {
-      'Agnewak Zone': ['Gambela', 'Itang', 'Abobo', 'Gog', 'Jor'],
+      'Agnewak': ['Gambela', 'Itang', 'Abobo', 'Gog', 'Jor'],
       'Nuer Zone': ['Matar', 'Jikawo', 'Akobo', 'Lare', 'Wanthowa'],
       'Mezhenger Zone': ['Gilo', 'Abobo', 'Gambella', 'Dimma', 'Gog woreda'],
     },
     'Harari': {
-      'Harari Region': [
+      'HarariRegion': [
         'Harar',
         'Dire Dawa',
         'Asebe Teferi',
         'Jijiga',
         'Tuliguled'
       ],
-      'Dire Dawa Special Zone': [
-        'Dire Dawa',
-        'Dhagaxbuur',
-        'Deder',
-        'Gursum',
-        'Lebu'
-      ],
+      'DireDawa': ['Dire Dawa', 'Dhagaxbuur', 'Deder', 'Gursum', 'Lebu'],
     },
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -254,8 +248,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
       'phoneNo': phoneNo.text,
       "gender": _selectedGender,
       "dateofbirth": Date_of_birth.text,
-      "region": _selectedRegion,
       "user_id": userDetails['id'],
+      "region": _selectedRegion,
       "zone": _selectedZone,
       "woreda": _selectedWoreda
     });
@@ -438,7 +432,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 hint: Text('Select Region'),
-                dropdownColor: Colors.white,
+                dropdownColor: const Color.fromARGB(255, 213, 144, 144),
                 value: _selectedRegion,
                 items: locationData.keys.map((String region) {
                   return DropdownMenuItem<String>(

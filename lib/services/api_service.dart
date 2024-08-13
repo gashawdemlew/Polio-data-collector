@@ -10,10 +10,12 @@ class ApiService {
     required String lastName,
     required String phoneNo,
     required String zone,
+    required String region,
     required String woreda,
     required String lat,
     required String long,
     required String userRole,
+    required String emergency_phonno,
     required String password,
   }) async {
     final url = Uri.parse('${baseUrl}user/create');
@@ -27,11 +29,13 @@ class ApiService {
         'last_name': lastName,
         'phoneNo': phoneNo,
         'zone': zone,
+        'region': region,
         'woreda': woreda,
         'lat': lat,
         'long': long,
         'user_role': userRole,
         'password': password,
+        "emergency_phonno": emergency_phonno
       }),
     );
 

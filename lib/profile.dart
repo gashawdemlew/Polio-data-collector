@@ -1,3 +1,5 @@
+import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -27,11 +29,18 @@ class _ProfilePageState extends State<ProfilePage> {
   String phoneNo = '';
   String zone = '';
   String woreda = '';
+  String lastname = '';
+  String region = '';
+  String password = '';
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _zoneController = TextEditingController();
   final TextEditingController _woredaController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _regionController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -44,20 +53,26 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       firstName = prefs.getString('first_name') ?? '';
       id = prefs.getInt('id') ?? 0;
-
       phoneNo = prefs.getString('phoneNo') ?? '';
       zone = prefs.getString('zone') ?? '';
       woreda = prefs.getString('woreda') ?? '';
+      lastname = prefs.getString('last_name') ?? '';
+      region = prefs.getString('region') ?? '';
+      password = prefs.getString('password') ?? '';
+
       _firstNameController.text = firstName;
       _phoneNoController.text = phoneNo;
       _zoneController.text = zone;
       _woredaController.text = woreda;
+      _lastNameController.text = lastname;
+      _regionController.text = region;
+      _passwordController.text = password;
     });
   }
 
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
-      final url = 'http://localhost:7476/user/update/$id';
+      final url = '${baseUrl}user/$id';
       final response = await http.put(
         Uri.parse(url),
         headers: <String, String>{
@@ -68,6 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
           'phoneNo': _phoneNoController.text,
           'zone': _zoneController.text,
           'woreda': _woredaController.text,
+          'lastname': _lastNameController.text,
+          'region': _regionController.text,
+          'password': _passwordController.text,
         }),
       );
 
@@ -77,16 +95,27 @@ class _ProfilePageState extends State<ProfilePage> {
         await prefs.setString('phoneNo', _phoneNoController.text);
         await prefs.setString('zone', _zoneController.text);
         await prefs.setString('woreda', _woredaController.text);
+        await prefs.setString('lastname', _lastNameController.text);
+        await prefs.setString('region', _regionController.text);
+        await prefs.setString('password', _passwordController.text);
 
         setState(() {
           firstName = _firstNameController.text;
           phoneNo = _phoneNoController.text;
           zone = _zoneController.text;
           woreda = _woredaController.text;
+          lastname = _lastNameController.text;
+          region = _regionController.text;
+          password = _passwordController.text;
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile updated successfully!')),
+        );
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => PolioDashboard(),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -137,6 +166,20 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 10),
                     TextFormField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Last Name',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your last name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
                       controller: _phoneNoController,
                       decoration: InputDecoration(
                         labelText: 'Phone Number',
@@ -177,6 +220,35 @@ class _ProfilePageState extends State<ProfilePage> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _regionController,
+                      decoration: InputDecoration(
+                        labelText: 'Region',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your region';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _updateProfile,
@@ -192,41 +264,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               SizedBox(height: 20),
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: Icon(Icons.person, size: 40),
-                  title: Text('First Name'),
-                  subtitle: Text(firstName),
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: Icon(Icons.phone, size: 40),
-                  title: Text('Phone Number'),
-                  subtitle: Text(phoneNo),
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: Icon(Icons.map, size: 40),
-                  title: Text('Zone'),
-                  subtitle: Text(zone),
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.symmetric(vertical: 10),
-                child: ListTile(
-                  leading: Icon(Icons.location_on, size: 40),
-                  title: Text('Woreda'),
-                  subtitle: Text(woreda),
-                ),
-              ),
+              _buildInfoCard('First Name', firstName, Icons.person),
+              _buildInfoCard('Last Name', lastname, Icons.person),
+              _buildInfoCard('Phone Number', phoneNo, Icons.phone),
+              _buildInfoCard('Zone', zone, Icons.map),
+              _buildInfoCard('Woreda', woreda, Icons.location_on),
+              _buildInfoCard('Region', region, Icons.location_city),
+              _buildInfoCard('Password', password, Icons.lock),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInfoCard(String title, String subtitle, IconData icon) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        leading: Icon(icon, size: 40),
+        title: Text(title),
+        subtitle: Text(subtitle),
       ),
     );
   }

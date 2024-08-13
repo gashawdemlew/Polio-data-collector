@@ -14,8 +14,6 @@ import 'package:camera_app/controler/upload_file_server.dart';
 import 'home_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
   runApp(MyApp());
 }
 
@@ -45,14 +43,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // void _setupConnectivityListener() {
-  //   Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-  //     if (result == ConnectivityResult.mobile || result == ConnectivityResult.wifi) {
-  //       DatabaseHelper().retryPendingUploads(context);  // Make sure this method exists in DatabaseHelper
-  //     }
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,45 +54,5 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: email.isEmpty ? LoginPage() : PolioDashboard(),
     );
-  }
-}
-
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
-
-  @override
-  _SplashScreenState createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    navigateToCameraPage();
-  }
-
-  Future<void> navigateToCameraPage() async {
-    // Simulate a delay for the splash screen
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Navigate to the CameraPage
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const CameraPage()));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: CircularProgressIndicator(color: Colors.white),
-      ),
-    );
-  }
-}
-
-// Ensure this method is defined in DatabaseHelper class
-class DatabaseHelper {
-  Future<void> retryPendingUploads(BuildContext context) async {
-    // Implement the retry logic here
   }
 }

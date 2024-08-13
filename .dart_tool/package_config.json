@@ -8,6 +8,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "args",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/args-2.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "async",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
@@ -27,13 +33,13 @@
     },
     {
       "name": "camera_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/camera_android-0.10.9+8",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/camera_android-0.10.9+9",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
     {
       "name": "camera_avfoundation",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/camera_avfoundation-0.9.17",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/camera_avfoundation-0.9.17+1",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -86,28 +92,16 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "connectivity",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity-3.0.6",
+      "name": "connectivity_plus",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_plus-6.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.2"
     },
     {
-      "name": "connectivity_for_web",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_for_web-0.4.0+1",
+      "name": "connectivity_plus_platform_interface",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_plus_platform_interface-2.0.1",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_macos",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_macos-0.2.1+2",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "connectivity_platform_interface",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/connectivity_platform_interface-2.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "cross_file",
@@ -144,6 +138,12 @@
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/datetime_picker_formfield-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/dbus-0.7.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "dio",
@@ -213,15 +213,9 @@
     },
     {
       "name": "flutter_plugin_android_lifecycle",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.20",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.21",
       "packageUri": "lib/",
       "languageVersion": "3.4"
-    },
-    {
-      "name": "flutter_sms",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_sms-2.3.3",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "flutter_test",
@@ -238,12 +232,6 @@
     {
       "name": "fluttertoast",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.2.6",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
-      "name": "gallery_saver",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/gallery_saver-2.3.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -279,7 +267,7 @@
     },
     {
       "name": "geolocator_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/geolocator_android-4.6.0",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/geolocator_android-4.6.1",
       "packageUri": "lib/",
       "languageVersion": "2.15"
     },
@@ -428,6 +416,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "nm",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/nm-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.9.0",
       "packageUri": "lib/",
@@ -441,7 +435,7 @@
     },
     {
       "name": "path_provider_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.7",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_android-2.2.8",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -468,6 +462,42 @@
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/path_provider_windows-2.3.0",
       "packageUri": "lib/",
       "languageVersion": "3.2"
+    },
+    {
+      "name": "permission_handler",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler-11.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_android",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_android-12.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_apple",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_apple-9.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "permission_handler_html",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_html-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "permission_handler_platform_interface",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_platform_interface-4.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "permission_handler_windows",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/permission_handler_windows-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "petitparser",
@@ -525,7 +555,7 @@
     },
     {
       "name": "shared_preferences_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.3",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_android-2.2.4",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -543,9 +573,9 @@
     },
     {
       "name": "shared_preferences_platform_interface",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.3.2",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences_platform_interface-2.4.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "shared_preferences_web",
@@ -644,54 +674,6 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "url_launcher",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher-6.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
-      "name": "url_launcher_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_android-6.3.5",
-      "packageUri": "lib/",
-      "languageVersion": "3.4"
-    },
-    {
-      "name": "url_launcher_ios",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_ios-6.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
-      "name": "url_launcher_linux",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_linux-3.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "url_launcher_macos",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_macos-3.2.0",
-      "packageUri": "lib/",
-      "languageVersion": "3.1"
-    },
-    {
-      "name": "url_launcher_platform_interface",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_platform_interface-2.3.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.1"
-    },
-    {
-      "name": "url_launcher_web",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_web-2.3.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.3"
-    },
-    {
-      "name": "url_launcher_windows",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/url_launcher_windows-3.1.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.2"
-    },
-    {
       "name": "uuid",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/uuid-4.4.2",
       "packageUri": "lib/",
@@ -711,7 +693,7 @@
     },
     {
       "name": "video_player_android",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.5.2",
+      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/video_player_android-2.5.3",
       "packageUri": "lib/",
       "languageVersion": "3.4"
     },
@@ -776,10 +758,10 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-07-28T16:54:55.851587Z",
+  "generated": "2024-08-03T08:20:34.815518Z",
   "generator": "pub",
-  "generatorVersion": "3.6.0-78.0.dev",
+  "generatorVersion": "3.6.0-89.0.dev",
   "flutterRoot": "file:///C:/flutter/flutter",
-  "flutterVersion": "3.24.0-1.0.pre.273",
+  "flutterVersion": "3.24.0-1.0.pre.343",
   "pubCache": "file:///C:/Users/hp/AppData/Local/Pub/Cache"
 }

@@ -1,22 +1,43 @@
-import 'package:camera_app/color.dart';
-import 'package:camera_app/mo/api.dart';
-import 'package:camera_app/util/common/theme_helper.dart';
-import 'package:camera_app/volunter/vole_image.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class DemographicForm extends StatefulWidget {
+import 'package:camera_app/color.dart';
+import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/services/api_service.dart';
+import 'package:camera_app/user_list.dart';
+import 'package:camera_app/util/common/theme_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
+import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart' as location;
+import 'package:geocoding/geocoding.dart';
+
+class RegisterScreen extends StatefulWidget {
   @override
-  _DemographicFormState createState() => _DemographicFormState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _DemographicFormState extends State<DemographicForm> {
-  final _formKey = GlobalKey<FormState>();
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController zoneController = TextEditingController();
+  final TextEditingController woredaController = TextEditingController();
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController longController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String? selectedRole;
 
-  final TextEditingController first_name = TextEditingController();
-  final TextEditingController last_name = TextEditingController();
+  final List<String> roles = [
+    'Admin',
+    'Health Officer',
+    'Volunteers',
+    'Laboratorist'
+  ];
 
   String? epidNumber,
       firstName,
@@ -28,15 +49,10 @@ class _DemographicFormState extends State<DemographicForm> {
       long = '3866990.0', // Initialize with a default value
       selectedHealthOfficer;
 
+  List<String> healthOfficers = []; // List to store fetched health officers
   String? _selectedRegion;
   String? _selectedZone;
   String? _selectedWoreda;
-  String? _selectedGender;
-
-  String _selectedLanguage = "English";
-
-  List<String> healthOfficers = []; // List to store fetched health officers
-
   Map<String, Map<String, List<String>>> locationData = {
     'Amhara': {
       'NorthGonder': ['Debark', 'Dabat'],
@@ -116,6 +132,32 @@ class _DemographicFormState extends State<DemographicForm> {
       'DireDawa': ['Dire Dawa', 'Dhagaxbuur', 'Deder', 'Gursum', 'Lebu'],
     },
   };
+  Future<void> getCurrentLocation() async {
+    var locationPlugin = location.Location();
+
+    try {
+      location.PermissionStatus permission =
+          await locationPlugin.hasPermission();
+      if (permission == location.PermissionStatus.denied) {
+        permission = await locationPlugin.requestPermission();
+        if (permission != location.PermissionStatus.granted) {
+          print('Location permission denied');
+          return;
+        }
+      }
+
+      location.LocationData locationData = await locationPlugin.getLocation();
+
+      setState(() {
+        latitude = locationData.latitude ?? 0.0;
+        longitude = locationData.longitude ?? 0.0;
+      });
+
+      print('LatitudeXXXXX: $latitude, LongitudeXXXXX: $longitude');
+    } catch (e) {
+      print('Error getting location: $e');
+    }
+  }
 
   Future<void> fetchHealthOfficers() async {
     if (_selectedRegion != null &&
@@ -143,109 +185,36 @@ class _DemographicFormState extends State<DemographicForm> {
     }
   }
 
-  void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Prevents dismissing the dialog by tapping outside
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text(
-              'Please capture a quality and unblurred image. If the image is blurred, you will be requested again.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
-              },
-            ),
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
-                onConfirm(); // Calls the callback to navigate to TakePictureScreen
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      final response = await http.post(
-        Uri.parse('http://${baseUrl}clinic/post'),
-        body: {
-          'epid_number': epidNumber,
-          'first_name': firstName,
-          'last_name': lastName,
-          "region": _selectedRegion,
-          "zone": _selectedZone,
-          "woreda": _selectedWoreda,
-          'lat': lat,
-          'long': long,
-          'selected_health_officer': selectedHealthOfficer,
-        },
-      );
-
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Data submitted successfully')));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to submit data')));
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Demographic Form',
-          style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        appBar: AppBar(
+          backgroundColor: CustomColors.testColor1,
+          title: Text(
+            'Register',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-        backgroundColor: CustomColors.testColor1,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  decoration: ThemeHelper().textInputDecoration("First Name"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter first name';
-                    }
-                    return null;
-                  },
-                  controller: first_name,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
-                TextFormField(
-                  decoration: ThemeHelper().textInputDecoration("Last Name"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter last name';
-                    }
-                    return null;
-                  },
-                  controller: last_name,
-                ),
-                SizedBox(
-                  height: 16,
-                ),
+                TextField(
+                    controller: firstNameController,
+                    decoration: ThemeHelper()
+                        .textInputDecoration('First Name', 'First Name')),
+                SizedBox(height: 16),
+                TextField(
+                    controller: lastNameController,
+                    decoration: ThemeHelper()
+                        .textInputDecoration('Last Name', 'Last Name')),
+                SizedBox(height: 16),
+                TextField(
+                    controller: phoneNoController,
+                    decoration: ThemeHelper()
+                        .textInputDecoration('Phone Number', 'Phone Number')),
+                SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration:
                       ThemeHelper().textInputDecoration("Select Region"),
@@ -331,88 +300,119 @@ class _DemographicFormState extends State<DemographicForm> {
                     return null;
                   },
                 ),
-                SizedBox(
-                  height: 16,
-                ),
+
+                SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
                   decoration: ThemeHelper()
-                      .textInputDecoration("Selected Health Officer"),
-                  value: selectedHealthOfficer,
-                  items: healthOfficers.map((String officer) {
-                    return DropdownMenuItem<String>(
-                      value: officer,
-                      child: Text(officer),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
+                      .textInputDecoration('User Role', 'User Role'),
+                  value: selectedRole,
+                  onChanged: (String? newValue) {
                     setState(() {
-                      selectedHealthOfficer = newValue;
+                      selectedRole = newValue;
                     });
                   },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select a health officer';
-                    }
-                    return null;
-                  },
+                  items: roles.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
+                SizedBox(
+                  height: 16,
+                ),
+                if (selectedRole == 'Volunteers')
+                  DropdownButtonFormField<String>(
+                    dropdownColor: Colors.white,
+                    decoration: ThemeHelper()
+                        .textInputDecoration("Selected Health Officer  Woreda"),
+                    value: selectedHealthOfficer,
+                    items: healthOfficers.map((String officer) {
+                      return DropdownMenuItem<String>(
+                        value: officer,
+                        child: Text(officer),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedHealthOfficer = newValue;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select a health officer';
+                      }
+                      return null;
+                    },
+                  ),
+                // SizedBox(height: 16),
+                // TextField(
+                //     controller: latController,
+                //     decoration: ThemeHelper()
+                //         .textInputDecoration('Latitude', 'Latitude')),
+                // SizedBox(height: 16),
+                // TextField(
+                //     controller: longController,
+                //     decoration: ThemeHelper()
+                //         .textInputDecoration('Longitude', 'Longitude')),
+
                 SizedBox(height: 16),
-                // Text('Coordinates: Lat ($lat), Long ($long)'),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     _submitForm();
-                    //   },
-                    //   child: Text('Submit'),
-                    // ),
-                    Container(
-                      width: 300,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showConfirmationDialog(context, () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VolTakePictureScreen(
-                                  // epidNumber: epidNumber ?? '',
-                                  first_name: first_name.text,
-                                  last_name: last_name.text,
-                                  region: _selectedRegion ?? '',
-                                  zone: _selectedZone ?? '',
-                                  woreda: _selectedWoreda ?? '',
-                                  lat: lat.toString(),
-                                  long: long.toString(),
-                                  selected_health_officer:
-                                      selectedHealthOfficer ?? '',
-                                ),
-                              ),
-                            );
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor:
-                              CustomColors.testColor1, // Change the text color
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                8.0), // Adjust the border radius
-                          ),
-                          elevation: 14, // Add elevation
-                        ),
-                        child: Text('Submit'),
+                TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: ThemeHelper()
+                        .textInputDecoration('Password', 'Password')),
+                SizedBox(height: 20),
+                Container(
+                  width: 370,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (selectedRole == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Please select a user role')));
+                        return;
+                      }
+
+                      try {
+                        final response = await ApiService.createUser(
+                          firstName: firstNameController.text,
+                          lastName: lastNameController.text,
+                          phoneNo: phoneNoController.text,
+                          region: _selectedRegion.toString(),
+                          zone: _selectedZone.toString(),
+                          woreda: _selectedWoreda.toString(),
+                          lat: latitude.toString(),
+                          long: long.toString(),
+                          userRole: selectedRole!,
+                          emergency_phonno: selectedHealthOfficer!,
+                          password: passwordController.text,
+                        );
+                        print('User created: ${response['message']}');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => userList()));
+                      } catch (e) {
+                        print('Error: $e');
+                      }
+                    },
+                    child: Text('Register'),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor:
+                          CustomColors.testColor1, // Change the text color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            8.0), // Adjust the border radius
                       ),
-                    )
-                  ],
+                      elevation: 14, // Add elevation
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

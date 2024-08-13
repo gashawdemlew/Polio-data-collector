@@ -98,7 +98,7 @@ class _DataListPageState extends State<DataListPage> {
       case "4":
         return "Environment Metrology Form";
       case "5":
-        return "Take Picture Screen";
+        return "Media Screen";
       default:
         return "";
     }

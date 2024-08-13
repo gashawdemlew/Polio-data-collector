@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/lab_form.dart';
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -104,6 +105,25 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CustomColors.testColor1,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            // Add your back button logic here
+            Navigator.pop(context);
+          },
+        ),
+        title: Text(
+          'User List',
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -256,7 +276,11 @@ class AnotherPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LabForm()),
+                        MaterialPageRoute(
+                            builder: (context) => LabForm(
+                                  epid: epid,
+                                  type: "Stool 1",
+                                )),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -280,7 +304,11 @@ class AnotherPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LabForm()),
+                        MaterialPageRoute(
+                            builder: (context) => LabForm(
+                                  epid: epid,
+                                  type: 'Stool 2',
+                                )),
                       );
                     },
                     style: ElevatedButton.styleFrom(

@@ -1,25 +1,43 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/video.dart';
+import 'package:camera_app/volunter/vol_video.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
-class TakePictureScreen extends StatefulWidget {
-  final String epid_number;
+class VolTakePictureScreen extends StatefulWidget {
+  // final String epidNumber;
+  final String first_name;
+  final String last_name;
+  final String region;
+  final String zone;
+  final String woreda;
+  final String lat;
+  final String long;
+  final String selected_health_officer;
 
-  TakePictureScreen({
-    // required this.resources,
-    required this.epid_number,
+  VolTakePictureScreen({
+    // required this.epidNumber,
+    required this.first_name,
+    required this.last_name,
+    required this.region,
+    required this.zone,
+    required this.woreda,
+    required this.lat,
+    required this.long,
+    required this.selected_health_officer,
   });
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen>
+class TakePictureScreenState extends State<VolTakePictureScreen>
     with SingleTickerProviderStateMixin {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
@@ -50,24 +68,24 @@ class TakePictureScreenState extends State<TakePictureScreen>
   }
 
   Future<void> _initializeCamera() async {
-    // if (await Permission.camera.request().isGranted) {
-    try {
-      cameras = await availableCameras();
-      _controller = CameraController(
-        cameras!.first,
-        ResolutionPreset.high,
-      );
-      _initializeControllerFuture = _controller.initialize();
-      setState(() {
-        _isCameraInitialized = true;
-      });
-    } catch (e) {
-      print(e);
+    if (await Permission.camera.request().isGranted) {
+      try {
+        cameras = await availableCameras();
+        _controller = CameraController(
+          cameras!.first,
+          ResolutionPreset.high,
+        );
+        _initializeControllerFuture = _controller.initialize();
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      // Handle permission not granted case
+      print('Camera permission not granted');
     }
-    // } else {
-    //   // Handle permission not granted case
-    //   print('Camera permission not granted');
-    // }
   }
 
   @override
@@ -84,12 +102,18 @@ class TakePictureScreenState extends State<TakePictureScreen>
       final directory = await getApplicationDocumentsDirectory();
       final imagePath = join(directory.path, '${DateTime.now()}.png');
       await image.saveTo(imagePath);
-      Navigator.push(
-        context,
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => DisplayPictureScreen(
             imagePath: imagePath,
-            epid_number: widget.epid_number,
+            first_name: widget.first_name ?? '',
+            last_name: widget.last_name ?? '',
+            region: widget.region ?? '',
+            zone: widget.zone ?? '',
+            woreda: widget.woreda ?? '',
+            lat: widget.lat,
+            long: widget.long,
+            selected_health_officer: widget.selected_health_officer ?? '',
           ),
         ),
       );
@@ -141,11 +165,27 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
-  final String epid_number;
+  final String first_name;
+  final String last_name;
+  final String region;
+  final String zone;
+  final String woreda;
+  final String lat;
+  final String long;
+  final String selected_health_officer;
+  // final String epid_number;
 
   DisplayPictureScreen({
-    required this.epid_number,
+    // required this.epid_number,
     required this.imagePath,
+    required this.first_name,
+    required this.last_name,
+    required this.region,
+    required this.zone,
+    required this.woreda,
+    required this.lat,
+    required this.long,
+    required this.selected_health_officer,
   });
 
   void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
@@ -198,10 +238,18 @@ class DisplayPictureScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => TakeMediaScreen(
-                        imagePath: imagePath,
-                        epid_number: epid_number,
-                      ),
+                      builder: (BuildContext context) => VolTakeMediaScreen(
+                          imagePath: imagePath,
+                          first_name: first_name,
+                          last_name: last_name,
+                          region: region,
+                          zone: zone,
+                          woreda: woreda,
+                          lat: lat,
+                          long: long,
+                          selected_health_officer: selected_health_officer
+                          // epid_number: epid_number,
+                          ),
                     ),
                   );
                 });

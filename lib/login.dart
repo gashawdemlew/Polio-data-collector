@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:flutter/services.dart';
+// import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
@@ -37,10 +41,18 @@ class _LoginPageState extends State<LoginPage> {
   String? _selectedLanguage = 'English'; // Default value
   bool _isLoading = false; // Loading state variable
 
+  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+
   @override
   void initState() {
     super.initState();
     loadLanguage();
+
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
   Future<void> loadLanguage() async {
@@ -72,37 +84,53 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  Future<void> initConnectivity() async {
+    late List<ConnectivityResult> result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+      print("XXXXXXXX $result");
+    } on PlatformException catch (e) {
+      print('Couldn\'t check connectivity status');
+      return;
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  String xx = "";
+  Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
+    // ignore: avoid_print
+    print('Connectivity changed: $_connectionStatus');
+  }
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
-      ConnectivityResult connectivityResult =
-          await (Connectivity().checkConnectivity());
+      var connectivityResult = await Connectivity().checkConnectivity();
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      print("Connectivity Status: $connectivityResult");
 
-      if (connectivityResult == ConnectivityResult.none) {
-        // No internet connection, try login with shared preferences
-        String storedPhoneNo = prefs.getString('phoneNo') ?? '';
-        String storedPassword = prefs.getString('password') ?? '';
-
-        if (_emailController.text == storedPhoneNo &&
-            _passwordController.text == storedPassword) {
-          // Successful login with stored credentials
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PolioDashboard()),
-          );
-        } else {
-          // Credentials do not match
-          _showErrorDialog('Invalid credentials from local storage.');
-        }
-      } else {
-        // Internet connection available, try login with API
-
+      if (connectivityResult.toString() !=
+          [ConnectivityResult.none].toString()) {
         setState(() {
           _isLoading = true;
         });
+
         try {
           if (_emailController.text == "admin@gmail.com" &&
               _passwordController.text == "admin@gmail.com") {
+            await prefs.setString('email', "admin@gmail.com");
+            await prefs.setString('userType', "Admin");
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PolioDashboard()));
           } else {
@@ -118,12 +146,17 @@ class _LoginPageState extends State<LoginPage> {
             await prefs.setString('email', _emailController.text);
             await prefs.setString('userType', response['user_role'] ?? "");
             await prefs.setString('first_name', response['first_name'] ?? "");
+            await prefs.setString('last_name', response['last_name'] ?? "");
+
             await prefs.setString('phoneNo', response['phoneNo'] ?? "");
             await prefs.setString('zone', response['zone'] ?? "");
             await prefs.setString('woreda', response['woreda'] ?? "");
+            await prefs.setString('region', response['region'] ?? "");
+
             await prefs.setInt('id', response['user_id'] ?? 0);
-            await prefs.setString('userType', response['user_role'] ?? "");
-            await prefs.setString('password', response['password'] ?? "");
+            await prefs.setString('password', _passwordController.text);
+            await prefs.setString(
+                'emergency_phonno', response['emergency_phonno'] ?? "");
 
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PolioDashboard()));
@@ -136,6 +169,19 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading = false;
           });
         }
+      } else {
+        // Check stored credentials locally
+        String storedPhoneNo = prefs.getString('phoneNo') ?? '';
+        String storedPassword = prefs.getString('password') ?? '';
+
+        if (_emailController.text == storedPhoneNo &&
+            _passwordController.text == storedPassword) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PolioDashboard()));
+        } else {
+          _showErrorDialog(
+              'No internet connection and no valid local credentials.');
+        }
       }
     }
   }
@@ -143,20 +189,16 @@ class _LoginPageState extends State<LoginPage> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            ElevatedButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 

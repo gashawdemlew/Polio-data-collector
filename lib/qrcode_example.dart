@@ -1,11 +1,11 @@
 import 'dart:ui';
 
+import 'package:camera_app/polioDashboard.dart';
 import 'package:custom_qr_generator/custom_qr_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'dart:io';
-import 'dart:typed_data';
 
 class QRCodeScreen extends StatelessWidget {
   final String first_name;
@@ -40,6 +40,7 @@ class QRCodeScreen extends StatelessWidget {
         'hofficer_name: $hofficer_name, '
         'hofficer_phonno: $hofficer_phonno, ';
   }
+  static const MethodChannel _channel = MethodChannel('gallery_saver');
 
   Future<void> _downloadQRCode(BuildContext context) async {
     try {
@@ -79,14 +80,23 @@ class QRCodeScreen extends StatelessWidget {
       await file.writeAsBytes(buffer);
 
       // Save to gallery
-      await GallerySaver.saveImage(filePath);
+      await _channel.invokeMethod('saveImage', {'filePath': filePath});
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('QR Code saved to gallery')),
       );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PolioDashboard(),
+        ),
+      );
     } catch (e) {
+      print("DDDDDDDDDD  $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving QR Code: $e')),
+        SnackBar(
+          content: Text('Error saving QR Code: $e'),
+          duration: const Duration(seconds: 40),
+        ),
       );
     }
   }

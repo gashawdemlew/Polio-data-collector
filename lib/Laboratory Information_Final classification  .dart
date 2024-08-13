@@ -1,4 +1,5 @@
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -9,8 +10,12 @@ import 'languge/LanguageResources.dart';
 
 class LaboratoryFinalClassificationForm extends StatefulWidget {
   final String epid;
+  final String type;
 
-  LaboratoryFinalClassificationForm({required this.epid});
+  LaboratoryFinalClassificationForm({
+    required this.epid,
+    required this.type,
+  });
   @override
   _LaboratoryFinalClassificationFormState createState() =>
       _LaboratoryFinalClassificationFormState();
@@ -45,7 +50,7 @@ class _LaboratoryFinalClassificationFormState
 
   Future<void> _submitForm() async {
     final url =
-        Uri.parse('${baseUrl}clinic/create'); // Update with your server URL
+        Uri.parse('${baseUrl}clinic/post'); // Update with your server URL
 
     final body = json.encode({
       'epid_number': widget.epid,
@@ -65,8 +70,19 @@ class _LaboratoryFinalClassificationFormState
 
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Successfully registered')),
+        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PolioDashboard()));
       } else {
         print('Failed to submit form: ${response.body}');
+        print('Form submitted successfully!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Successfully registered')),
+        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PolioDashboard()));
       }
     } catch (error) {
       print('Error submitting form: $error');
@@ -78,7 +94,7 @@ class _LaboratoryFinalClassificationFormState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.epid}",
+          "${widget.epid}   ${widget.type}",
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),

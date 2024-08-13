@@ -5,6 +5,7 @@ import 'package:camera_app/home_page.dart';
 import 'package:camera_app/image.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/permission.dart';
 import 'package:camera_app/pushMessage.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';

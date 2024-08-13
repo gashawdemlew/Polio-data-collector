@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera_app/Laboratory%20Information_Final%20classification%20%20.dart';
+import 'package:camera_app/lab_form.dart';
+import 'package:camera_app/viewMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -228,9 +230,10 @@ class DetailPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => LaboratoryFinalClassificationForm(
-                      epid: parsedData['epid_number'].toString(),
-                    ),
+                    builder: (context) => AnotherPage(
+                        epid: parsedData['epid_number'].toString(),
+                        firstName: parsedData['first_name'].toString(),
+                        lastName: parsedData['last_name'].toString()),
                   ),
                 );
               },

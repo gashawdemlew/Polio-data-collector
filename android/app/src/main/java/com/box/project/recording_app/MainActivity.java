@@ -1,7 +1,11 @@
 package com.box.project.polio;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.telephony.SmsManager;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -10,16 +14,22 @@ import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import android.net.Uri;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends FlutterActivity {
-  private static final String CHANNEL = "com.example.sms_sender/sms";
+  private static final String SMS_CHANNEL = "com.example.sms_sender/sms";
+  private static final String GALLERY_CHANNEL = "gallery_saver";
   private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 0;
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
     super.configureFlutterEngine(flutterEngine);
 
-    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), SMS_CHANNEL)
         .setMethodCallHandler(
             (call, result) -> {
               if (call.method.equals("sendSms")) {
@@ -34,6 +44,18 @@ public class MainActivity extends FlutterActivity {
                 } else {
                   sendSms(phoneNumber, message, result);
                 }
+              } else {
+                result.notImplemented();
+              }
+            }
+        );
+
+    new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), GALLERY_CHANNEL)
+        .setMethodCallHandler(
+            (call, result) -> {
+              if (call.method.equals("saveImage")) {
+                String filePath = call.argument("filePath");
+                saveImageToGallery(filePath, result);
               } else {
                 result.notImplemented();
               }
@@ -59,6 +81,39 @@ public class MainActivity extends FlutterActivity {
       result.success("SMS Sent");
     } catch (Exception e) {
       result.error("UNAVAILABLE", "SMS sending failed", null);
+    }
+  }
+
+  private void saveImageToGallery(String filePath, MethodChannel.Result result) {
+    try {
+      ContentValues values = new ContentValues();
+      values.put(MediaStore.Images.Media.DISPLAY_NAME, new File(filePath).getName());
+      values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+      values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/");
+      values.put(MediaStore.Images.Media.IS_PENDING, true);
+
+      Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+      if (uri != null) {
+        OutputStream out = getContentResolver().openOutputStream(uri);
+        if (out != null) {
+          Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+          bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+          out.flush();
+          out.close();
+          
+          values.put(MediaStore.Images.Media.IS_PENDING, false);
+          getContentResolver().update(uri, values, null, null);
+          
+          result.success("Image saved successfully");
+        } else {
+          result.error("UNAVAILABLE", "Failed to get output stream", null);
+        }
+      } else {
+        result.error("UNAVAILABLE", "Failed to insert image", null);
+      }
+    } catch (Exception e) {
+      result.error("UNAVAILABLE", "Failed to save image: " + e.getMessage(), null);
     }
   }
 }
