@@ -17,6 +17,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VolTakeMediaScreen extends StatefulWidget {
   final String imagePath;
+  final String gender;
+
+  final String phonNo;
+
   final String first_name;
   final String last_name;
   final String region;
@@ -37,6 +41,8 @@ class VolTakeMediaScreen extends StatefulWidget {
     required this.woreda,
     required this.lat,
     required this.long,
+    required this.phonNo,
+    required this.gender,
     required this.selected_health_officer,
   });
 
@@ -153,6 +159,8 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
               region: widget.region,
               zone: widget.zone,
               woreda: widget.woreda,
+              gender: widget.gender,
+              phonNo: widget.phonNo,
               lat: widget.lat,
               long: widget.long,
               selected_health_officer: widget.selected_health_officer
@@ -237,6 +245,8 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
 class DisplayVideoScreen1 extends StatefulWidget {
   final String imagePath;
   final String videoPath;
+  final String phonNo;
+  final String gender;
 
   final String first_name;
   final String last_name;
@@ -252,6 +262,8 @@ class DisplayVideoScreen1 extends StatefulWidget {
     required this.videoPath,
     // required this.epid_number,
     required this.imagePath,
+    required this.gender,
+    required this.phonNo,
     required this.first_name,
     required this.last_name,
     required this.region,
@@ -315,7 +327,10 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
       "hofficer_name": widget.selected_health_officer,
       'region': widget.region,
       'woreda': widget.woreda,
-      'zone': widget.zone
+      'zone': widget.zone,
+      'gender': widget.gender,
+
+      'phonNo': widget.phonNo
     });
 
     // Adding image file
@@ -355,10 +370,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
         SnackBar(content: Text('Data submitted successfully')),
       );
 
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => PolioDashboard(),
-          ));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+        builder: (context) => PolioDashboard(),
+      ));
 
       print('Data posted successfully');
     } else {

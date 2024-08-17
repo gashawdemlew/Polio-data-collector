@@ -17,6 +17,7 @@ class _DemographicFormState extends State<DemographicForm> {
 
   final TextEditingController first_name = TextEditingController();
   final TextEditingController last_name = TextEditingController();
+  // String? _selectedGender;
 
   String? epidNumber,
       firstName,
@@ -32,6 +33,7 @@ class _DemographicFormState extends State<DemographicForm> {
   String? _selectedZone;
   String? _selectedWoreda;
   String? _selectedGender;
+  final TextEditingController phoneNo = TextEditingController();
 
   String _selectedLanguage = "English";
 
@@ -246,6 +248,46 @@ class _DemographicFormState extends State<DemographicForm> {
                 SizedBox(
                   height: 16,
                 ),
+
+                DropdownButtonFormField<String>(
+                  hint: Text('Select Gender'),
+                  value: _selectedGender,
+                  dropdownColor: Colors.white,
+                  items: ['Male', 'Female'].map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender,
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedGender = newValue;
+                    });
+                  },
+                  decoration: ThemeHelper()
+                      .textInputDecoration('Gender', 'Select Gender'),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select your gender';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: phoneNo,
+                  decoration: ThemeHelper().textInputDecoration('Phone No'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an Phon No';
+                    }
+                    return null;
+                  },
+                ),
+                // const SizedBox(height: 16.0),
+                SizedBox(
+                  height: 16,
+                ),
                 DropdownButtonFormField<String>(
                   decoration:
                       ThemeHelper().textInputDecoration("Select Region"),
@@ -384,6 +426,8 @@ class _DemographicFormState extends State<DemographicForm> {
                                   region: _selectedRegion ?? '',
                                   zone: _selectedZone ?? '',
                                   woreda: _selectedWoreda ?? '',
+                                  gender: _selectedGender.toString(),
+                                  phonNo: phoneNo.text,
                                   lat: lat.toString(),
                                   long: long.toString(),
                                   selected_health_officer:

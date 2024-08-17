@@ -12,6 +12,7 @@ class ApiService {
     required String zone,
     required String region,
     required String woreda,
+    required String gender,
     required String lat,
     required String long,
     required String userRole,
@@ -29,6 +30,7 @@ class ApiService {
         'last_name': lastName,
         'phoneNo': phoneNo,
         'zone': zone,
+        'gender': gender ?? "",
         'region': region,
         'woreda': woreda,
         'lat': lat,
@@ -42,7 +44,7 @@ class ApiService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to create user');
+      throw Exception('Failed to create user  Phono ');
     }
   }
 

@@ -31,6 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   double latitude = 0.0;
   double longitude = 0.0;
   String? selectedRole;
+  String? _selectedGender;
 
   final List<String> roles = [
     'Admin',
@@ -210,6 +211,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: ThemeHelper()
                         .textInputDecoration('Last Name', 'Last Name')),
                 SizedBox(height: 16),
+
+                DropdownButtonFormField<String>(
+                  hint: Text('Select Gender'),
+                  value: _selectedGender,
+                  dropdownColor: Colors.white,
+                  items: ['Male', 'Female'].map((String gender) {
+                    return DropdownMenuItem<String>(
+                      value: gender,
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedGender = newValue;
+                    });
+                  },
+                  decoration: ThemeHelper()
+                      .textInputDecoration('Gender', 'Select Gender'),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select your gender';
+                    }
+                    return null;
+                  },
+                ),
+
+                SizedBox(height: 16),
+
                 TextField(
                     controller: phoneNoController,
                     decoration: ThemeHelper()
@@ -377,6 +406,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       try {
                         final response = await ApiService.createUser(
                           firstName: firstNameController.text,
+                          gender: _selectedGender.toString(),
                           lastName: lastNameController.text,
                           phoneNo: phoneNoController.text,
                           region: _selectedRegion.toString(),
@@ -385,7 +415,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           lat: latitude.toString(),
                           long: long.toString(),
                           userRole: selectedRole!,
-                          emergency_phonno: selectedHealthOfficer!,
+                          emergency_phonno: selectedHealthOfficer ?? "",
                           password: passwordController.text,
                         );
                         print('User created: ${response['message']}');

@@ -1,3 +1,4 @@
+import 'package:camera_app/color.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,23 @@ class UserProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('Profile Page')),
+        appBar: AppBar(
+          title: Text(
+            ' Profile page',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          backgroundColor: CustomColors.testColor1,
+          elevation: 0,
+        ),
         body: ProfilePage(),
       ),
     );
@@ -128,9 +145,6 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('My Profile'),
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -252,12 +266,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _updateProfile,
-                      child: Text('Update Profile'),
+                      child: Text(
+                        'Update Profile',
+                        style: TextStyle(
+                          // fontSize: 24.0, // Changes the font size
+                          fontWeight: FontWeight.bold, // Makes the text bold
+                          color: Colors.white, // Changes the text color
+                          // letterSpacing: 1.2, // Adds space between letters
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                        textStyle: TextStyle(fontSize: 18),
+                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            CustomColors.testColor1, // Change the text color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              8.0), // Adjust the border radius
+                        ),
+                        elevation: 14, // Add elevation
                       ),
                     ),
                   ],

@@ -5,6 +5,7 @@ import 'package:camera_app/ReviewPage.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/qrcode_example.dart';
+import 'package:camera_app/stool/date_stool.collected.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path/path.dart' show join;
@@ -325,16 +326,16 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => QRCodeScreen(
+            builder: (context) => DateStoolcollected(
               // resources1: widget.resources1,
-              epid_number: widget.epid_number,
-              first_name: first_name ?? "",
-              last_name: last_name ?? "",
-              region: region ?? "",
-              woreda: woreda ?? "",
-              zone: zone ?? "",
-              hofficer_name: userDetails['firstName'],
-              hofficer_phonno: userDetails['firstName'],
+              epid_Number: widget.epid_number,
+              // first_name: first_name ?? "",
+              // last_name: last_name ?? "",
+              // region: region ?? "",
+              // woreda: woreda ?? "",
+              // zone: zone ?? "",
+              // hofficer_name: userDetails['firstName'],
+              // hofficer_phonno: userDetails['firstName'],
             ),
           ));
 

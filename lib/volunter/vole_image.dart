@@ -20,6 +20,9 @@ class VolTakePictureScreen extends StatefulWidget {
   final String lat;
   final String long;
   final String selected_health_officer;
+  final String gender;
+
+  final String phonNo;
 
   VolTakePictureScreen({
     // required this.epidNumber,
@@ -30,6 +33,8 @@ class VolTakePictureScreen extends StatefulWidget {
     required this.woreda,
     required this.lat,
     required this.long,
+    required this.phonNo,
+    required this.gender,
     required this.selected_health_officer,
   });
 
@@ -113,6 +118,8 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
             woreda: widget.woreda ?? '',
             lat: widget.lat,
             long: widget.long,
+            gender: widget.gender,
+            phonNo: widget.phonNo,
             selected_health_officer: widget.selected_health_officer ?? '',
           ),
         ),
@@ -166,6 +173,10 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
   final String first_name;
+  final String gender;
+
+  final String phonNo;
+
   final String last_name;
   final String region;
   final String zone;
@@ -185,6 +196,8 @@ class DisplayPictureScreen extends StatelessWidget {
     required this.woreda,
     required this.lat,
     required this.long,
+    required this.gender,
+    required this.phonNo,
     required this.selected_health_officer,
   });
 
@@ -247,6 +260,8 @@ class DisplayPictureScreen extends StatelessWidget {
                           woreda: woreda,
                           lat: lat,
                           long: long,
+                          phonNo: phonNo,
+                          gender: gender,
                           selected_health_officer: selected_health_officer
                           // epid_number: epid_number,
                           ),

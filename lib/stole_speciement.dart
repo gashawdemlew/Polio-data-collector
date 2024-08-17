@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class StoolSpecimensForm34 extends StatefulWidget {
+class StoolSpecimensForm343 extends StatefulWidget {
   // final LanguageResources? resources1;
   final String epid_Number;
   // final String longitude;
@@ -46,7 +46,7 @@ class StoolSpecimensForm34 extends StatefulWidget {
   // final String daysAfterOnset;
 
   @override
-  const StoolSpecimensForm34({
+  const StoolSpecimensForm343({
     // required this.resources1,
     required this.epid_Number,
     // required this.longitude,
@@ -78,7 +78,7 @@ class StoolSpecimensForm34 extends StatefulWidget {
   _StoolSpecimensFormState createState() => _StoolSpecimensFormState();
 }
 
-class _StoolSpecimensFormState extends State<StoolSpecimensForm34> {
+class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
   DateTime? _stool1DateCollected;
   DateTime? _stool2DateCollected;
   DateTime? _stool1DaysAfterOnset;

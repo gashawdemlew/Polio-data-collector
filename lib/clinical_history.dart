@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:camera_app/FollowUpExaminationForm%20.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
@@ -174,8 +175,8 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  StoolSpecimensForm34(epid_Number: widget.epid_Number),
+              builder: (context) => FollowUpExaminationForm(
+                  resources1: resources, epid_Number: widget.epid_Number),
             ));
       } else {
         print('Failed to submit form: ${response.body}');

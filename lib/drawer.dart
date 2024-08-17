@@ -5,6 +5,7 @@ import 'package:camera_app/demographyByVolunter.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/login.dart';
 import 'package:camera_app/patient_demographic.dart';
+import 'package:camera_app/profile.dart';
 import 'package:camera_app/qr_scanner.dart';
 import 'package:camera_app/sessionPage.dart';
 import 'package:camera_app/sms.dart';
@@ -155,7 +156,9 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.home, color: Colors.blue),
                 title: Text(
-                  widget.languge == "Amharic" ? "Session" : 'Session ',
+                  widget.languge == "Amharic"
+                      ? "incomplete investigation"
+                      : 'incomplete investigation ',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
@@ -205,7 +208,11 @@ class _Drawer45State extends State<Drawer45> {
                 style: TextStyle(color: Colors.blue),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(),
+                  ),
+                );
               },
             ),
             if (widget.userType == "Health Officer")
@@ -227,7 +234,7 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.video_call, color: Colors.blue),
                 title: Text(
-                  'Demographiy ',
+                  'Register Suspected Patient ',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () => _checkConnectivityAndNavigate(context),
@@ -248,16 +255,16 @@ class _Drawer45State extends State<Drawer45> {
                 },
               ),
             Divider(color: Colors.blue),
-            ListTile(
-              leading: Icon(Icons.settings, color: Colors.blue),
-              title: Text(
-                widget.resources1?.drawer()["setting"] ?? '',
-                style: TextStyle(color: Colors.blue),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.settings, color: Colors.blue),
+            //   title: Text(
+            //     widget.resources1?.drawer()["setting"] ?? '',
+            //     style: TextStyle(color: Colors.blue),
+            //   ),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //   },
+            // ),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
               title: Text(

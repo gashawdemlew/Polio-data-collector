@@ -31,6 +31,7 @@ class _LaboratoryFinalClassificationFormState
   String _finalCellCultureResult = '';
   DateTime? _dateFinalCellCultureResults;
   String _finalCombinedITDResult = '';
+  bool isSubmitting = false;
 
   void init() {
     setState(() {
@@ -49,12 +50,17 @@ class _LaboratoryFinalClassificationFormState
   }
 
   Future<void> _submitForm() async {
-    final url =
-        Uri.parse('${baseUrl}clinic/post'); // Update with your server URL
+    setState(() {
+      isSubmitting = true;
+    });
+
+    final url = Uri.parse(
+        '${baseUrl}clinic/registerStool'); // Update with your server URL
 
     final body = json.encode({
       'epid_number': widget.epid,
       'true_afp': _trueAFP,
+      'type': widget.type,
       'final_cell_culture_result': _finalCellCultureResult,
       'date_cell_culture_result':
           _dateFinalCellCultureResults?.toIso8601String(),
@@ -67,25 +73,34 @@ class _LaboratoryFinalClassificationFormState
         headers: {'Content-Type': 'application/json'},
         body: body,
       );
-
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Successfully registered')),
         );
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PolioDashboard()));
+
+        // Check the widget.type
+        if (widget.type == "Stool 2") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => PolioDashboard()),
+          );
+        }
       } else {
         print('Failed to submit form: ${response.body}');
-        print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully registered')),
+          SnackBar(content: Text('Failed to register')),
         );
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PolioDashboard()));
       }
     } catch (error) {
       print('Error submitting form: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred')),
+      );
+    } finally {
+      setState(() {
+        isSubmitting = false;
+      });
     }
   }
 
@@ -94,7 +109,7 @@ class _LaboratoryFinalClassificationFormState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.epid}   ${widget.type}",
+          " ${widget.type}",
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -289,7 +304,9 @@ class _LaboratoryFinalClassificationFormState
                     onPressed: () {
                       _submitForm();
                     },
-                    child: Text('Next'),
+                    child: Text(
+                      isSubmitting ? 'Saving...' : 'Submit',
+                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,

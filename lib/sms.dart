@@ -1,6 +1,9 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/polioDashboard.dart';
+import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(SMS());
@@ -32,6 +35,9 @@ class _SmsSenderState extends State<SmsSender> {
   final TextEditingController _regionController = TextEditingController();
   final TextEditingController _zoneController = TextEditingController();
   final TextEditingController _woredaController = TextEditingController();
+  final TextEditingController phonNo = TextEditingController();
+
+  String? _selectedGender;
 
   String _smsStatus = '';
   String userType = '';
@@ -60,12 +66,15 @@ class _SmsSenderState extends State<SmsSender> {
     String zone = _zoneController.text;
     String woreda = _woredaController.text;
     String phoneNumber = _phoneNumberController.text;
+    String gender = _selectedGender.toString();
+    String phon = phonNo.text;
 
     String message = 'fullname: $fullName\n'
         'region: $region\n'
+        'gender: $gender\n'
         'zone: $zone\n'
         'woreda: $woreda\n'
-        'phone: $phoneNumber';
+        'phone: $phon';
 
     try {
       final String result =
@@ -87,14 +96,23 @@ class _SmsSenderState extends State<SmsSender> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Send SMS'),
+        title: Text(
+          'Send sms ',
+          style: GoogleFonts.splineSans(
+              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             // Add navigation logic here to go back to the previous screen
-            Navigator.pop(context);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PolioDashboard(),
+              ),
+            );
           },
         ),
+        backgroundColor: CustomColors.testColor1,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -146,10 +164,51 @@ class _SmsSenderState extends State<SmsSender> {
                       ),
                     ),
                     SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      hint: Text('Select Gender'),
+                      value: _selectedGender,
+                      dropdownColor: Colors.white,
+                      items: ['Male', 'Female'].map((String gender) {
+                        return DropdownMenuItem<String>(
+                          value: gender,
+                          child: Text(gender),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedGender = newValue;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Gender',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.people),
+                      ),
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please select your gender';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
                     TextField(
-                      controller: _phoneNumberController,
+                      controller: phonNo,
                       decoration: InputDecoration(
                         labelText: 'Phone Number',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.phone),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      readOnly: true,
+                      controller: _phoneNumberController,
+                      decoration: InputDecoration(
+                        filled: true, // Enable the filled property
+                        fillColor: Colors.grey[300],
+                        labelText: 'receiver phone Number',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.phone),
                       ),

@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:camera_app/Laboratory%20Information_Final%20classification%20%20.dart';
+import 'package:camera_app/color.dart';
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class YU extends StatelessWidget {
@@ -45,7 +48,28 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Session Data')),
+      appBar: AppBar(
+        title: Text(
+          'Incomplete List',
+          style: GoogleFonts.splineSans(
+              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        ),
+        backgroundColor: CustomColors.testColor1,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            // Add navigation logic here to go back to the previous screen
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PolioDashboard(),
+              ),
+            );
+          },
+        ),
+      ),
       body: FutureBuilder<List<ClinicData>>(
         future: futureData,
         builder: (context, snapshot) {
@@ -65,9 +89,9 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
                   elevation: 5,
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
-                    title: Text(item.name,
+                    title: Text(item.id,
                         style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('ID: ${item.id}'),
+                    subtitle: Text('name: ${item.name}'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.teal),
                     onTap: () {
                       Navigator.push(

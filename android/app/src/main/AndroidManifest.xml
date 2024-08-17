@@ -19,7 +19,7 @@
         android:banner="@mipmap/ic_banner_main"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Polio collector"
+        android:label="PolioAntenna"
         android:largeHeap="true"
         android:supportsRtl="true"
         tools:node="merge">
