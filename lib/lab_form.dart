@@ -71,6 +71,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
       'stool_recieved_date': "2024-08-03T14:30:00Z",
       'speciement_condition': _specimenCondition.toString(),
       'type': widget.type,
+      'completed': 'false',
       'user_id': userDetails['id'],
     };
 
@@ -81,9 +82,12 @@ class _StoolSpecimensFormState extends State<LabForm> {
         body: jsonEncode(formData),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully registered')),
+          SnackBar(
+            content: Text('Successfully registered  ${widget.type}'),
+            duration: Duration(seconds: 30),
+          ),
         );
         Navigator.push(
           context,

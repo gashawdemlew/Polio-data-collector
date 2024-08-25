@@ -280,11 +280,12 @@ class DisplayVideoScreen1 extends StatefulWidget {
 
 class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   bool isSaving = false;
-  // const { hofficer_name, hofficer_phonno, epid_number } = req.body;
+  bool showMessage = false; // New state variable to control message visibility
   Map<String, dynamic> userDetails = {};
+
+  @override
   void initState() {
     super.initState();
-    // getCurrentLocation();
     _loadUserDetails();
   }
 
@@ -306,7 +307,17 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
 
   Future<void> postClinicalData(BuildContext context) async {
     setState(() {
-      isSaving = true; // Start saving
+      isSaving = true;
+      showMessage = true; // Show message when the saving starts
+    });
+
+    // Timer to hide the message after 15 seconds
+    Timer(Duration(seconds: 15), () {
+      if (mounted) {
+        setState(() {
+          showMessage = false;
+        });
+      }
     });
 
     final url = '${baseUrl}clinic/upload';
@@ -315,21 +326,14 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     request.headers['Content-Type'] = 'multipart/form-data';
 
     // Adding JSON fields
-
-    //  first_name,
-    //   last_name,
-    //   hofficer_name,
-    //   region,woreda,zone,
     request.fields.addAll({
       "first_name": widget.first_name,
       "last_name": widget.last_name,
-      // "user_id": userDetails['id'],
       "hofficer_name": widget.selected_health_officer,
       'region': widget.region,
       'woreda': widget.woreda,
       'zone': widget.zone,
       'gender': widget.gender,
-
       'phonNo': widget.phonNo
     });
 
@@ -360,11 +364,8 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     var response = await request.send();
 
     if (response.statusCode == 201) {
-      final responseBody =
-          await response.stream.bytesToString(); // Convert ByteStream to String
-      final responseData =
-          json.decode(responseBody); // Decode the response body
-      print("KKKKKKKKKKKKKKKKKKKKKKKK$responseData");
+      final responseBody = await response.stream.bytesToString();
+      final responseData = json.decode(responseBody);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Data submitted successfully')),
@@ -373,18 +374,14 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => PolioDashboard(),
       ));
-
-      print('Data posted successfully');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to post data: ${response.statusCode}')),
       );
-
-      print('Failed to post data: ${response.statusCode}');
     }
 
     setState(() {
-      isSaving = false; // Stop saving
+      isSaving = false;
     });
   }
 
@@ -392,49 +389,52 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Video    ${widget.videoPath}'),
-        backgroundColor: Colors.deepPurple,
+        title: Text('Upload Video And Image'),
+        backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
         children: [
-          Text(
-            'Video saved at: ${widget.videoPath}',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          Expanded(
-            child: Center(
+          if (showMessage)
+            Container(
+              width: double.infinity,
+              color: Colors.orangeAccent,
+              padding: EdgeInsets.all(8.0),
               child: Text(
-                'Video saved at: ${widget.videoPath}',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                "Please wait to upload video and image",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: ElevatedButton(
-          //     onPressed: () async {
-          //       // Navigator.push(
-          //       //   context,
-          //       //   MaterialPageRoute(
-          //       //     builder: (context) => ReviewPage(),
-          //       //   ),
-          //       // );
-          //     },
-          //     child: Text('Preview'),
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: Color(0xff4A148C), // Button color
-          //     ),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          SizedBox(height: 20), // Add some spacing below the message
+          Center(
             child: ElevatedButton(
               onPressed: isSaving ? null : () => postClinicalData(context),
-              child: isSaving ? CircularProgressIndicator() : Text('Sub'),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color.fromARGB(255, 9, 60, 202), // Button color
+                backgroundColor: CustomColors.testColor1,
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              child: isSaving
+                  ? SizedBox(
+                      height: 24.0,
+                      width: 24.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text('Submit'),
             ),
           ),
         ],

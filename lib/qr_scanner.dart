@@ -167,11 +167,15 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
+
     controller.scannedDataStream.listen((scanData) async {
       await controller.pauseCamera(); // Pause the camera
       setState(() {
         result = scanData;
       });
+
+      // Dispose of the controller before navigating away
+      await controller.stopCamera(); // Stop the camera completely
 
       // Delay navigation until the current frame is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -134,7 +134,7 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text('Take a Picture'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: CustomColors.testColor1,
       ),
       body: !_isCameraInitialized
           ? Center(child: CircularProgressIndicator())
@@ -151,7 +151,7 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
                           padding: const EdgeInsets.all(16.0),
                           child: FloatingActionButton(
                             onPressed: _takePicture,
-                            backgroundColor: Colors.deepPurple,
+                            backgroundColor: CustomColors.testColor1,
                             child: ScaleTransition(
                               scale: _animation,
                               child: Icon(Icons.camera_alt),
@@ -236,7 +236,7 @@ class DisplayPictureScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Preview Picture'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
         children: [

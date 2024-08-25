@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:camera_app/camera/cameraHome.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/demographyByVolunter.dart';
+import 'package:camera_app/ho_volunter.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/login.dart';
 import 'package:camera_app/patient_demographic.dart';
@@ -152,6 +153,24 @@ class _Drawer45State extends State<Drawer45> {
                 ],
               ),
             ),
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.home, color: Colors.blue),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? "Voluntar Messages"
+                      : 'Voluntar Messages ',
+                  style: TextStyle(color: Colors.blue),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DemographiVolPage(),
+                    ),
+                  );
+                },
+              ),
+
             if (widget.userType == "Laboratorist")
               ListTile(
                 leading: Icon(Icons.home, color: Colors.blue),

@@ -226,6 +226,7 @@ class DisplayVideoScreen extends StatefulWidget {
 
 class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
   bool isSaving = false;
+  bool showMessage = false;
   // const { hofficer_name, hofficer_phonno, epid_number } = req.body;
   Map<String, dynamic> userDetails = {};
   void initState() {
@@ -253,8 +254,15 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
   Future<void> postClinicalData(BuildContext context) async {
     setState(() {
       isSaving = true; // Start saving
+      showMessage = true; // Show message when the saving starts
     });
-
+    Timer(Duration(seconds: 15), () {
+      if (mounted) {
+        setState(() {
+          showMessage = false;
+        });
+      }
+    });
     final url = '${baseUrl}clinic/create';
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
@@ -327,15 +335,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => DateStoolcollected(
-              // resources1: widget.resources1,
               epid_Number: widget.epid_number,
-              // first_name: first_name ?? "",
-              // last_name: last_name ?? "",
-              // region: region ?? "",
-              // woreda: woreda ?? "",
-              // zone: zone ?? "",
-              // hofficer_name: userDetails['firstName'],
-              // hofficer_phonno: userDetails['firstName'],
             ),
           ));
 
@@ -357,49 +357,51 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Video    ${widget.videoPath}'),
-        backgroundColor: Colors.deepPurple,
+        title: Text('Preview Video   '),
+        backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
         children: [
-          Text(
-            'Video saved at: ${widget.videoPath}',
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          Expanded(
-            child: Center(
+          if (showMessage)
+            Container(
+              width: double.infinity,
+              color: Colors.orangeAccent,
+              padding: EdgeInsets.all(8.0),
               child: Text(
-                'Video saved at: ${widget.videoPath}',
-                style: TextStyle(color: Colors.black, fontSize: 18),
+                "Please wait to upload video and image",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.all(16.0),
-          //   child: ElevatedButton(
-          //     onPressed: () async {
-          //       // Navigator.push(
-          //       //   context,
-          //       //   MaterialPageRoute(
-          //       //     builder: (context) => ReviewPage(),
-          //       //   ),
-          //       // );
-          //     },
-          //     child: Text('Preview'),
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: Color(0xff4A148C), // Button color
-          //     ),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          Center(
             child: ElevatedButton(
               onPressed: isSaving ? null : () => postClinicalData(context),
-              child: isSaving ? CircularProgressIndicator() : Text('Submite'),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color.fromARGB(255, 9, 60, 202), // Button color
+                backgroundColor: CustomColors.testColor1,
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                textStyle: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+              child: isSaving
+                  ? SizedBox(
+                      height: 24.0,
+                      width: 24.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text('Submit'),
             ),
           ),
         ],

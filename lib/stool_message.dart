@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+// Adjust import paths as necessary
 import 'package:camera_app/Laboratory%20Information_Final%20classification%20%20.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 
 class YU extends StatelessWidget {
   @override
@@ -31,11 +34,31 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
   @override
   void initState() {
     super.initState();
-    futureData = fetchClinicData();
+    _loadUserDetails();
   }
 
-  Future<List<ClinicData>> fetchClinicData() async {
-    final response = await http.get(Uri.parse('${baseUrl}clinic/getData'));
+  Map<String, dynamic> userDetails = {};
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? -1, // Use -1 or other default value for int
+      };
+
+      futureData = fetchClinicData(userDetails['id']);
+    });
+  }
+
+  Future<List<ClinicData>> fetchClinicData(int id) async {
+    final response = await http.get(Uri.parse('${baseUrl}clinic/getData/$id'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -61,12 +84,7 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            // Add navigation logic here to go back to the previous screen
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PolioDashboard(),
-              ),
-            );
+            Navigator.of(context).pop(); // Navigate back to the previous screen
           },
         ),
       ),
@@ -91,17 +109,18 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
                   child: ListTile(
                     title: Text(item.id,
                         style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('name: ${item.name}'),
+                    subtitle: Text('Name: ${item.name}'),
                     trailing: Icon(Icons.arrow_forward_ios, color: Colors.teal),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                LaboratoryFinalClassificationForm(
-                                  epid: item.id,
-                                  type: item.name,
-                                )),
+                          builder: (context) =>
+                              LaboratoryFinalClassificationForm(
+                            epid: item.id,
+                            type: item.name,
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -123,7 +142,7 @@ class ClinicData {
 
   factory ClinicData.fromJson(Map<String, dynamic> json) {
     return ClinicData(
-      id: json['epid_number'],
+      id: json['epid_number'], // Ensure this key matches your API response
       name: json['type'],
     );
   }
@@ -137,7 +156,7 @@ class ClinicDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Stool  Session')),
+      appBar: AppBar(title: Text('Stool Session')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -145,7 +164,7 @@ class ClinicDetailScreen extends StatelessWidget {
           children: [
             Text('Name: ${clinicData.name}', style: TextStyle(fontSize: 20)),
             SizedBox(height: 10),
-            Text('epid: ${clinicData.id}', style: TextStyle(fontSize: 16)),
+            Text('Epid: ${clinicData.id}', style: TextStyle(fontSize: 16)),
           ],
         ),
       ),

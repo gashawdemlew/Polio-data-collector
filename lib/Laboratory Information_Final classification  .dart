@@ -3,6 +3,7 @@ import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'color.dart';
@@ -34,9 +35,28 @@ class _LaboratoryFinalClassificationFormState
   bool isSubmitting = false;
 
   void init() {
+    _loadUserDetails();
     setState(() {
       _selectedLanguage = languge;
       resources = LanguageResources(languge);
+    });
+  }
+
+  Map<String, dynamic> userDetails = {};
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+      };
     });
   }
 
@@ -54,13 +74,15 @@ class _LaboratoryFinalClassificationFormState
       isSubmitting = true;
     });
 
-    final url = Uri.parse(
-        '${baseUrl}clinic/registerStool'); // Update with your server URL
+    final url =
+        Uri.parse('${baseUrl}clinic/post'); // Update with your server URL
 
     final body = json.encode({
       'epid_number': widget.epid,
       'true_afp': _trueAFP,
       'type': widget.type,
+      'user_id': userDetails['user_id'],
+      'completed': 'true',
       'final_cell_culture_result': _finalCellCultureResult,
       'date_cell_culture_result':
           _dateFinalCellCultureResults?.toIso8601String(),
@@ -73,7 +95,7 @@ class _LaboratoryFinalClassificationFormState
         headers: {'Content-Type': 'application/json'},
         body: body,
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Successfully registered')),
