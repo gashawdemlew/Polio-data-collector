@@ -1425,7 +1425,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   value: _selectedGender,
                   dropdownColor: Colors.white,
-                  items: ['Male', 'Female','Other'].map((String gender) {
+                  items: ['Male', 'Female', 'Other'].map((String gender) {
                     return DropdownMenuItem<String>(
                       value: gender,
                       child: Text(gender),

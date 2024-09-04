@@ -8,12 +8,12 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart'; // Add this line
 
 class TakePictureScreen extends StatefulWidget {
   final String epid_number;
 
   TakePictureScreen({
-    // required this.resources,
     required this.epid_number,
   });
 
@@ -33,9 +33,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
   @override
   void initState() {
     super.initState();
-
     _loadUserDetails();
-    _initializeCamera();
+    _requestCameraPermission();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -53,6 +52,32 @@ class TakePictureScreenState extends State<TakePictureScreen>
     _animationController.forward();
   }
 
+  Future<void> _requestCameraPermission() async {
+    if (await Permission.camera.request().isGranted) {
+      // If permission is granted, initialize the camera
+      _initializeCamera();
+    } else {
+      // Handle permission denied case if necessary
+      print('Camera permission not granted');
+    }
+  }
+
+  Future<void> _initializeCamera() async {
+    try {
+      cameras = await availableCameras();
+      _controller = CameraController(
+        cameras!.first,
+        ResolutionPreset.high,
+      );
+      _initializeControllerFuture = _controller.initialize();
+      setState(() {
+        _isCameraInitialized = true;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Map<String, dynamic> userDetails = {};
   String languge = '';
   Future<void> _loadUserDetails() async {
@@ -67,7 +92,6 @@ class TakePictureScreenState extends State<TakePictureScreen>
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
-        'id': prefs.getInt('id') ?? 'N/A',
         'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
     });
@@ -75,27 +99,6 @@ class TakePictureScreenState extends State<TakePictureScreen>
     setState(() {
       languge = userDetails['selectedLanguage'];
     });
-  }
-
-  Future<void> _initializeCamera() async {
-    // if (await Permission.camera.request().isGranted) {
-    try {
-      cameras = await availableCameras();
-      _controller = CameraController(
-        cameras!.first,
-        ResolutionPreset.high,
-      );
-      _initializeControllerFuture = _controller.initialize();
-      setState(() {
-        _isCameraInitialized = true;
-      });
-    } catch (e) {
-      print(e);
-    }
-    // } else {
-    //   // Handle permission not granted case
-    //   print('Camera permission not granted');
-    // }
   }
 
   @override

@@ -323,7 +323,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
         );
 
         _showConfirmationDialog(context, () {
-          Navigator.pushReplacement(
+          Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => TakePictureScreen(
