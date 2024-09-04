@@ -43,6 +43,7 @@ class _Drawer45State extends State<Drawer45> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails1();
     initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -52,6 +53,37 @@ class _Drawer45State extends State<Drawer45> {
   void dispose() {
     _connectivitySubscription.cancel();
     super.dispose();
+  }
+
+  Map<String, dynamic> userDetails1 = {};
+  String languge2 = '';
+  String fname = '';
+  String lname = '';
+
+  Future<void> _loadUserDetails1() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails1 = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'lastName': prefs.getString('last_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+      setState(() {
+        languge2 = userDetails1['selectedLanguage'];
+        fname = userDetails1['firstName'] ?? "";
+        lname = userDetails1['lastName'] ?? "";
+      });
+      print(userDetails1);
+
+      // Fetch data by phone number and assign the future to _futureVols
+    });
   }
 
   Future<void> _removeUserInfo() async {
@@ -133,16 +165,13 @@ class _Drawer45State extends State<Drawer45> {
                       size: 40,
                     ),
                   ),
-                  if (widget.userType == "Health Officer")
-                    Text(
-                      widget.languge == "Amharic"
-                          ? "የጤና መኮንን"
-                          : 'Health Officer ',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                      ),
+                  Text(
+                    " $fname $lname",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
                     ),
+                  ),
                   Text(
                     widget.userType,
                     style: TextStyle(
@@ -158,8 +187,10 @@ class _Drawer45State extends State<Drawer45> {
                 leading: Icon(Icons.home, color: Colors.blue),
                 title: Text(
                   widget.languge == "Amharic"
-                      ? "Voluntar Messages"
-                      : 'Voluntar Messages ',
+                      ? 'የበጎ ፍቃደኛ መልዕክት'
+                      : widget.languge == "AfanOromo"
+                          ? "Volunteers  Messages"
+                          : 'Volunteers  Messages',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
@@ -176,7 +207,7 @@ class _Drawer45State extends State<Drawer45> {
                 leading: Icon(Icons.home, color: Colors.blue),
                 title: Text(
                   widget.languge == "Amharic"
-                      ? "incomplete investigation"
+                      ? "ያልተሟላ ምርመራ"
                       : 'incomplete investigation ',
                   style: TextStyle(color: Colors.blue),
                 ),
@@ -192,7 +223,7 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.home, color: Colors.blue),
                 title: Text(
-                  widget.languge == "Amharic" ? "Read QrCode" : 'Read QrCode ',
+                  widget.languge == "Amharic" ? "Qrcode አንብብ" : 'Read QrCode ',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
@@ -238,7 +269,11 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.arrow_right, color: Colors.blue),
                 title: Text(
-                  "create  New petient",
+                  widget.languge == "Amharic"
+                      ? 'አዲሰ ታካሚ መዝግብ'
+                      : widget.languge == "AfanOromo"
+                          ? "Ergaa"
+                          : 'Create New Patient',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {
@@ -253,7 +288,9 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.video_call, color: Colors.blue),
                 title: Text(
-                  'Register Suspected Patient ',
+                  widget.languge == "Amharic"
+                      ? "የተጠረጠረ ታካሚ መዝግብ"
+                      : "Register Suspected Patient",
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () => _checkConnectivityAndNavigate(context),
@@ -262,7 +299,11 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.arrow_right, color: Colors.blue),
                 title: Text(
-                  'Incomplete Petient Records',
+                  widget.languge == "Amharic"
+                      ? 'ያላለቁ የታካሚ መዝገቦች'
+                      : widget.languge == "AfanOromo"
+                          ? "Gosoota galtee"
+                          : 'Incomplete petient Records',
                   style: TextStyle(color: Colors.blue),
                 ),
                 onTap: () {

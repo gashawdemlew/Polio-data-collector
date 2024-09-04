@@ -6,40 +6,40 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserProfile extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            ' Profile page',
-            style: TextStyle(color: Colors.white),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: CustomColors.testColor1,
-          elevation: 0,
-        ),
-        body: ProfilePage(),
-      ),
-    );
-  }
-}
+// class UserProfile extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Scaffold(
+//         appBar: AppBar(
+//           title: Text(
+//             ' Profile page',
+//             style: TextStyle(color: Colors.white),
+//           ),
+//           leading: IconButton(
+//             icon: Icon(
+//               Icons.arrow_back,
+//               color: Colors.white,
+//             ),
+//             onPressed: () {
+//               Navigator.pop(context);
+//             },
+//           ),
+//           backgroundColor: CustomColors.testColor1,
+//           elevation: 0,
+//         ),
+//         body: ProfilePage(),
+//       ),
+//     );
+//   }
+// }
 
-class ProfilePage extends StatefulWidget {
+class UserProfile extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<UserProfile> {
   String firstName = '';
   int id = 0;
 
@@ -58,6 +58,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _regionController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String languge = '';
 
   @override
   void initState() {
@@ -76,7 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
       lastname = prefs.getString('last_name') ?? '';
       region = prefs.getString('region') ?? '';
       password = prefs.getString('password') ?? '';
+      languge = prefs.getString('selectedLanguage') ?? '';
 
+      // print(languge);
       _firstNameController.text = firstName;
       _phoneNoController.text = phoneNo;
       _zoneController.text = zone;
@@ -145,6 +148,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile page",
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: CustomColors.testColor1,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -157,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: 20),
               Text(
-                'Edit Your Profile',
+                languge == "Amharic" ? 'አስተካክል' : 'Edit Your Profile',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
@@ -267,7 +286,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ElevatedButton(
                       onPressed: _updateProfile,
                       child: Text(
-                        'Update Profile',
+                        languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
                         style: TextStyle(
                           // fontSize: 24.0, // Changes the font size
                           fontWeight: FontWeight.bold, // Makes the text bold
@@ -290,13 +309,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               SizedBox(height: 20),
-              _buildInfoCard('First Name', firstName, Icons.person),
-              _buildInfoCard('Last Name', lastname, Icons.person),
-              _buildInfoCard('Phone Number', phoneNo, Icons.phone),
-              _buildInfoCard('Zone', zone, Icons.map),
-              _buildInfoCard('Woreda', woreda, Icons.location_on),
-              _buildInfoCard('Region', region, Icons.location_city),
-              _buildInfoCard('Password', password, Icons.lock),
+              // _buildInfoCard('First Name', firstName, Icons.person),
+              // _buildInfoCard('Last Name', lastname, Icons.person),
+              // _buildInfoCard('Phone Number', phoneNo, Icons.phone),
+              // _buildInfoCard('Zone', zone, Icons.map),
+              // _buildInfoCard('Woreda', woreda, Icons.location_on),
+              // _buildInfoCard('Region', region, Icons.location_city),
+              // _buildInfoCard('Password', password, Icons.lock),
             ],
           ),
         ),

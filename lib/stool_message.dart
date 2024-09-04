@@ -30,31 +30,34 @@ class ClinicDataScreen extends StatefulWidget {
 
 class _ClinicDataScreenState extends State<ClinicDataScreen> {
   late Future<List<ClinicData>> futureData;
+  Map<String, dynamic> userDetails = {};
 
   @override
   void initState() {
     super.initState();
-    _loadUserDetails();
+    // Initialize futureData with a placeholder Future
+    futureData = _loadUserDetails();
   }
 
-  Map<String, dynamic> userDetails = {};
-
-  Future<void> _loadUserDetails() async {
+  String languge = "";
+  Future<List<ClinicData>> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    userDetails = {
+      'email': prefs.getString('email') ?? 'N/A',
+      'userType': prefs.getString('userType') ?? 'N/A',
+      'firstName': prefs.getString('first_name') ?? 'N/A',
+      'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+      'zone': prefs.getString('zone') ?? 'N/A',
+      'woreda': prefs.getString('woreda') ?? 'N/A',
+      'id': prefs.getInt('id') ?? -1, // Use -1 or other default value for int
+      'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+    };
     setState(() {
-      userDetails = {
-        'email': prefs.getString('email') ?? 'N/A',
-        'userType': prefs.getString('userType') ?? 'N/A',
-        'firstName': prefs.getString('first_name') ?? 'N/A',
-        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
-        'zone': prefs.getString('zone') ?? 'N/A',
-        'woreda': prefs.getString('woreda') ?? 'N/A',
-        'id': prefs.getInt('id') ?? -1, // Use -1 or other default value for int
-      };
-
-      futureData = fetchClinicData(userDetails['id']);
+      languge = userDetails['selectedLanguage'];
     });
+    // Fetch clinic data with the user ID
+    return fetchClinicData(userDetails['id']);
   }
 
   Future<List<ClinicData>> fetchClinicData(int id) async {
@@ -73,7 +76,7 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Incomplete List',
+          languge == "Amharic" ? 'ያላለቀ ሊስቶች' : 'Incomplete List',
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -84,7 +87,10 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.of(context).pop(); // Navigate back to the previous screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PolioDashboard()),
+            );
           },
         ),
       ),

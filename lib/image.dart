@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/video.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final String epid_number;
@@ -31,6 +33,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
   @override
   void initState() {
     super.initState();
+
+    _loadUserDetails();
     _initializeCamera();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -47,6 +51,30 @@ class TakePictureScreenState extends State<TakePictureScreen>
         }
       });
     _animationController.forward();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
   }
 
   Future<void> _initializeCamera() async {
@@ -89,6 +117,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
         MaterialPageRoute(
           builder: (BuildContext context) => DisplayPictureScreen(
             imagePath: imagePath,
+            languge: languge,
             epid_number: widget.epid_number,
           ),
         ),
@@ -102,7 +131,12 @@ class TakePictureScreenState extends State<TakePictureScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a Picture'),
+        title: Text(
+          languge == "Amharic" ? 'ፎቶ አንሳ' : 'Take Picture',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: CustomColors.testColor1,
       ),
       body: !_isCameraInitialized
@@ -142,9 +176,11 @@ class TakePictureScreenState extends State<TakePictureScreen>
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
   final String epid_number;
+  final String languge;
 
   DisplayPictureScreen({
     required this.epid_number,
+    required this.languge,
     required this.imagePath,
   });
 
@@ -155,18 +191,21 @@ class DisplayPictureScreen extends StatelessWidget {
           false, // Prevents dismissing the dialog by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text(
-              'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
+          title: Text(languge == "Amharic" ? 'አረጋግጥ' : 'Confirmation'),
+          content: Text(languge == "Amharic"
+              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
+              : languge == "AfanOromo"
+                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text(languge == "Amharic" ? 'አጥፋ' : 'Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text(languge == "Amharic" ? 'እሽ' : 'ok'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
                 onConfirm(); // Calls the callback to navigate to TakeMediaScreen
@@ -182,7 +221,7 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Picture'),
+        title: Text(languge == "Amharic" ? 'ምስሉን እይ' : 'Preview Image'),
         backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
@@ -216,7 +255,7 @@ class DisplayPictureScreen extends StatelessWidget {
                 ),
                 elevation: 14, // Add elevation
               ),
-              child: Text('Next'),
+              child: Text(languge == "Amharic" ? 'ቀጣይ' : 'Next'),
             ),
           ),
         ],

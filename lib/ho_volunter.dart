@@ -22,6 +22,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
   }
 
   Map<String, dynamic> userDetails = {};
+  String languge = '';
 
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -35,7 +36,12 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
+      setState(() {
+        languge = userDetails['selectedLanguage'];
+      });
+      print(userDetails);
 
       // Fetch data by phone number and assign the future to _futureVols
       _futureVols = fetchDataByPhone(userDetails['phoneNo']);
@@ -99,8 +105,10 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            DetailPage(vol: vol), // Assuming you have a DetailPage
+        builder: (context) => DetailPage(
+            vol: vol,
+            languge: userDetails[
+                'selectedLanguage']), // Assuming you have a DetailPage
       ),
     );
   }
@@ -110,7 +118,9 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Demographic Records',
+          userDetails['selectedLanguage'] == 'Amharic'
+              ? 'የበጎ ፍቃደኛ መረጃዎች'
+              : 'Demographic Records', // Use an empty string as a fallback
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor:
@@ -130,7 +140,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                     backgroundColor: Colors.blueAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -138,7 +148,9 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     elevation: 5,
                   ),
                   child: Text(
-                    "Show All",
+                    userDetails['selectedLanguage'] == 'Amharic'
+                        ? 'ሁሉንም አሳይ'
+                        : "Show All",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -149,7 +161,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                     backgroundColor: Colors.orangeAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -157,7 +169,9 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     elevation: 5,
                   ),
                   child: Text(
-                    "Unread",
+                    userDetails['selectedLanguage'] == 'Amharic'
+                        ? 'ያልታዩትን  አሳይ'
+                        : "Unread",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -168,7 +182,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                     backgroundColor: Colors.greenAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -176,7 +190,9 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     elevation: 5,
                   ),
                   child: Text(
-                    "Read",
+                    userDetails['selectedLanguage'] == 'Amharic'
+                        ? 'የታዩትን  አሳይ'
+                        : "seen",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
@@ -224,14 +240,8 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
                                 children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      vol['image_url'],
-                                    ),
-                                    radius: 30,
-                                  ),
                                   SizedBox(width: 16.0),
-                                  Expanded(
+                                  Container(
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -246,10 +256,58 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                                               ),
                                         ),
                                         Text(
-                                          'Region: ${vol['region']}, Phone: ${vol['phonNo']}',
+                                          ' Phone: ${vol['phonNo']}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleMedium,
+                                        ),
+                                        Text(
+                                          'Region: ${vol['region']}, ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        Text(
+                                          'zone: ${vol['zone']}, ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        Text(
+                                          'woreda: ${vol['woreda']} ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        Text(
+                                          'Gender: ${vol['gender']},',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            navigateToDetailPage(vol);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 7),
+                                            backgroundColor: Colors.blueAccent,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            elevation: 5,
+                                          ),
+                                          child: Text(
+                                            userDetails['selectedLanguage'] ==
+                                                    'Amharic'
+                                                ? 'ተጨማሪ  አሳይ'
+                                                : "View Detail",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -274,8 +332,8 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
 
 class DetailPage extends StatelessWidget {
   final Map<String, dynamic> vol;
-
-  DetailPage({required this.vol});
+  final String languge;
+  DetailPage({required this.vol, required this.languge});
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +348,7 @@ class DetailPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Demographic Details',
+                languge == 'Amharic' ? 'የበጎ ፍቃደኛ መረጃዎች' : 'Demographic Records',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,

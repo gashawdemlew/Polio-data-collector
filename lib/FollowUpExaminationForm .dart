@@ -337,15 +337,19 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      RadioListTile(
+                      CheckboxListTile(
                         title: Text(
                           widget.resources1?.followUp()["Losttofollowup"] ?? '',
                         ),
-                        value: 'Lost to follow-up',
-                        groupValue: _findingsAtFollowUp,
+                        value: _findingsAtFollowUp == 'Lost to follow-up',
                         onChanged: (value) {
                           setState(() {
-                            _findingsAtFollowUp = value.toString();
+                            if (value == true) {
+                              _findingsAtFollowUp = 'Lost to follow-up';
+                            } else {
+                              _findingsAtFollowUp =
+                                  ''; // Optionally handle unchecking
+                            }
                           });
                         },
                       ),

@@ -34,7 +34,8 @@ class _LaboratoryFinalClassificationFormState
   String _finalCombinedITDResult = '';
   bool isSubmitting = false;
 
-  void init() {
+  void initState() {
+    super.initState();
     _loadUserDetails();
     setState(() {
       _selectedLanguage = languge;
@@ -42,6 +43,7 @@ class _LaboratoryFinalClassificationFormState
     });
   }
 
+  String ff = '';
   Map<String, dynamic> userDetails = {};
 
   Future<void> _loadUserDetails() async {
@@ -56,7 +58,12 @@ class _LaboratoryFinalClassificationFormState
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
+    });
+
+    setState(() {
+      ff = userDetails['selectedLanguage'];
     });
   }
 
@@ -131,7 +138,7 @@ class _LaboratoryFinalClassificationFormState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          " ${widget.type}",
+          " ${widget.type} ",
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -151,7 +158,7 @@ class _LaboratoryFinalClassificationFormState
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'True AFP:',
+                    'True AFP:  ',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -162,7 +169,7 @@ class _LaboratoryFinalClassificationFormState
                     children: [
                       Expanded(
                         child: RadioListTile(
-                          title: Text('Yes'),
+                          title: Text(ff == "Amharic" ? 'አዎ' : 'Yes'),
                           value: 'Yes',
                           groupValue: _trueAFP,
                           onChanged: (value) {
@@ -174,7 +181,9 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       Expanded(
                         child: RadioListTile(
-                          title: Text('No'),
+                          title: Text(
+                            ff == "Amharic" ? "አይ" : "No",
+                          ),
                           value: 'No',
                           groupValue: _trueAFP,
                           onChanged: (value) {
@@ -188,7 +197,9 @@ class _LaboratoryFinalClassificationFormState
                   ),
                   SizedBox(height: 16.0),
                   Text(
-                    'Final Cell Culture Result:',
+                    ff == "Amharic"
+                        ? "የመጨረሻ  ውጤት:"
+                        : "Final Cell Culture Result:",
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -199,7 +210,11 @@ class _LaboratoryFinalClassificationFormState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RadioListTile(
-                        title: Text('Suspected Poliovirus'),
+                        title: Text(
+                          ff == "Amharic"
+                              ? " ፖሊኦቪረስ ተጠርጣሪ"
+                              : "Suspected Poliovirus",
+                        ),
                         value: 'Suspected Poliovirus',
                         groupValue: _finalCellCultureResult,
                         onChanged: (value) {
@@ -209,7 +224,9 @@ class _LaboratoryFinalClassificationFormState
                         },
                       ),
                       RadioListTile(
-                        title: Text('Negative'),
+                        title: Text(
+                          ff == "Amharic" ? "አልተገኘም" : "Negative",
+                        ),
                         value: 'Negative',
                         groupValue: _finalCellCultureResult,
                         onChanged: (value) {
@@ -219,7 +236,9 @@ class _LaboratoryFinalClassificationFormState
                         },
                       ),
                       RadioListTile(
-                        title: Text('NPENT'),
+                        title: Text(
+                          ff == "Amharic" ? "ኤንፒንት" : "NPENT",
+                        ),
                         value: 'NPENT',
                         groupValue: _finalCellCultureResult,
                         onChanged: (value) {
@@ -232,7 +251,9 @@ class _LaboratoryFinalClassificationFormState
                   ),
                   SizedBox(height: 16.0),
                   Text(
-                    'Date Final Cell Culture Results:',
+                    ff == "Amharic"
+                        ? "የመጨረሻ ቀን ውጤቶች :"
+                        : "Date Final Cell Culture Results:",
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -254,7 +275,9 @@ class _LaboratoryFinalClassificationFormState
                         });
                       }
                     },
-                    child: Text('Select Date'),
+                    child: Text(
+                      ff == "Amharic" ? "ቀን ይምረጡ" : "Select Date",
+                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -269,7 +292,9 @@ class _LaboratoryFinalClassificationFormState
                   ),
                   SizedBox(height: 16.0),
                   Text(
-                    'Final Combined ITD Result:',
+                    ff == "Amharic"
+                        ? "የመጨረሻ  አይቲዲ ውጤት:"
+                        : "Final Combined ITD Result:",
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -280,7 +305,9 @@ class _LaboratoryFinalClassificationFormState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RadioListTile(
-                        title: Text('Confirmed'),
+                        title: Text(
+                          ff == "Amharic" ? "የተረጋገጠ" : "Confirmed",
+                        ),
                         value: 'Confirmed',
                         groupValue: _finalCombinedITDResult,
                         onChanged: (value) {
@@ -290,7 +317,9 @@ class _LaboratoryFinalClassificationFormState
                         },
                       ),
                       RadioListTile(
-                        title: Text('Compatible'),
+                        title: Text(
+                          ff == "Amharic" ? "ተስማሚ" : "Compatible",
+                        ),
                         value: 'Compatible',
                         groupValue: _finalCombinedITDResult,
                         onChanged: (value) {
@@ -300,7 +329,9 @@ class _LaboratoryFinalClassificationFormState
                         },
                       ),
                       RadioListTile(
-                        title: Text('Discarded'),
+                        title: Text(
+                          ff == "Amharic" ? "የተወው" : "Discarded",
+                        ),
                         value: 'Discarded',
                         groupValue: _finalCombinedITDResult,
                         onChanged: (value) {
@@ -310,7 +341,9 @@ class _LaboratoryFinalClassificationFormState
                         },
                       ),
                       RadioListTile(
-                        title: Text('Not an AFP'),
+                        title: Text(
+                          ff == "Amharic" ? " ኤፍፒ አይደለም" : "Not an AFP",
+                        ),
                         value: 'Not an AFP',
                         groupValue: _finalCombinedITDResult,
                         onChanged: (value) {

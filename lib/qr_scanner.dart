@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera_app/Laboratory%20Information_Final%20classification%20%20.dart';
+import 'package:camera_app/color.dart';
 import 'package:camera_app/lab_form.dart';
 import 'package:camera_app/viewMessage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MaterialApp(home: Qrreader()));
 
@@ -16,7 +18,7 @@ class Qrreader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Qr Scanner Page ')),
+      appBar: AppBar(title: const Text('QR Scanner Page ')),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
@@ -52,10 +54,43 @@ class _QRViewExampleState extends State<QRViewExample> {
     controller!.resumeCamera();
   }
 
+  Map<String, dynamic> userDetails = {};
+
+  void initState() {
+    super.initState();
+    // getCurrentLocation();
+    _loadUserDetails();
+  }
+
+  String languge = '';
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Qr Scanner Page ')),
+      appBar: AppBar(
+          backgroundColor: CustomColors.testColor1,
+          title: Text(languge == "Amharic" ? 'Qr ምስሉን አንሳ' : 'Scan Qe Code ')),
       body: Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
@@ -85,7 +120,8 @@ class _QRViewExampleState extends State<QRViewExample> {
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
+                                return Text(
+                                    '${languge == "Amharic" ? 'መብራት' : 'Flash'}: ${snapshot.data}');
                               },
                             )),
                       ),
@@ -101,7 +137,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                               builder: (context, snapshot) {
                                 if (snapshot.data != null) {
                                   return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
+                                      '${languge == "Amharic" ? 'ካሜራ' : 'Cmera Facing'} ${describeEnum(snapshot.data!)}');
                                 } else {
                                   return const Text('loading');
                                 }
@@ -120,7 +156,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                           onPressed: () async {
                             await controller?.pauseCamera();
                           },
-                          child: const Text('pause',
+                          child: Text(languge == "Amharic" ? 'አቁም' : 'Pause',
                               style: TextStyle(fontSize: 20)),
                         ),
                       ),
@@ -130,10 +166,10 @@ class _QRViewExampleState extends State<QRViewExample> {
                           onPressed: () async {
                             await controller?.resumeCamera();
                           },
-                          child: const Text('resume',
+                          child: Text(languge == "Amharic" ? 'ቀጥል' : 'Resume',
                               style: TextStyle(fontSize: 20)),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -180,7 +216,8 @@ class _QRViewExampleState extends State<QRViewExample> {
       // Delay navigation until the current frame is complete
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => DetailPage(data: scanData.code!),
+          builder: (context) =>
+              DetailPage(data: scanData.code!, languge: languge),
         ));
       });
     });
@@ -204,56 +241,189 @@ class _QRViewExampleState extends State<QRViewExample> {
 
 class DetailPage extends StatelessWidget {
   final String data;
+  final String languge;
 
-  const DetailPage({Key? key, required this.data}) : super(key: key);
+  const DetailPage({Key? key, required this.languge, required this.data})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final parsedData = _parseData(data);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Page'),
+        title: Text(languge == "Amharic" ? 'ዝርዝር መረጃ' : 'Detail page '),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('epid_number: ${parsedData['epid_number']}'),
-            Text('First Name: ${parsedData['first_name']}'),
-            Text('Last name: ${parsedData['last_name']}'),
-            Text('Region: ${parsedData['region']}'),
-            Text('Zone: ${parsedData['zone']}'),
-            Text('Woreda: ${parsedData['woreda']}'),
-            Text('Phone: ${parsedData['hofficer_phonno']}'),
-            Text('hofficername: ${parsedData['hofficer_name']}'),
-            SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => AnotherPage(
-                        epid: parsedData['epid_number'].toString(),
-                        firstName: parsedData['first_name'].toString(),
-                        lastName: parsedData['last_name'].toString()),
-                  ),
-                );
-              },
-              child: Text('Go to Lab Information Form'),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.blue,
-                elevation: 8,
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.numbers, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Epid Number: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
+                Text(
+                  parsedData['epid_number']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.person, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'First Name: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['first_name']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.person, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Last Name: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['last_name']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.location_on, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Region: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['region']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.location_city, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Zone: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['zone']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.map, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Woreda: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['woreda']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.phone, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Phone: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['hofficer_phonno']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              children: [
+                Icon(Icons.badge, color: Colors.blue),
+                SizedBox(width: 10),
+                Text(
+                  'Officer Name: ',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  parsedData['hofficer_name']!,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AnotherPage(
+                      languge: languge,
+                      epid: parsedData['epid_number'].toString(),
+                      firstName: parsedData['first_name'].toString(),
+                      lastName: parsedData['last_name'].toString()),
+                ),
+              );
+            },
+            child: Text(
+              languge == "Amharic"
+                  ? 'ወደ ላብ መረጃ ቅጽ ይሂዱ'
+                  : 'Go to Lab Information Form',
+              style: TextStyle(fontSize: 18),
+            ),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blue,
+              elevation: 8,
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }

@@ -170,7 +170,11 @@ class _DataListPageState extends State<DataListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Incomplete registrations ',
+          languge == "Amharic"
+              ? 'ያላለቁ የታካሚ መዝገቦች'
+              : languge == "AfanOromo"
+                  ? "Gosoota galtee"
+                  : 'Incomplete registrations',
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -263,7 +267,9 @@ class _DataListPageState extends State<DataListPage> {
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue,
                         child: Text(
-                          data[index]['first_name'][0].toUpperCase(),
+                          data[index]['first_name']?.isNotEmpty == true
+                              ? data[index]['first_name'][0].toUpperCase()
+                              : "",
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

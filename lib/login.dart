@@ -215,8 +215,14 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Image.asset('assets/im/heder.jpg'),
+                SizedBox(
+                  height: 40,
+                ),
                 Text(
-                  'Welcome Back!',
+                  _selectedLanguage == "Amharic"
+                      ? "እንኳን  በደህና መጡ!"
+                      : "Welcome ",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 28.0,
@@ -224,65 +230,81 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                Text(
+                  "Polio Data Collector and Diagnosis APP!",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
                 DropdownButtonHideUnderline(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(
-                        color: Colors.deepPurpleAccent,
-                        width: 2,
-                      ),
-                    ),
-                    child: DropdownButton<String>(
-                      value: _selectedLanguage,
-                      hint: Text(
-                        'Select Language',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedLanguage = newValue!;
-                          _saveSelectedLanguage(newValue);
-                        });
-                      },
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.deepPurpleAccent,
-                      ),
-                      iconSize: 36.0,
-                      elevation: 16,
-                      style: TextStyle(
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 18.0,
-                      ),
-                      dropdownColor: Colors.white,
-                      items: <String>['English', 'Amharic', 'AfanOromo']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              color: Colors.black,
-                            ),
-                          ),
-                        );
-                      }).toList(),
+                    child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: Colors.deepPurpleAccent,
+                      width: 2,
                     ),
                   ),
-                ),
+                  child: DropdownButton<String>(
+                    value: _selectedLanguage,
+                    hint: Text(
+                      'Select Language',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedLanguage = newValue!;
+                        _saveSelectedLanguage(newValue);
+                      });
+                    },
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    iconSize: 36.0,
+                    elevation: 16,
+                    style: TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 18.0,
+                    ),
+                    dropdownColor: Colors.white,
+                    items: <String>['English', 'Amharic', 'AfanOromo']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value == 'Amharic'
+                              ? 'አማርኛ'
+                              : value == 'AfanOromo'
+                                  ? 'Afaan Oromoo'
+                                  : value, // Keep the original value for 'English'
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                )),
                 SizedBox(height: 30.0),
                 TextFormField(
                   controller: _emailController,
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: 'Phone No',
+                    labelText:
+                        _selectedLanguage == "Amharic" ? "ስልክ ቁጥር" : "Phone No",
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -298,7 +320,9 @@ class _LoginPageState extends State<LoginPage> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Text(
-                    "Forget Password?",
+                    _selectedLanguage == "Amharic"
+                        ? "የይለፍ ቃል  እረስተዋል?"
+                        : "Forget Password?",
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -312,7 +336,8 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(color: Colors.black),
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText:
+                        _selectedLanguage == "Amharic" ? "ይለፍ ቃል" : "Password",
                     labelStyle: TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15.0),
@@ -339,7 +364,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         child: Text(
-                          'Login',
+                          _selectedLanguage == "Amharic" ? "ግባ" : "Login",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,

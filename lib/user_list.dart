@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 void main() {
   runApp(userList());
 }
@@ -43,6 +45,37 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void initState() {
+    super.initState();
+    _loadUserDetails1();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge2 = '';
+
+  Future<void> _loadUserDetails1() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+      setState(() {
+        languge2 = userDetails['selectedLanguage'];
+      });
+      print(userDetails);
+
+      // Fetch data by phone number and assign the future to _futureVols
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +93,12 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
         title: Text(
-          'User List',
+          languge2 == "Amharic" ? "የተጠቃሚዎች ዝርዝር" : "User List",
           style: TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),

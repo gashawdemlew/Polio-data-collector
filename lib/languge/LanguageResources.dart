@@ -19,9 +19,8 @@ class LanguageResources {
 
   Map<String, String> homepage() {
     return {
-      "appbar": language == "Amharic" ? 'ፖሊዮ ዳሽቦርድ' : 'Polio Dashboard!',
-      "welcomeMessage":
-          language == "Amharic" ? 'ፖሊዮ ዳሽቦርድ' : 'Polio Dashboard!',
+      "appbar": language == "Amharic" ? 'ፖሊዮ ዳሽቦርድ' : 'Dashboard!',
+      "welcomeMessage": language == "Amharic" ? 'ፖሊዮ ዳሽቦርድ' : 'Dashboard!',
       "polioOverview":
           language == "Amharic" ? 'ፖሊዮ አጠቃላይ እይታ' : 'Polio Overview!',
     };
@@ -38,15 +37,35 @@ class LanguageResources {
               : language == "Amharic"
                   ? 'ርዕስ'
                   : 'Title',
+      "Create New petient ": language == "Amharic"
+          ? 'አዲሰ ታካሚ መዝግብ'
+          : language == "AfanOromo"
+              ? "Ergaa"
+              : 'Create New petient ',
+      "image": language == "Amharic"
+          ? 'አዲሰ ታካሚ መዝግብ'
+          : language == "AfanOromo"
+              ? "Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa"
+              : 'Please capture unblurred quality image without losing important information about the patient ',
+      "video": language == "Amharic"
+          ? 'አዲሰ ታካሚ መዝግብ'
+          : language == "AfanOromo"
+              ? "Viidiyoo waraabuun sekondii 10 booda kandhaabbatu ta&#39;a, qulqullinaan odeeffannoo barbaachisaa osoo hin dhabamssisin waraabaa"
+              : 'The video recording will be stopped after 10 seconds, please be conscious and record it without missing essential information. ',
       "home": language == "Amharic"
           ? 'መነሻ'
           : language == "AfanOromo"
               ? "Jalqaba"
               : 'Home',
       "profile": language == "Amharic"
-          ? 'መገለጫ'
+          ? 'የፕሮፋይል ገጽ'
           : language == "AfanOromo"
               ? "Galmee"
+              : 'Profile',
+      "Incomplete petient Records": language == "Amharic"
+          ? ' የታካሚ መዝገቦች'
+          : language == "AfanOromo"
+              ? "Gosoota galtee"
               : 'Profile',
       "categories": language == "Amharic"
           ? 'ምድቦች'
@@ -54,7 +73,7 @@ class LanguageResources {
               ? "Gosoota galtee"
               : 'Categories',
       "patientDemographic":
-          language == "Amharic" ? 'የታካሚ ስነ-ሕዝብ' : 'Patient Demographic',
+          language == "Amharic" ? 'የታካሚ መረጃ' : 'Patient Demographic',
       "clinicalHistory":
           language == "Amharic" ? 'ክሊኒካዊ ታሪክ' : 'Clinical History',
       "stoolSpecimen": language == "Amharic" ? 'የሰገራ ናሙና' : 'Stool Specimen',
@@ -76,13 +95,23 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Ba’i"
               : 'Logout',
+      "Voluntar Messages": language == "Amharic"
+          ? 'የበጎ ፍቃደኛ መልዕክት'
+          : language == "AfanOromo"
+              ? "Voluntar Messages"
+              : 'Voluntar Messages',
+      "Create New Petient": language == "Amharic"
+          ? 'አዲስ ታካሚ መዝግብ  '
+          : language == "AfanOromo"
+              ? "Create New Petient"
+              : 'Create New Petient"',
     };
   }
 
   Map<String, String> patientDemographic() {
     return {
       "Patientdemographic": language == "Amharic"
-          ? 'የታካሚ ስነ-ሕዝብ'
+          ? 'የታካሚ መረጃ መዝግብ'
           : language == "AfanOromo"
               ? "Odeeffannoo dhukkubsataa"
               : 'Patient Demographic',
@@ -94,11 +123,41 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Maqaa"
               : 'Enter Name',
+      "First name": language == "Amharic"
+          ? 'ስም '
+          : language == "Maqaa"
+              ? "Maqaa"
+              : 'First name',
+      "Last name": language == "Amharic"
+          ? 'ያባት ስም '
+          : language == "AfanOromo"
+              ? "Maqaa abbaa"
+              : 'Last name',
       "gender": language == "Amharic"
           ? 'ጾታ'
           : language == "AfanOromo"
               ? "Saala"
               : 'Gender',
+      "Phone number": language == "Amharic"
+          ? 'ስልክ ቁጥር'
+          : language == "AfanOromo"
+              ? "Lakkoofsa bilbilaa"
+              : 'Phone number',
+      "Select Region": language == "Amharic"
+          ? 'ክልል ምረጥ'
+          : language == "AfanOromo"
+              ? "Naannoo"
+              : 'Select Region',
+      "Select Zone": language == "Amharic"
+          ? 'ዞን ምረጥ'
+          : language == "AfanOromo"
+              ? "Zoonii"
+              : 'Select Zone',
+      "Select Woreda": language == "Amharic"
+          ? 'ዎረዳ ምረጥ'
+          : language == "AfanOromo"
+              ? "Aanaa"
+              : 'Select Woreda',
       "dateOfBirth": language == "Amharic"
           ? 'የተወለደበት ቀን'
           : language == "AfanOromo"
@@ -180,7 +239,7 @@ class LanguageResources {
               ? "Harka mirgaa"
               : 'Right Arm',
       "leftLeg": language == "Amharic"
-          ? 'Miilla bitaa'
+          ? 'የግራ እግር'
           : language == "AfanOromo"
               ? "Bakka laamsha’e"
               : 'Left Leg',
@@ -233,17 +292,17 @@ class LanguageResources {
               ? "Saamuda sagaraa"
               : 'Stool Specimen Form',
       "dateStoolCollected": language == "Amharic"
-          ? 'የሰገራ ቀን ተሰብስቧል'
+          ? 'የሰገራ የተሰበሰበበት  ቀን '
           : language == "AfanOromo"
               ? "Guyyaa sagaraan itti fuudhame"
               : 'Date Stool Collected',
       "stool1": language == "Amharic"
-          ? 'ሰገራ 1'
+          ? 'ሰገራ ናሙና 1'
           : language == "AfanOromo"
               ? "Sagaraa 1ffaa"
               : 'Stool 1',
       "stool2": language == "Amharic"
-          ? 'ሰገራ 2'
+          ? 'ሰገራ ናሙና 2'
           : language == "AfanOromo"
               ? "Sagaraa 2ffaa"
               : 'Stool 2',
@@ -308,7 +367,7 @@ class LanguageResources {
       "no": language == "Amharic" ? 'አይደለም' : 'No',
       "DateofDeath": language == "Amharic" ? 'የሞት ቀን' : 'Date of Death',
       "ResidualParalysis": language == "Amharic"
-          ? 'ቀሪ ሽባ'
+          ? 'ምረጥ'
           : language == "AfanOromo"
               ? "Laamsha’uu haftee "
               : 'Residual Paralysis',

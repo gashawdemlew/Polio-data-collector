@@ -1,11 +1,16 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:camera_app/volunter/vole_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'dart:convert';
+import 'package:location/location.dart' as location;
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DemographicForm extends StatefulWidget {
   @override
@@ -14,10 +19,37 @@ class DemographicForm extends StatefulWidget {
 
 class _DemographicFormState extends State<DemographicForm> {
   final _formKey = GlobalKey<FormState>();
+  LanguageResources? resource12;
+  LanguageResources? resources;
 
+  String languge = "ccc";
+  String languge1 = "";
+
+  String _selectedLanguage = "English";
+
+  LanguageResources? resource;
   final TextEditingController first_name = TextEditingController();
   final TextEditingController last_name = TextEditingController();
   // String? _selectedGender;
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
+    if (mounted) {
+      setState(() {
+        languge = storedLanguage;
+        languge1 = storedLanguage;
+      });
+    }
+  }
+
+  Future<void> _loadLanguage45() async {
+    // Simulate language loading
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      resources = LanguageResources(languge); // or "English"
+      resource12 = resources;
+    });
+  }
 
   String? epidNumber,
       firstName,
@@ -35,9 +67,37 @@ class _DemographicFormState extends State<DemographicForm> {
   String? _selectedGender;
   final TextEditingController phoneNo = TextEditingController();
 
-  String _selectedLanguage = "English";
-
   List<String> healthOfficers = []; // List to store fetched health officers
+
+  Map<String, dynamic> userDetails = {};
+
+  void initState() {
+    super.initState();
+    // getCurrentLocation();
+    _loadUserDetails1();
+    _loadUserDetails();
+  }
+
+  String xx = "";
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+    setState(() {
+      xx = userDetails['selectedLanguage'];
+    });
+  }
 
   Map<String, Map<String, List<String>>> locationData = {
     "Addis Ababa": {
@@ -1315,6 +1375,32 @@ class _DemographicFormState extends State<DemographicForm> {
     }
   }
 
+  Map<String, dynamic> userDetails1 = {};
+  String languge2 = '';
+
+  Future<void> _loadUserDetails1() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+      setState(() {
+        languge2 = userDetails['selectedLanguage'];
+      });
+      print(userDetails);
+
+      // Fetch data by phone number and assign the future to _futureVols
+    });
+  }
+
   void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
     showDialog(
       context: context,
@@ -1322,9 +1408,14 @@ class _DemographicFormState extends State<DemographicForm> {
           false, // Prevents dismissing the dialog by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text(
-              'Please capture a quality and unblurred image. If the image is blurred, you will be requested again.'),
+          title: Text(
+            languge2 == "Amharic" ? "ማረጋገጫ" : "Confirmation",
+          ),
+          content: Text(languge2 == "Amharic"
+              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
+              : languge2 == "AfanOromo"
+                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again..'),
           actions: <Widget>[
             TextButton(
               child: Text('Cancel'),
@@ -1343,6 +1434,37 @@ class _DemographicFormState extends State<DemographicForm> {
         );
       },
     );
+  }
+
+  double latitude = 0.0;
+  double longitude = 0.0;
+  Future<void> getCurrentLocation(dynamic location) async {
+    var locationPlugin = location.Location();
+
+    try {
+      var permission = await locationPlugin.hasPermission();
+      if (permission == location.PermissionStatus.denied) {
+        permission = await locationPlugin.requestPermission();
+        if (permission != location.PermissionStatus.granted) {
+          print('Location permission denied');
+          return;
+        }
+      }
+
+      var locationData = await locationPlugin.getLocation();
+
+      setState(() {
+        latitude = locationData.latitude ?? 0.0;
+        longitude = locationData.longitude ?? 0.0;
+        print(latitude);
+      });
+
+      print('Latitude: $latitude, Longitude: $longitude');
+
+      // getAddressFromLatLng();
+    } catch (e) {
+      print('Error getting location: $e');
+    }
   }
 
   Future<void> _submitForm() async {
@@ -1378,9 +1500,12 @@ class _DemographicFormState extends State<DemographicForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Demographic Form',
+          xx == "Amharic" ? "ዴሞግራፊክ ቅጽ ሙላ" : "Demographic Form",
           style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: CustomColors.testColor1,
       ),
@@ -1393,10 +1518,14 @@ class _DemographicFormState extends State<DemographicForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
-                  decoration: ThemeHelper().textInputDecoration("First Name"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ስም" : "First name",
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter first name';
+                      return xx == "Amharic"
+                          ? 'እባክዎ መጀመሪያ ስም ይግቡ'
+                          : 'Please enter first name';
                     }
                     return null;
                   },
@@ -1406,10 +1535,14 @@ class _DemographicFormState extends State<DemographicForm> {
                   height: 16,
                 ),
                 TextFormField(
-                  decoration: ThemeHelper().textInputDecoration("Last Name"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "የአባት ስም" : "Last Name",
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter last name';
+                      return xx == "Amharic"
+                          ? 'እባክዎ የአባት ስም ይግቡ'
+                          : 'Please enter last name';
                     }
                     return null;
                   },
@@ -1420,10 +1553,12 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
 
                 DropdownButtonFormField<String>(
-                  hint: Text('Select Gender'),
+                  hint: Text(
+                    xx == "Amharic" ? "ጾታ ምረጥ" : "Select Gender",
+                  ),
                   value: _selectedGender,
                   dropdownColor: Colors.white,
-                  items: ['Male', 'Female'].map((String gender) {
+                  items: ['Male', 'Female', 'Other'].map((String gender) {
                     return DropdownMenuItem<String>(
                       value: gender,
                       child: Text(gender),
@@ -1434,11 +1569,15 @@ class _DemographicFormState extends State<DemographicForm> {
                       _selectedGender = newValue;
                     });
                   },
-                  decoration: ThemeHelper()
-                      .textInputDecoration('Gender', 'Select Gender'),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ጾታ ምረጥ" : "Gender",
+                    xx == "Amharic" ? "ጾታዎን ይምረጡ" : "Select Gender",
+                  ),
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select your gender';
+                      return xx == "Amharic"
+                          ? 'እባክዎ ጾታዎን ይምረጡ'
+                          : 'Please select your gender';
                     }
                     return null;
                   },
@@ -1446,10 +1585,18 @@ class _DemographicFormState extends State<DemographicForm> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: phoneNo,
-                  decoration: ThemeHelper().textInputDecoration('Phone No'),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ስልክ ቁጥር" : "Phone No",
+                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter an Phon No';
+                      return xx == "Amharic"
+                          ? 'እባክዎ ስልክ ቁጥር ይግቡ'
+                          : 'Please enter a Phone No';
+                    }
+                    if (value.length != 10 ||
+                        !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                      return 'Please enter a valid 10-digit phone number';
                     }
                     return null;
                   },
@@ -1459,8 +1606,9 @@ class _DemographicFormState extends State<DemographicForm> {
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
-                  decoration:
-                      ThemeHelper().textInputDecoration("Select Region"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ክልል ምረጥ" : "Select Region",
+                  ),
                   dropdownColor: Colors.white,
                   value: _selectedRegion,
                   items: locationData.keys.map((String region) {
@@ -1489,7 +1637,9 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
-                  decoration: ThemeHelper().textInputDecoration("Select zone"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ዞን ምረጥ" : "Select Zone",
+                  ),
                   value: _selectedZone,
                   items: _selectedRegion != null
                       ? locationData[_selectedRegion!]!.keys.map((String zone) {
@@ -1517,8 +1667,9 @@ class _DemographicFormState extends State<DemographicForm> {
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
-                  decoration:
-                      ThemeHelper().textInputDecoration("Select Woreda"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ወረዳ ምረጥ" : "Select Woreda",
+                  ),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
                   items: _selectedRegion != null && _selectedZone != null
@@ -1548,8 +1699,9 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
-                  decoration: ThemeHelper()
-                      .textInputDecoration("Selected Health Officer"),
+                  decoration: ThemeHelper().textInputDecoration(
+                    xx == "Amharic" ? "ባለሙያ ስም ምረጥ" : "Selected Health Officer",
+                  ),
                   value: selectedHealthOfficer,
                   items: healthOfficers.map((String officer) {
                     return DropdownMenuItem<String>(
@@ -1617,7 +1769,9 @@ class _DemographicFormState extends State<DemographicForm> {
                           ),
                           elevation: 14, // Add elevation
                         ),
-                        child: Text('Submit'),
+                        child: Text(
+                          xx == "Amharic" ? "መዝግብ" : "Submit",
+                        ),
                       ),
                     )
                   ],

@@ -133,20 +133,45 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails1();
     _loadUserData();
     _loadUserInfo();
     getCurrentLocation().then((_) {
       fetchWeatherData();
+      _loadUserDetails();
     });
   }
 
   String? first_name;
   String? phoneNo;
+  String? xx;
+
   Future<void> _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       first_name = prefs.getString('first_name') ?? '';
       phoneNo = prefs.getString('phoneNo') ?? '';
+      // xx = prefs.getString('selectedLanguage') ?? '';
+    });
+  }
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+    setState(() {
+      xx = userDetails['selectedLanguage'];
     });
   }
 
@@ -212,18 +237,27 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
           false, // Prevents dismissing the dialog by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
+          title: Text(
+            xx == "Amharic" ? "ማረጋገጫ" : "Confirmation",
+          ),
           content: Text(
-              'Please capture a quality and unblurred image. If the image is blurred, you will be requested again.'),
+            xx == "Amharic"
+                ? 'እባክዎ ጥራት ያለ እና ያልተለወጠ የምስል ይዘግቡ። የምስል እንደተለወጠ ቢሆን ወደ እንደገና ይጠይቃል።'
+                : 'Please capture unblurred quality image without losing important information about the patient.',
+          ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: Text(
+                xx == "Amharic" ? "አቁም" : "Cancel",
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: Text(
+                xx == "Amharic" ? "እሺ" : "OK",
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
                 onConfirm(); // Calls the callback to navigate to TakePictureScreen
@@ -237,7 +271,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
 
   Map<String, dynamic> userDetails = {};
 
-  Future<void> _loadUserDetails() async {
+  Future<void> _loadUserDetails1() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     setState(() {
@@ -379,9 +413,12 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Enviroment Methodology Information ",
+          xx == "Amharic" ? "የ አካባቢ  መረጃ" : "Methodology Information ",
           style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: CustomColors.testColor1,
       ),
@@ -535,7 +572,9 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                       // });
                     },
                     child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
+                      isSubmitting
+                          ? (xx == "Amharic" ? 'ቀጣይ' : 'Next')
+                          : (xx == "Amharic" ? 'ቀጣይ' : 'Next..'),
                     ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,

@@ -13,6 +13,7 @@ import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:location/location.dart' as location;
 import 'package:geocoding/geocoding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -1305,6 +1306,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ]
     },
   };
+
+  void initState() {
+    super.initState();
+    _loadUserDetails1();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge2 = '';
+
+  Future<void> _loadUserDetails1() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+      setState(() {
+        languge2 = userDetails['selectedLanguage'];
+      });
+      print(userDetails);
+
+      // Fetch data by phone number and assign the future to _futureVols
+    });
+  }
+
   Future<void> getCurrentLocation() async {
     var locationPlugin = location.Location();
 
@@ -1364,7 +1397,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         appBar: AppBar(
           backgroundColor: CustomColors.testColor1,
           title: Text(
-            'Register',
+            languge2 == "Amharic" ? "መዝግብ" : "Register",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -1375,20 +1408,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 TextField(
                     controller: firstNameController,
-                    decoration: ThemeHelper()
-                        .textInputDecoration('First Name', 'First Name')),
+                    decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "የመጀመሪያ ስም" : "First Name",
+                    )),
                 SizedBox(height: 16),
                 TextField(
                     controller: lastNameController,
-                    decoration: ThemeHelper()
-                        .textInputDecoration('Last Name', 'Last Name')),
+                    decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "ያባት ስም" : "Last Name",
+                    )),
                 SizedBox(height: 16),
 
                 DropdownButtonFormField<String>(
-                  hint: Text('Select Gender'),
+                  hint: Text(
+                    languge2 == "Amharic" ? "ጾታ ይምረጡ" : "Select Gender",
+                  ),
                   value: _selectedGender,
                   dropdownColor: Colors.white,
-                  items: ['Male', 'Female'].map((String gender) {
+                  items: ['Male', 'Female','Other'].map((String gender) {
                     return DropdownMenuItem<String>(
                       value: gender,
                       child: Text(gender),
@@ -1399,8 +1436,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       _selectedGender = newValue;
                     });
                   },
-                  decoration: ThemeHelper()
-                      .textInputDecoration('Gender', 'Select Gender'),
+                  decoration: ThemeHelper().textInputDecoration(
+                    languge2 == "Amharic" ? "ጾታ" : "Gender",
+                  ),
                   validator: (value) {
                     if (value == null) {
                       return 'Please select your gender';
@@ -1413,12 +1451,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 TextField(
                     controller: phoneNoController,
-                    decoration: ThemeHelper()
-                        .textInputDecoration('Phone Number', 'Phone Number')),
+                    decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "ስልክ ቁጥር" : "Phone Number",
+                    )),
                 SizedBox(height: 16),
+                TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: ThemeHelper().textInputDecoration(
+                        languge2 == "Amharic"
+                            ? "የይለፍ ቃል ይሙሉ"
+                            : "Enter Password")),
+                SizedBox(height: 20),
                 DropdownButtonFormField<String>(
-                  decoration:
-                      ThemeHelper().textInputDecoration("Select Region"),
+                  decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "ክልል ይምረጡ" : "Select Region"),
                   dropdownColor: Colors.white,
                   value: _selectedRegion,
                   items: locationData.keys.map((String region) {
@@ -1447,7 +1494,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
-                  decoration: ThemeHelper().textInputDecoration("Select zone"),
+                  decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "ዞን ይምረጡ" : "Select Zone"),
                   value: _selectedZone,
                   items: _selectedRegion != null
                       ? locationData[_selectedRegion!]!.keys.map((String zone) {
@@ -1475,8 +1523,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
-                  decoration:
-                      ThemeHelper().textInputDecoration("Select Woreda"),
+                  decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic" ? "ወረዳ ይምረጡ" : "Select Woreda"),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
                   items: _selectedRegion != null && _selectedZone != null
@@ -1505,8 +1553,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
-                  decoration: ThemeHelper()
-                      .textInputDecoration('User Role', 'User Role'),
+                  decoration: ThemeHelper().textInputDecoration(
+                      languge2 == "Amharic"
+                          ? "የተጠቃሚ ሚና ይምረጡ"
+                          : "Select User Role"),
                   value: selectedRole,
                   onChanged: (String? newValue) {
                     setState(() {
@@ -1526,8 +1576,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if (selectedRole == 'Volunteers')
                   DropdownButtonFormField<String>(
                     dropdownColor: Colors.white,
-                    decoration: ThemeHelper()
-                        .textInputDecoration("Selected Health Officer  "),
+                    decoration: ThemeHelper().textInputDecoration(
+                        languge2 == "Amharic"
+                            ? "የተመረጡ ጤና ባለሙያ"
+                            : "Selected Health Officer"),
                     value: selectedHealthOfficer,
                     items: healthOfficers.map((String officer) {
                       return DropdownMenuItem<String>(
@@ -1559,11 +1611,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //         .textInputDecoration('Longitude', 'Longitude')),
 
                 SizedBox(height: 16),
-                TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: ThemeHelper()
-                        .textInputDecoration('Password', 'Password')),
+
                 SizedBox(height: 20),
                 Container(
                   width: 370,
@@ -1599,7 +1647,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         print('Error: $e');
                       }
                     },
-                    child: Text('Register'),
+                    child: Text(
+                      languge2 == "Amharic" ? "መዝግብ" : "Register",
+                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:

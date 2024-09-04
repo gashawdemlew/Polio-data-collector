@@ -201,10 +201,12 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '${widget.epid_Number}',
-          // resources?.clinicalHistory()["clinicalhistoryform"] ?? "",
+          languge == "Amharic" ? "ከሊኒካል  ታሪክ ቅጽ" : "Clinical History form",
           style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         backgroundColor: CustomColors.testColor1,
       ),

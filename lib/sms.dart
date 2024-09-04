@@ -47,6 +47,31 @@ class _SmsSenderState extends State<SmsSender> {
   void initState() {
     super.initState();
     _loadUserInfo();
+    _loadUserDetails();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String xx = '';
+
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      xx = userDetails['selectedLanguage'];
+    });
   }
 
   Future<void> _loadUserInfo() async {
@@ -97,9 +122,12 @@ class _SmsSenderState extends State<SmsSender> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Send sms ',
+          xx == "Amharic" ? "SMS ይላኩ" : "Send SMS",
           style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -131,7 +159,7 @@ class _SmsSenderState extends State<SmsSender> {
                     TextField(
                       controller: _fullNameController,
                       decoration: InputDecoration(
-                        labelText: 'Full Name',
+                        labelText: xx == "Amharic" ? "ሙሉ ስም" : "Full Name",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.person),
                       ),
@@ -140,7 +168,7 @@ class _SmsSenderState extends State<SmsSender> {
                     TextField(
                       controller: _regionController,
                       decoration: InputDecoration(
-                        labelText: 'Region',
+                        labelText: xx == "Amharic" ? "ክልል" : "Region",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.map),
                       ),
@@ -149,7 +177,7 @@ class _SmsSenderState extends State<SmsSender> {
                     TextField(
                       controller: _zoneController,
                       decoration: InputDecoration(
-                        labelText: 'Zone',
+                        labelText: xx == "Amharic" ? "ዞን" : "Zone",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.location_city),
                       ),
@@ -158,14 +186,16 @@ class _SmsSenderState extends State<SmsSender> {
                     TextField(
                       controller: _woredaController,
                       decoration: InputDecoration(
-                        labelText: 'Woreda',
+                        labelText: xx == "Amharic" ? "ወረዳ" : "Woreda",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.location_on),
                       ),
                     ),
                     SizedBox(height: 10),
                     DropdownButtonFormField<String>(
-                      hint: Text('Select Gender'),
+                      hint: Text(
+                        xx == "Amharic" ? "የጾታ ምረጥ" : "Select Gender",
+                      ),
                       value: _selectedGender,
                       dropdownColor: Colors.white,
                       items: ['Male', 'Female'].map((String gender) {
@@ -180,7 +210,7 @@ class _SmsSenderState extends State<SmsSender> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Gender',
+                        labelText: xx == "Amharic" ? "ጾታ" : "Gender",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.people),
                       ),
@@ -195,7 +225,8 @@ class _SmsSenderState extends State<SmsSender> {
                     TextField(
                       controller: phonNo,
                       decoration: InputDecoration(
-                        labelText: 'Phone Number',
+                        labelText:
+                            xx == "Amharic" ? "የስልክ ቁጥር" : "Phone Number",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.phone),
                       ),
@@ -208,7 +239,9 @@ class _SmsSenderState extends State<SmsSender> {
                       decoration: InputDecoration(
                         filled: true, // Enable the filled property
                         fillColor: Colors.grey[300],
-                        labelText: 'receiver phone Number',
+                        labelText: xx == "Amharic"
+                            ? "የተቀባይ የስልክ ቁጥር"
+                            : "Receiver Phone Number",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.phone),
                       ),
@@ -217,7 +250,9 @@ class _SmsSenderState extends State<SmsSender> {
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _sendSms,
-                      child: Text('Send SMS'),
+                      child: Text(
+                        xx == "Amharic" ? "SMS ይላኩ" : "Send SMS",
+                      ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor:

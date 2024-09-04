@@ -6,6 +6,7 @@ import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Laboratory Information_Final classification  .dart';
 
@@ -39,6 +40,8 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
+
     _fetchMessages();
   }
 
@@ -63,22 +66,31 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
     }
   }
 
-  // Future<void> _handleMessageTap(Map<String, dynamic> message) async {
-  //   // Perform any additional logic or navigation here
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => AnotherPage(
-  //         firstName: message['first_name'] ?? 'N/A',
-  //         lastName: message['last_name'] ?? 'N/A',
-  //         epid: message['epid_number'] ?? 'N/A',
-  //       ),
-  //     ),
-  //   );
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
 
-  // Update the message status to 'seen'
-  // await _updateMessageStatus(message['id'], 'seen');
-  // }
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+      setState(() {
+        languge = userDetails['selectedLanguage'];
+      });
+      print(userDetails);
+
+      // Fetch data by phone number and assign the future to _futureVols
+    });
+  }
 
   Future<void> _updateMessageStatus(int push_id) async {
     try {
@@ -173,6 +185,7 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => AnotherPage(
+                            languge: languge,
                             firstName: message['first_name'] ?? 'N/A',
                             lastName: message['last_name'] ?? 'N/A',
                             epid: message['epid_number'] ?? 'N/A',
@@ -241,9 +254,13 @@ class AnotherPage extends StatelessWidget {
   final String firstName;
   final String lastName;
   final String epid;
+  final String languge;
 
   AnotherPage(
-      {required this.firstName, required this.lastName, required this.epid});
+      {required this.firstName,
+      required this.languge,
+      required this.lastName,
+      required this.epid});
 
   @override
   Widget build(BuildContext context) {
@@ -279,6 +296,7 @@ class AnotherPage extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => LabForm(
                                   epid: epid,
+                                  languge: languge,
                                   type: "Stool 1",
                                 )),
                       );
@@ -292,7 +310,7 @@ class AnotherPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      "Stool  1",
+                      languge == "Amharic" ? 'ሰገራ ምርምራ 1' : 'Stool 1',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -307,6 +325,7 @@ class AnotherPage extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => LabForm(
                                   epid: epid,
+                                  languge: languge,
                                   type: 'Stool 2',
                                 )),
                       );
@@ -320,7 +339,7 @@ class AnotherPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      "Stool  2",
+                      languge == "Amharic" ? 'ሰገራ ምርምራ 2' : 'Stool 2',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

@@ -166,6 +166,7 @@ class _StoolSpecimensFormState extends State<DateStooleRecieved> {
           context,
           MaterialPageRoute(
             builder: (context) => QRCodeScreen(
+              languge: languge,
               epid_number: widget.epid_Number,
               first_name: first_name ?? "",
               last_name: last_name ?? "",

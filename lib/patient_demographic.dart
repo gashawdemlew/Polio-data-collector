@@ -1389,6 +1389,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
   }
 
   Map<String, dynamic> userDetails = {};
+  String xx = '';
 
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1402,7 +1403,12 @@ class _PatientdemographicState extends State<Patientdemographic> {
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
+    });
+
+    setState(() {
+      xx = userDetails['selectedLanguage'];
     });
   }
 
@@ -1521,7 +1527,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: first_name,
-                decoration: ThemeHelper().textInputDecoration('first Name'),
+                decoration: ThemeHelper().textInputDecoration(
+                    '${resources?.patientDemographic()["First name"] ?? ''}',
+                    '${resources?.patientDemographic()["First name"] ?? ''}'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -1532,7 +1540,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: last_name,
-                decoration: ThemeHelper().textInputDecoration('Last Name'),
+                decoration: ThemeHelper().textInputDecoration(
+                    '${resources?.patientDemographic()["Last name"] ?? ''}',
+                    '${resources?.patientDemographic()["Last name"] ?? ''}'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -1543,20 +1553,28 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               TextFormField(
                 controller: phoneNo,
-                decoration: ThemeHelper().textInputDecoration('Phone No'),
+                decoration: ThemeHelper().textInputDecoration(
+                    '${resources?.patientDemographic()["Phone number"] ?? ''}',
+                    '${resources?.patientDemographic()["Phone number"] ?? ''}'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an Phon No';
+                    return 'Please enter a phone number';
+                  }
+                  if (value.length != 10 ||
+                      !RegExp(r'^[0-9]+$').hasMatch(value)) {
+                    return 'Please enter a valid 10-digit phone number';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
-                hint: Text('Select Gender'),
+                hint: Text(
+                  languge == "Amharic" ? "ጾታ ምረጥ" : "Select Gender",
+                ),
                 value: _selectedGender,
                 dropdownColor: Colors.white,
-                items: ['Male', 'Female'].map((String gender) {
+                items: ['Male', 'Female', 'Other'].map((String gender) {
                   return DropdownMenuItem<String>(
                     value: gender,
                     child: Text(gender),
@@ -1567,8 +1585,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     _selectedGender = newValue;
                   });
                 },
-                decoration: ThemeHelper()
-                    .textInputDecoration('Gender', 'Select Gender'),
+                decoration: ThemeHelper().textInputDecoration(
+                    '${resources?.patientDemographic()["gender"] ?? ''}',
+                    '${resources?.patientDemographic()["gender"] ?? ''}'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select your gender';
@@ -1602,7 +1621,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
-                hint: Text('Select Region'),
+                hint: Text(
+                  languge == "Amharic" ? "ክልል ምረጥ" : "Select Region",
+                ),
                 dropdownColor: const Color.fromARGB(255, 213, 144, 144),
                 value: _selectedRegion,
                 items: locationData.keys.map((String region) {
@@ -1619,8 +1640,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
                   });
                 },
                 decoration: ThemeHelper().textInputDecoration(
-                  'Region',
-                  'Select Region',
+                  languge == "Amharic" ? "ክልል ምረጥ" : "Select Region",
                 ),
                 validator: (value) {
                   if (value == null) {
@@ -1632,7 +1652,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               if (_selectedRegion != null)
                 DropdownButtonFormField<String>(
-                  hint: Text('Select Zone'),
+                  hint: Text(
+                    languge == "Amharic" ? "ዞን ምረጥ" : "Select Zone",
+                  ),
                   value: _selectedZone,
                   dropdownColor: Colors.white,
                   items:
@@ -1649,9 +1671,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                    'Zone',
-                    'Select Zone',
-                  ),
+                      '${resources?.patientDemographic()["Select Zone "] ?? ''}',
+                      '${resources?.patientDemographic()["Select Zone"] ?? ''}'),
                   validator: (value) {
                     if (value == null) {
                       return 'Please select a zone';
@@ -1662,7 +1683,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               if (_selectedZone != null)
                 DropdownButtonFormField<String>(
-                  hint: Text('Select Woreda'),
+                  hint: Text(
+                    languge == "Amharic" ? "ወረዳ ምረጥ" : "Select Woreda",
+                  ),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
                   items: locationData[_selectedRegion!]![_selectedZone!]!
@@ -1678,9 +1701,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                    'Woreda',
-                    'Select Woreda',
-                  ),
+                      '${resources?.patientDemographic()["Select Woreda "] ?? ''}',
+                      '${resources?.patientDemographic()["Select Woreda"] ?? ''}'),
                   validator: (value) {
                     if (value == null) {
                       return 'Please select a woreda';
@@ -1716,7 +1738,9 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     //             )));
                   },
                   child: Text(
-                    isSubmitting ? 'Saving...' : 'Submit',
+                    isSubmitting
+                        ? (languge == "Amharic" ? 'ቀጣይ...' : 'Saving...')
+                        : (languge == "Amharic" ? 'ቀጣይ' : 'Next'),
                   ),
                   //  isSubmitting ? Text('Saving...') : Text('Submit'),
 

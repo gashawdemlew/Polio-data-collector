@@ -13,10 +13,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LabForm extends StatefulWidget {
   final String epid;
   final String type;
+  final String languge;
 
   LabForm({
     required this.epid,
     required this.type,
+    required this.languge,
   });
 
   @override
@@ -35,6 +37,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
   }
 
   Map<String, dynamic> userDetails = {};
+  String languge = '';
 
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -50,6 +53,8 @@ class _StoolSpecimensFormState extends State<LabForm> {
         'id': prefs.getInt('id') ?? 'N/A',
       };
     });
+
+    setState(() {});
   }
 
   Future<void> _submitForm() async {
@@ -151,7 +156,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Forms ${widget.epid}',
+          widget.languge == "Amharic" ? 'የሰገራ ውጤት' : ' Stool Result  ',
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -172,7 +177,10 @@ class _StoolSpecimensFormState extends State<LabForm> {
                 children: [
                   SizedBox(height: 16.0),
                   Text(
-                    'Date stool received by Lab:',
+                    widget.languge == "Amharic"
+                        ? 'የ ሰገራ ናሙና የተሰበሰበበት  ቀን'
+                        : 'Edit Your Profile'
+                            'Date stool received by Lab: $languge',
                     style: TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
@@ -211,7 +219,10 @@ class _StoolSpecimensFormState extends State<LabForm> {
                   ),
                   SizedBox(height: 16.0),
                   Text(
-                    "Specimen Condition",
+                    widget.languge == "Amharic"
+                        ? 'የናሙና ሁኔታ'
+                        : 'Specimen Condition'
+                            "Specimen Condition",
                     style: TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
@@ -222,7 +233,8 @@ class _StoolSpecimensFormState extends State<LabForm> {
                     children: [
                       Expanded(
                         child: RadioListTile(
-                          title: Text("Good"),
+                          title:
+                              Text(widget.languge == "Amharic" ? 'ጥሩ' : 'Good'),
                           value: 'Good',
                           groupValue: _specimenCondition,
                           onChanged: (value) {
@@ -234,7 +246,8 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                       Expanded(
                         child: RadioListTile(
-                          title: Text("Bad"),
+                          title:
+                              Text(widget.languge == "Amharic" ? 'መጥፎ' : 'Bad'),
                           value: 'Bad',
                           groupValue: _specimenCondition,
                           onChanged: (value) {
@@ -257,8 +270,9 @@ class _StoolSpecimensFormState extends State<LabForm> {
                     ),
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child:
-                        _isSubmitting ? Text("Submitting...") : Text("Submit"),
+                    child: _isSubmitting
+                        ? Text(widget.languge == "Amharic" ? 'መዝግብ..' : 'ሹብሚት')
+                        : Text("Submit"),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,

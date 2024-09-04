@@ -59,25 +59,24 @@ class _PolioDashboardState extends State<PolioDashboard> {
   }
 
   final List<String> imagePaths = [
-    "assets/im/polio1.jpg",
-    "assets/im/polio2.jpg",
-    "assets/im/polio3.jpg",
-    "assets/im/polio4.jpg",
-    "assets/im/polio5.jpg",
+    // "assets/im/polio1.jpg",
+    // "assets/im/polio2.jpg",
+    // "assets/im/polio3.jpg",
+    // "assets/im/polio4.jpg",
+    // "assets/im/polio5.jpg",
   ];
 
   final List<String> anotherPath = [
-    "assets/im/acute1.jpg",
-    "assets/im/acute2.jpg",
-    "assets/im/acute3.jpg",
+    // "assets/im/acute1.jpg",
+    // "assets/im/acute2.jpg",
+    // "assets/im/acute3.jpg",
   ];
 
   final List<String> map = [
-    "assets/im/map.jpg",
+    "assets/im/yarie.jpg",
   ];
 
   final String map34 = '''
-Global and Regional Polio Status
 - The world has made significant progress towards polio eradication, with a 99% reduction in cases since 1988
 - Africa was certified free of wild poliovirus in 2020, though vaccine-derived polio cases still occur
 - Ethiopia has been polio-free since 2014 but continues to face challenges with imported cases and vaccine-derived poliovirus
@@ -98,7 +97,7 @@ Haala Pooliyoo Addunyaa fi Naannawaa
   ''';
 
   final String polioOverview = '''
-Polio Overview
+
 - Polio is a highly contagious viral disease that primarily affects young children
 - It can cause lifelong paralysis and, in some cases, lead to death
 - Polio is caused by the poliovirus and spreads through contaminated water or food
@@ -117,9 +116,22 @@ Pooliyoo
 - የዕድሜ ልክ ሽባ ሊያመጣ ይችላል, እና በአንዳንድ ሁኔታዎች, ለሞት ሊዳርግ ይችላል
 - ፖሊዮ በፖሊዮ ቫይረስ የሚመጣ ሲሆን በተበከለ ውሃ ወይም ምግብ ይተላለፋል
   ''';
+  final String WhatisthePolioVirus = '''
+
+⦁	Polio is a highly contagious viral disease that primarily affects young children
+⦁	It can cause lifelong paralysis and, in some cases, lead to death
+⦁	Polio is caused by the poliovirus and spreads through contaminated water or food
+
+  ''';
+  final String AboutPolioAntennaAPP = '''
+PolioAntenna is a mobile app that automates acute flaccid paralysis (AFP) surveillance by collecting real-time multimedia data—forms, images, and videos. It offers immediate diagnoses of the polio virus, serving as a vital tool for community volunteers and public health officials. By streamlining data collection, PolioAntenna enhances outbreak monitoring and response, while its user-friendly interface allows volunteers to efficiently input critical information, strengthening public health efforts.
+  ''';
+
+  final String AboutRAPPS = '''
+RAPPS is a project that is part of a global IDRC-funded initiative on AI for Global Health. It aims to improve polio surveillance sensitivity through responsible AI in a decolonized approach using local capacity and local data focusing on empowering underserved groups. Click/copy the link (https://www.polioantenna.org/) to get more information about the project
+  ''';
 
   final String AFP = '''
-Acute Flaccid Paralysis (AFP) Surveillance
 - AFP surveillance is a key strategy in the global effort to eradicate polio
 - AFP is a sudden onset of weakness or paralysis in any part of the body in a child under 15 years old
 - Monitoring AFP cases helps identify potential polio infections and guide public health response
@@ -138,6 +150,9 @@ Acute Flaccid Paralysis (AFP) Surveillance
 - AFP ከ15 ዓመት በታች በሆነ ህጻን ውስጥ በማንኛውም የሰውነት ክፍል ላይ ድንገተኛ ድክመት ወይም ሽባ ነው።
 - የ AFP ጉዳዮችን መከታተል የፖሊዮ ኢንፌክሽኖችን ለመለየት እና የህዝብ ጤና ምላሽን ለመምራት ይረዳል
   ''';
+
+  double _scale = 1.0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,10 +181,11 @@ Acute Flaccid Paralysis (AFP) Surveillance
             icon: Icon(Icons.people_alt),
             onPressed: () {
               // Implement notification functionality
+              //
 
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ProfilePage(),
+                  builder: (context) => UserProfile(),
                 ),
               );
             },
@@ -185,22 +201,6 @@ Acute Flaccid Paralysis (AFP) Surveillance
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '${resources!.homepage()["welcomeMessage"]} $userType!',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      '${resources!.homepage()["polioOverview"]}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    SizedBox(height: 30),
                     Card(
                       elevation: 4,
                       child: Padding(
@@ -209,7 +209,7 @@ Acute Flaccid Paralysis (AFP) Surveillance
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${resources!.homepage()["polioOverview"]}!',
+                              'About RAPPS',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -217,11 +217,7 @@ Acute Flaccid Paralysis (AFP) Surveillance
                             ),
                             SizedBox(height: 10),
                             Text(
-                              languge == "Amharic"
-                                  ? polioOverviewam
-                                  : languge == "AfanOromo"
-                                      ? polioOverviewafm
-                                      : polioOverview,
+                              AboutRAPPS,
                               style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey[600],
@@ -232,32 +228,64 @@ Acute Flaccid Paralysis (AFP) Surveillance
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      languge == "Amharic" ? " ምስሎች" : 'Polio Images',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Center(
+                      child: Image.asset(
+                        'assets/im/yarie.jpg',
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Container(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: imagePaths.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                imagePaths[index],
-                                fit: BoxFit.cover,
-                                width: 120,
+                    SizedBox(height: 20),
+                    Card(
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'About Polio Antenna APP',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          );
-                        },
+                            SizedBox(height: 10),
+                            Text(
+                              AboutPolioAntennaAPP,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Card(
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'What is the Polio Virus???',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              WhatisthePolioVirus,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -271,7 +299,7 @@ Acute Flaccid Paralysis (AFP) Surveillance
                             Text(
                               languge == "Amharic"
                                   ? 'AFP ስለላ'
-                                  : "AFP Surveillance",
+                                  : "Acute Flaccid Paralysis (AFP) Surveillance",
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -294,39 +322,6 @@ Acute Flaccid Paralysis (AFP) Surveillance
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      languge == "Amharic"
-                          ? "አጣዳፊ የፍላሲድ ሽባ"
-                          : languge == "AfanOromo"
-                              ? "Hordoffii Acute Flaccid Paralysis (AFP)"
-                              : 'Acute Flaccid Paralysis Images',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      height: 150,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: anotherPath.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                anotherPath[index],
-                                fit: BoxFit.cover,
-                                width: 120,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 20),
                     Card(
                       elevation: 4,
                       child: Padding(
@@ -336,8 +331,8 @@ Acute Flaccid Paralysis (AFP) Surveillance
                           children: [
                             Text(
                               languge == "Amharic"
-                                  ? "ዓለም አቀፍ እና ክልላዊ የፖሊዮ ካርታ"
-                                  : 'Global and Regional Polio Map',
+                                  ? "ዓለም አቀፍ እና ክልላዊ የፖሊዮ ሁኔታ"
+                                  : 'Global and Regional Polio Status',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -361,46 +356,11 @@ Acute Flaccid Paralysis (AFP) Surveillance
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      languge == "Amharic"
-                          ? "ዓለም አቀፍ እና ክልላዊ የፖሊዮ ካርታ"
-                          : 'Global and Regional Polio Map',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Container(
-                      height: 150,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          childAspectRatio: 2,
-                        ),
-                        itemCount: map.length,
-                        itemBuilder: (context, index) {
-                          return Image.asset(
-                            map[index],
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
                     SizedBox(height: 50),
                   ],
                 ),
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _loadUserInfo(); // Refresh user info
-        },
-        backgroundColor: Colors.white,
-        child: Icon(
-          Icons.refresh,
-          color: Colors.blue,
-        ),
-      ),
     );
   }
 }

@@ -13,8 +13,8 @@ class CustomColors {
   static const Color aBackground = Color(0xE5E5E500);
   static const Color aSidebar = Color(0x7C01FF00);
   static const Color secondaryTextColor = Color.fromARGB(255, 36, 129, 204);
-  static const Color testColor1 = Color(0xFF145DA0);
-  static const Color testColor2 = Color(0xFF0C2D48);
+  static const Color testColor1 = Color.fromARGB(255, 10, 83,
+      156); // Dark blue color  static const Color testColor2 = Color(0xFF0C2D48);
   static const Color testColor3 = Color(0xFF2E8BC0);
   static const Color testColor4 = Color(0xFFB1D4E0);
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:camera_app/color.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:custom_qr_generator/custom_qr_generator.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'dart:io';
 
 class QRCodeScreen extends StatelessWidget {
   final String first_name;
+  final String languge;
   final String last_name;
   final String region;
 
@@ -23,6 +25,7 @@ class QRCodeScreen extends StatelessWidget {
   QRCodeScreen({
     Key? key,
     required this.first_name,
+    required this.languge,
     required this.last_name,
     required this.zone,
     required this.region,
@@ -105,46 +108,48 @@ class QRCodeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('QR Code Generator'),
+        backgroundColor: CustomColors.testColor1,
+        title: Text(
+            languge == "Amharic" ? 'የተፈጠረው QR  ምስል' : 'Genereted QR Code '),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              children: [
-                Row(children: [
-                  Text(epid_number),
-                ]),
-                Row(children: [
-                  Text(first_name),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(region),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(last_name),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(zone),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(woreda),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(hofficer_name),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(hofficer_name),
-                ]),
-              ],
-            ),
+            // Column(
+            //   children: [
+            //     Row(children: [
+            //       Text(epid_number),
+            //     ]),
+            //     Row(children: [
+            //       Text(first_name),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(region),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(last_name),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(zone),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(woreda),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(hofficer_name),
+            //       SizedBox(
+            //         width: 10,
+            //       ),
+            //       Text(hofficer_name),
+            //     ]),
+            //   ],
+            // ),
             CustomPaint(
               painter: QrPainter(
                 data: qrData,
@@ -170,7 +175,25 @@ class QRCodeScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _downloadQRCode(context),
-              child: const Text('Save QR Code to Gallery'),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: CustomColors.testColor1, // Text color
+                padding: EdgeInsets.symmetric(
+                    horizontal: 24, vertical: 12), // Button padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30), // Rounded corners
+                ),
+                elevation: 5, // Shadow elevation
+              ),
+              child: Text(
+                languge == "Amharic"
+                    ? 'ጋለርይ ላይ አስቀምጥ'
+                    : 'Save Image Into Gallery',
+                style: TextStyle(
+                  fontSize: 18, // Text size
+                  fontWeight: FontWeight.bold, // Text weight
+                ),
+              ),
             ),
           ],
         ),

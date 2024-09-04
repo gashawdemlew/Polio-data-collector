@@ -42,6 +42,7 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
     _initializeCamera();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -58,6 +59,30 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
         }
       });
     _animationController.forward();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
   }
 
   Future<void> _initializeCamera() async {
@@ -192,13 +217,21 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
                           ),
                           ElevatedButton(
                             onPressed: _stopRecording,
-                            child: Text('Stop Recording'),
+                            child: Text(
+                              languge == "Amharic"
+                                  ? "መቅረጽ አቁም"
+                                  : "Stop Recording",
+                            ),
                           ),
                         ],
                       )
                     : ElevatedButton(
                         onPressed: _startRecording,
-                        child: Text('Start Recording'),
+                        child: Text(
+                          languge == "Amharic"
+                              ? "መቅረጽ ይጀምሩ"
+                              : "Start Recording",
+                        ),
                       ),
               ],
             ),
@@ -235,6 +268,8 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
     _loadUserDetails();
   }
 
+  // Map<String, dynamic> userDetails = {};
+  String languge = '';
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -247,7 +282,13 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
     });
   }
 
@@ -357,7 +398,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Video   '),
+        title: Text(languge == "Amharic"
+            ? 'Upload Video and  Audio'
+            : 'Upload Video and  Audio'),
         backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
@@ -368,7 +411,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
               color: Colors.orangeAccent,
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "Please wait to upload video and image",
+                languge == "Amharic"
+                    ? 'እባክዎን ቪዲዮ እና ምስል ለመምዝገብ ትንሽ ይጠብቁ.'
+                    : 'Please wait to upload video and image',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -377,6 +422,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
+          SizedBox(
+            height: 300,
+          ),
           Center(
             child: ElevatedButton(
               onPressed: isSaving ? null : () => postClinicalData(context),
@@ -401,7 +449,10 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                         color: Colors.white,
                       ),
                     )
-                  : Text('Submit'),
+                  : Text(
+                      languge == "Amharic" ? "መዝግብ" : "Upload",
+                      style: TextStyle(color: Colors.white),
+                    ),
             ),
           ),
         ],

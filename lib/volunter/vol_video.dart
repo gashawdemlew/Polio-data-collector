@@ -389,7 +389,12 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Video And Image'),
+        title: Text(
+          'Uploading Image and Video',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
@@ -400,7 +405,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
               color: Colors.orangeAccent,
               padding: EdgeInsets.all(8.0),
               child: Text(
-                "Please wait to upload video and image",
+                "Please Wait! Uploading Image and Video…",
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -409,7 +414,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                 textAlign: TextAlign.center,
               ),
             ),
-          SizedBox(height: 20), // Add some spacing below the message
+          SizedBox(height: 220), // Add some spacing below the message
           Center(
             child: ElevatedButton(
               onPressed: isSaving ? null : () => postClinicalData(context),
@@ -434,7 +439,12 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                         color: Colors.white,
                       ),
                     )
-                  : Text('Submit'),
+                  : Text(
+                      'Upload',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ],
