@@ -18,6 +18,8 @@ workflows:
           pod install
       - name: Build iOS
         script: |
+          flutter clean
+          flutter pub get
           flutter build ios --no-codesign
     artifacts:
       - build/ios/iphoneos/Runner.app
