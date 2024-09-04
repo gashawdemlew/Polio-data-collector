@@ -11,6 +11,10 @@ workflows:
       - name: Install CocoaPods
         script: |
           brew install cocoapods || echo "CocoaPods is already installed"
+          cd ios
+          if [ ! -f Podfile ]; then
+            pod init
+          fi
           pod install
       - name: Build iOS
         script: |
