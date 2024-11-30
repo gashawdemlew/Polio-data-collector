@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() => runApp(SMS());
 
 class SMS extends StatelessWidget {
+  const SMS({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,6 +25,8 @@ class SMS extends StatelessWidget {
 }
 
 class SmsSender extends StatefulWidget {
+  const SmsSender({super.key});
+
   @override
   _SmsSenderState createState() => _SmsSenderState();
 }
@@ -130,7 +134,7 @@ class _SmsSenderState extends State<SmsSender> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             // Add navigation logic here to go back to the previous screen
             Navigator.of(context).push(
@@ -160,38 +164,38 @@ class _SmsSenderState extends State<SmsSender> {
                       controller: _fullNameController,
                       decoration: InputDecoration(
                         labelText: xx == "Amharic" ? "ሙሉ ስም" : "Full Name",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.person),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: _regionController,
                       decoration: InputDecoration(
                         labelText: xx == "Amharic" ? "ክልል" : "Region",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.map),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.map),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: _zoneController,
                       decoration: InputDecoration(
                         labelText: xx == "Amharic" ? "ዞን" : "Zone",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.location_city),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.location_city),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: _woredaController,
                       decoration: InputDecoration(
                         labelText: xx == "Amharic" ? "ወረዳ" : "Woreda",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.location_on),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.location_on),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
                       hint: Text(
                         xx == "Amharic" ? "የጾታ ምረጥ" : "Select Gender",
@@ -211,8 +215,8 @@ class _SmsSenderState extends State<SmsSender> {
                       },
                       decoration: InputDecoration(
                         labelText: xx == "Amharic" ? "ጾታ" : "Gender",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.people),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.people),
                       ),
                       validator: (value) {
                         if (value == null) {
@@ -221,18 +225,18 @@ class _SmsSenderState extends State<SmsSender> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: phonNo,
                       decoration: InputDecoration(
                         labelText:
                             xx == "Amharic" ? "የስልክ ቁጥር" : "Phone Number",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.phone),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.phone),
                       ),
                       keyboardType: TextInputType.phone,
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       readOnly: true,
                       controller: _phoneNumberController,
@@ -242,17 +246,14 @@ class _SmsSenderState extends State<SmsSender> {
                         labelText: xx == "Amharic"
                             ? "የተቀባይ የስልክ ቁጥር"
                             : "Receiver Phone Number",
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.phone),
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.phone),
                       ),
                       keyboardType: TextInputType.phone,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _sendSms,
-                      child: Text(
-                        xx == "Amharic" ? "SMS ይላኩ" : "Send SMS",
-                      ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor:
@@ -263,12 +264,15 @@ class _SmsSenderState extends State<SmsSender> {
                         ),
                         elevation: 14, // Add elevation
                       ),
+                      child: Text(
+                        xx == "Amharic" ? "SMS ይላኩ" : "Send SMS",
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               _smsStatus,
               textAlign: TextAlign.center,

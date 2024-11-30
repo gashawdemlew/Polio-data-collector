@@ -15,7 +15,8 @@ class LabForm extends StatefulWidget {
   final String type;
   final String languge;
 
-  LabForm({
+  const LabForm({
+    super.key,
     required this.epid,
     required this.type,
     required this.languge,
@@ -30,6 +31,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
   String _specimenCondition = '';
   bool _isSubmitting = false;
   String? _errorMessage;
+  @override
   void initState() {
     super.initState();
     // getCurrentLocation();
@@ -91,7 +93,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Successfully registered  ${widget.type}'),
-            duration: Duration(seconds: 30),
+            duration: const Duration(seconds: 30),
           ),
         );
         Navigator.push(
@@ -163,7 +165,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Card(
             elevation: 4.0,
@@ -171,22 +173,22 @@ class _StoolSpecimensFormState extends State<LabForm> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     widget.languge == "Amharic"
                         ? 'የ ሰገራ ናሙና የተሰበሰበበት  ቀን'
                         : 'Edit Your Profile'
                             'Date stool received by Lab: $languge',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -201,7 +203,6 @@ class _StoolSpecimensFormState extends State<LabForm> {
                         });
                       }
                     },
-                    child: Text("Select Date"),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -210,25 +211,26 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                       elevation: 14,
                     ),
+                    child: Text("Select Date"),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     _stool1DateReceivedByLab != null
                         ? 'Selected Date: ${_stool1DateReceivedByLab!.toLocal().toString().split(' ')[0]}'
                         : 'No date selected',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     widget.languge == "Amharic"
                         ? 'የናሙና ሁኔታ'
                         : 'Specimen Condition'
                             "Specimen Condition",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
                       Expanded(
@@ -259,20 +261,17 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   if (_errorMessage != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Text(
                         _errorMessage!,
-                        style: TextStyle(color: Colors.red, fontSize: 16),
+                        style: const TextStyle(color: Colors.red, fontSize: 16),
                       ),
                     ),
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child: _isSubmitting
-                        ? Text(widget.languge == "Amharic" ? 'መዝግብ..' : 'ሹብሚት')
-                        : Text("Submit"),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -281,6 +280,9 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                       elevation: 14,
                     ),
+                    child: _isSubmitting
+                        ? Text(widget.languge == "Amharic" ? 'መዝግብ..' : 'ሹብሚት')
+                        : Text("Submit"),
                   ),
                 ],
               ),

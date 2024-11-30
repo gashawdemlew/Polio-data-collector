@@ -25,6 +25,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 final dio = Dio();
 
 class Patientdemographic extends StatefulWidget {
+  const Patientdemographic({super.key});
+
   // const Patientdemographic({});
 
   @override
@@ -1309,8 +1311,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
   final TextEditingController District = TextEditingController();
   final _dateController = TextEditingController();
 
-  String _empId = '';
-  String _oId = '';
+  final String _empId = '';
+  final String _oId = '';
   String languge = "ccc";
   LanguageResources? resources;
 
@@ -1333,7 +1335,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
     });
   }
 
-  TextEditingController _epidNumberController = TextEditingController();
+  final TextEditingController _epidNumberController = TextEditingController();
 
   final currentDate56 = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -1381,7 +1383,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
 
   Future<void> _loadLanguage45() async {
     // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge); // or "English"
       resource12 = resources;
@@ -1452,7 +1454,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
         print(epid_Number);
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form submitted successfully!')),
+          const SnackBar(content: Text('Form submitted successfully!')),
         );
 
         Navigator.pushReplacement(
@@ -1501,8 +1503,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 readOnly: true, // make it read-only
                 controller: TextEditingController(text: latitude.toString()),
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["latitude"] ?? ''}',
-                    '${resources?.patientDemographic()["latitude"] ?? ''}'),
+                    resources?.patientDemographic()["latitude"] ?? '',
+                    resources?.patientDemographic()["latitude"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Longitude is required';
@@ -1515,8 +1517,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 readOnly: true, // make it read-only
                 controller: TextEditingController(text: longitude.toString()),
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["longitude"] ?? ''}',
-                    '${resources?.patientDemographic()["longitude"] ?? ''}'),
+                    resources?.patientDemographic()["longitude"] ?? '',
+                    resources?.patientDemographic()["longitude"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Longitude is required';
@@ -1528,8 +1530,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
               TextFormField(
                 controller: first_name,
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["First name"] ?? ''}',
-                    '${resources?.patientDemographic()["First name"] ?? ''}'),
+                    resources?.patientDemographic()["First name"] ?? '',
+                    resources?.patientDemographic()["First name"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -1541,8 +1543,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
               TextFormField(
                 controller: last_name,
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["Last name"] ?? ''}',
-                    '${resources?.patientDemographic()["Last name"] ?? ''}'),
+                    resources?.patientDemographic()["Last name"] ?? '',
+                    resources?.patientDemographic()["Last name"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -1554,8 +1556,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
               TextFormField(
                 controller: phoneNo,
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["Phone number"] ?? ''}',
-                    '${resources?.patientDemographic()["Phone number"] ?? ''}'),
+                    resources?.patientDemographic()["Phone number"] ?? '',
+                    resources?.patientDemographic()["Phone number"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a phone number';
@@ -1586,8 +1588,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                   });
                 },
                 decoration: ThemeHelper().textInputDecoration(
-                    '${resources?.patientDemographic()["gender"] ?? ''}',
-                    '${resources?.patientDemographic()["gender"] ?? ''}'),
+                    resources?.patientDemographic()["gender"] ?? '',
+                    resources?.patientDemographic()["gender"] ?? ''),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select your gender';
@@ -1671,8 +1673,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      '${resources?.patientDemographic()["Select Zone "] ?? ''}',
-                      '${resources?.patientDemographic()["Select Zone"] ?? ''}'),
+                      resources?.patientDemographic()["Select Zone "] ?? '',
+                      resources?.patientDemographic()["Select Zone"] ?? ''),
                   validator: (value) {
                     if (value == null) {
                       return 'Please select a zone';
@@ -1701,8 +1703,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      '${resources?.patientDemographic()["Select Woreda "] ?? ''}',
-                      '${resources?.patientDemographic()["Select Woreda"] ?? ''}'),
+                      resources?.patientDemographic()["Select Woreda "] ?? '',
+                      resources?.patientDemographic()["Select Woreda"] ?? ''),
                   validator: (value) {
                     if (value == null) {
                       return 'Please select a woreda';
@@ -1712,7 +1714,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 ),
               const SizedBox(height: 16.0),
               const SizedBox(height: 16.0),
-              Container(
+              SizedBox(
                 width: 370,
                 child: ElevatedButton(
                   onPressed: () {
@@ -1737,11 +1739,6 @@ class _PatientdemographicState extends State<Patientdemographic> {
                     //               // woreda: _selectedZone.toString(),
                     //             )));
                   },
-                  child: Text(
-                    isSubmitting
-                        ? (languge == "Amharic" ? 'ቀጣይ...' : 'Saving...')
-                        : (languge == "Amharic" ? 'ቀጣይ' : 'Next'),
-                  ),
                   //  isSubmitting ? Text('Saving...') : Text('Submit'),
 
                   //
@@ -1756,6 +1753,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
                           8.0), // Adjust the border radius
                     ),
                     elevation: 14, // Add elevation
+                  ),
+                  child: Text(
+                    isSubmitting
+                        ? (languge == "Amharic" ? 'ቀጣይ...' : 'Saving...')
+                        : (languge == "Amharic" ? 'ቀጣይ' : 'Next'),
                   ),
                 ),
               ),

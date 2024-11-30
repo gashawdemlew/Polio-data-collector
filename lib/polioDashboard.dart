@@ -3,14 +3,20 @@ import 'package:camera_app/drawer.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PolioDashboard extends StatefulWidget {
+  const PolioDashboard({super.key});
+
   @override
   _PolioDashboardState createState() => _PolioDashboardState();
 }
 
 class _PolioDashboardState extends State<PolioDashboard> {
+  bool _isDisposed = false;
+
   String userType = '';
   String email = '';
   String _selectedLanguage = "English";
@@ -39,6 +45,11 @@ class _PolioDashboardState extends State<PolioDashboard> {
     });
   }
 
+  void dispose() {
+    _isDisposed = true;
+    super.dispose();
+  }
+
   Future<void> _loadLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
@@ -50,12 +61,13 @@ class _PolioDashboardState extends State<PolioDashboard> {
   }
 
   Future<void> _loadLanguage45() async {
-    // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {
-      resources = LanguageResources(languge); // or "English"
-      resource12 = resources;
-    });
+    await Future.delayed(const Duration(seconds: 1));
+    if (!_isDisposed) {
+      setState(() {
+        resources = LanguageResources(languge);
+        resource12 = resources;
+      });
+    }
   }
 
   final List<String> imagePaths = [
@@ -151,7 +163,7 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
 - የ AFP ጉዳዮችን መከታተል የፖሊዮ ኢንፌክሽኖችን ለመለየት እና የህዝብ ጤና ምላሽን ለመምራት ይረዳል
   ''';
 
-  double _scale = 1.0;
+  final double _scale = 1.0;
 
   @override
   Widget build(BuildContext context) {
@@ -162,217 +174,563 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
         userType: userType,
         languge: languge,
       ),
-      appBar: AppBar(
-        title: Text(
-          resources?.homepage()["welcomeMessage"] ?? '',
-          style: TextStyle(color: Colors.white),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0),
+        child: AppBar(
+          title: Text(
+            'Welcome, User!',
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          centerTitle: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [CustomColors.testColor1, Color(0xFF2575FC)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, size: 26),
+              onPressed: () {
+                // Implement notification functionality
+              },
+              color: Colors.white,
+            ),
+            IconButton(
+              icon: Icon(Icons.people_alt, size: 26),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(),
+                  ),
+                );
+              },
+              color: Colors.white,
+            ),
+            SizedBox(width: 10), // Add spacing for better alignment
+          ],
         ),
-        backgroundColor: CustomColors.testColor1,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {
-              // Implement notification functionality
-            },
-            color: Colors.white,
-          ),
-          IconButton(
-            icon: Icon(Icons.people_alt),
-            onPressed: () {
-              // Implement notification functionality
-              //
-
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => UserProfile(),
-                ),
-              );
-            },
-            color: Colors.white,
-          ),
-        ],
       ),
       body: resources == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Padding(
+              child: Container(
+                color: const Color.fromARGB(251, 232, 229, 229),
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'About RAPPS',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          // width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          // BoxShadow(
+                          //   color: Colors.grey.withOpacity(0.3),
+                          //   spreadRadius: 3,
+                          //   blurRadius: 8,
+                          //   offset: Offset(0, 3),
+                          // ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.info_outline,
+                                  color: CustomColors.testColor1, size: 26),
+                              const SizedBox(width: 8),
+                              Text(
+                                'About RAPPS',
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: CustomColors.testColor1,
+                            thickness: 2,
+                            endIndent: 30,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            AboutRAPPS,
+                            textAlign: TextAlign.justify,
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700],
+                              height: 1.5, // Improved readability
+                              // fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle URL tap
+                              launchUrlString('https://www.polioantenna.org/');
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.testColor1,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.blue.withOpacity(0.5),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Learn More',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(Icons.link,
+                                      color: Colors.white, size: 18),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              AboutRAPPS,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Center(
-                      child: Image.asset(
-                        'assets/im/yarie.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'About Polio Antenna APP',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              AboutPolioAntennaAPP,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ],
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            20.0), // Adjust the radius as needed
+                        child: Image.asset(
+                          'assets/im/yarie.jpg',
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'What is the Polio Virus???',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: Colors.white,
+                          // width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.grey.withOpacity(0.3),
+                        //     spreadRadius: 3,
+                        //     blurRadius: 8,
+                        //     offset: Offset(0, 3),
+                        //   ),
+                        // ],
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.info_outline,
+                                  color: CustomColors.testColor1, size: 26),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'About Polio Antenna APP',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: CustomColors.testColor1,
+                            thickness: 2,
+                            endIndent: 30,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            AboutPolioAntennaAPP,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[700],
+                              height: 1.5, // Improved readability
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle URL tap
+                              launchUrlString('https://www.polioantenna.org/');
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.testColor1,
+                                borderRadius: BorderRadius.circular(8),
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: Colors.blue.withOpacity(0.5),
+                                //     blurRadius: 5,
+                                //     spreadRadius: 2,
+                                //   ),
+                                // ],
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Learn More',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(Icons.link,
+                                      color: Colors.white, size: 18),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              WhatisthePolioVirus,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              languge == "Amharic"
-                                  ? 'AFP ስለላ'
-                                  : "Acute Flaccid Paralysis (AFP) Surveillance",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.info,
+                                  color: CustomColors.testColor1, size: 26),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'What is the Polio Virus???',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: CustomColors.testColor1,
+                            thickness: 2,
+                            endIndent: 30,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            WhatisthePolioVirus,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.w600,
+                              height: 1.5, // Improves line spacing
+                              // fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle URL or interaction
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.testColor1,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Learn More',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(Icons.link,
+                                      color: Colors.white, size: 18),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              languge == "Amharic"
-                                  ? AFPam
-                                  : languge == "AfanOromo"
-                                      ? AFPafm
-                                      : AFP,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Card(
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              languge == "Amharic"
-                                  ? "ዓለም አቀፍ እና ክልላዊ የፖሊዮ ሁኔታ"
-                                  : 'Global and Regional Polio Status',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.local_hospital_outlined,
+                                  color: CustomColors.testColor1, size: 26),
+                              const SizedBox(width: 8),
+                              Text(
+                                languge == "Amharic"
+                                    ? 'AFP ስለላ'
+                                    : "AFP Surveillance",
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: CustomColors.testColor1,
+                            thickness: 2,
+                            endIndent: 30,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            languge == "Amharic"
+                                ? AFPam
+                                : languge == "AfanOromo"
+                                    ? AFPafm
+                                    : AFP,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[700],
+                              height: 1.5, // Improves line spacing
+                              // fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle additional actions or navigation
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.testColor1,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Learn More',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(Icons.link,
+                                      color: Colors.white, size: 18),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              languge == "Amharic"
-                                  ? map34am
-                                  : languge == "AfanOromo"
-                                      ? map34afm
-                                      : map34,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontStyle: FontStyle.italic),
-                            ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 20),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.white, Colors.white],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.language_outlined,
+                                  color: CustomColors.testColor1, size: 26),
+                              const SizedBox(width: 8),
+                              Text(
+                                languge == "Amharic"
+                                    ? "የፖሊዮ ሁኔታ"
+                                    : 'Polio Status',
+                                style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Divider(
+                            color: CustomColors.testColor1,
+                            thickness: 2,
+                            endIndent: 30,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            languge == "Amharic"
+                                ? map34am
+                                : languge == "AfanOromo"
+                                    ? map34afm
+                                    : map34,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[700],
+                                height: 1.5, // Improves line spacing
+                                // fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle additional actions or navigation
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: CustomColors.testColor1,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.white.withOpacity(0.5),
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Learn More',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(Icons.arrow_forward,
+                                      color: Colors.white, size: 18),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
                   ],
                 ),
               ),
             ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    theme: ThemeData(
-      fontFamily: 'Roboto', // Custom font
-      appBarTheme: AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-    ),
-    home: PolioDashboard(),
-  ));
 }

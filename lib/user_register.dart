@@ -16,6 +16,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -38,7 +40,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'Admin',
     'Health Officer',
     'Volunteers',
-    'Laboratorist'
+    'Laboratorist',
+    'Desicion_maker_commite'
   ];
 
   String? epidNumber,
@@ -1307,6 +1310,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     },
   };
 
+  @override
   void initState() {
     super.initState();
     _loadUserDetails1();
@@ -1386,7 +1390,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to fetch health officers')));
+            const SnackBar(content: Text('Failed to fetch health officers')));
       }
     }
   }
@@ -1398,7 +1402,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           backgroundColor: CustomColors.testColor1,
           title: Text(
             languge2 == "Amharic" ? "መዝግብ" : "Register",
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
         body: SingleChildScrollView(
@@ -1411,13 +1415,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: ThemeHelper().textInputDecoration(
                       languge2 == "Amharic" ? "የመጀመሪያ ስም" : "First Name",
                     )),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                     controller: lastNameController,
                     decoration: ThemeHelper().textInputDecoration(
                       languge2 == "Amharic" ? "ያባት ስም" : "Last Name",
                     )),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 DropdownButtonFormField<String>(
                   hint: Text(
@@ -1447,14 +1451,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
                 TextField(
                     controller: phoneNoController,
                     decoration: ThemeHelper().textInputDecoration(
                       languge2 == "Amharic" ? "ስልክ ቁጥር" : "Phone Number",
                     )),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 TextField(
                     controller: passwordController,
                     obscureText: true,
@@ -1462,7 +1466,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         languge2 == "Amharic"
                             ? "የይለፍ ቃል ይሙሉ"
                             : "Enter Password")),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   decoration: ThemeHelper().textInputDecoration(
                       languge2 == "Amharic" ? "ክልል ይምረጡ" : "Select Region"),
@@ -1489,7 +1493,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1519,7 +1523,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1550,7 +1554,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
                   decoration: ThemeHelper().textInputDecoration(
@@ -1570,7 +1574,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 if (selectedRole == 'Volunteers')
@@ -1610,16 +1614,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //     decoration: ThemeHelper()
                 //         .textInputDecoration('Longitude', 'Longitude')),
 
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
 
-                SizedBox(height: 20),
-                Container(
+                const SizedBox(height: 20),
+                SizedBox(
                   width: 370,
                   child: ElevatedButton(
                     onPressed: () async {
                       if (selectedRole == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Please select a user role')));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Please select a user role')));
                         return;
                       }
 
@@ -1647,9 +1652,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         print('Error: $e');
                       }
                     },
-                    child: Text(
-                      languge2 == "Amharic" ? "መዝግብ" : "Register",
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -1659,6 +1661,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             8.0), // Adjust the border radius
                       ),
                       elevation: 14, // Add elevation
+                    ),
+                    child: Text(
+                      languge2 == "Amharic" ? "መዝግብ" : "Register",
                     ),
                   ),
                 ),

@@ -15,6 +15,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataListPage extends StatefulWidget {
+  const DataListPage({super.key});
+
   @override
   _DataListPageState createState() => _DataListPageState();
 }
@@ -52,7 +54,7 @@ class _DataListPageState extends State<DataListPage> {
   }
 
   Future<void> _loadLanguage45() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge);
       resource12 = resources;
@@ -101,7 +103,7 @@ class _DataListPageState extends State<DataListPage> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Record deleted successfully')),
+        const SnackBar(content: Text('Record deleted successfully')),
       );
 
       Navigator.of(context).push(
@@ -111,30 +113,30 @@ class _DataListPageState extends State<DataListPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete record')),
+        const SnackBar(content: Text('Failed to delete record')),
       );
     }
   }
 
-  Future<void> _showDeleteConfirmationDialog(int petient_id) async {
+  Future<void> _showDeleteConfirmationDialog(int petientId) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Delete Confirmation'),
-          content: Text('Are you sure you want to delete this record?'),
+          title: const Text('Delete Confirmation'),
+          content: const Text('Are you sure you want to delete this record?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
             ),
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
-                _deleteDataById(petient_id); // Delete the record
+                _deleteDataById(petientId); // Delete the record
               },
             ),
           ],
@@ -181,7 +183,7 @@ class _DataListPageState extends State<DataListPage> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
@@ -258,7 +260,7 @@ class _DataListPageState extends State<DataListPage> {
                     }
                   },
                   child: Card(
-                    margin: EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
@@ -270,19 +272,19 @@ class _DataListPageState extends State<DataListPage> {
                           data[index]['first_name']?.isNotEmpty == true
                               ? data[index]['first_name'][0].toUpperCase()
                               : "",
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       title: Text(
                         data[index]['first_name'],
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                       subtitle: Text(
                         getProgressText(data[index]['progressNo'] ?? ""),
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
                           _showDeleteConfirmationDialog(
                               data[index]['petient_id']);

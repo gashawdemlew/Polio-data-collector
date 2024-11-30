@@ -15,6 +15,8 @@ void main() {
 }
 
 class ViewMessage extends StatelessWidget {
+  const ViewMessage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,6 +31,8 @@ class ViewMessage extends StatelessWidget {
 }
 
 class ClinicMessagePage extends StatefulWidget {
+  const ClinicMessagePage({super.key});
+
   @override
   _ClinicMessagePageState createState() => _ClinicMessagePageState();
 }
@@ -92,9 +96,9 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
     });
   }
 
-  Future<void> _updateMessageStatus(int push_id) async {
+  Future<void> _updateMessageStatus(int pushId) async {
     try {
-      final url = '${baseUrl}clinic/messages23/$push_id';
+      final url = '${baseUrl}clinic/messages23/$pushId';
       print('Sending PUT request to: $url');
 
       final response = await http.put(
@@ -120,7 +124,7 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
       appBar: AppBar(
         backgroundColor: CustomColors.testColor1,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -129,7 +133,7 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'User List',
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -140,8 +144,8 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(16.0),
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.blue, Colors.lightBlueAccent],
                 begin: Alignment.topLeft,
@@ -152,7 +156,7 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                 bottomRight: Radius.circular(30.0),
               ),
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 'Clinic Messages',
                 style: TextStyle(
@@ -163,24 +167,24 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
               ),
             ),
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           if (_isLoading)
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             )
           else
             Expanded(
               child: ListView.builder(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   final message = _messages[index];
                   return GestureDetector(
                     onTap: () {
-                      int push_id = int.parse(message['push_id'].toString());
+                      int pushId = int.parse(message['push_id'].toString());
 
 // Call the function with the parsed integer
-                      _updateMessageStatus(push_id);
+                      _updateMessageStatus(pushId);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -194,13 +198,13 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                       );
                     },
                     child: Card(
-                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       elevation: 4.0,
                       child: Padding(
-                        padding: EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: Row(
                           children: [
                             Icon(
@@ -212,19 +216,19 @@ class _ClinicMessagePageState extends State<ClinicMessagePage> {
                                   : Colors.blue,
                               size: 40.0,
                             ),
-                            SizedBox(width: 16.0),
+                            const SizedBox(width: 16.0),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     '${message['first_name'] ?? 'N/A'} ${message['last_name'] ?? 'N/A'}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  const SizedBox(height: 8.0),
                                   Text(
                                     'EPID: ${message['epid_number'] ?? 'N/A'}',
                                     style: TextStyle(
@@ -256,8 +260,9 @@ class AnotherPage extends StatelessWidget {
   final String epid;
   final String languge;
 
-  AnotherPage(
-      {required this.firstName,
+  const AnotherPage(
+      {super.key,
+      required this.firstName,
       required this.languge,
       required this.lastName,
       required this.epid});
@@ -280,7 +285,7 @@ class AnotherPage extends StatelessWidget {
           children: [
             Text(
               'EPID: $epid',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -302,8 +307,8 @@ class AnotherPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 132, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 132, vertical: 20),
                       backgroundColor: CustomColors.testColor1,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -311,13 +316,13 @@ class AnotherPage extends StatelessWidget {
                     ),
                     child: Text(
                       languge == "Amharic" ? 'ሰገራ ምርምራ 1' : 'Stool 1',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -331,8 +336,8 @@ class AnotherPage extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 132, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 132, vertical: 20),
                       backgroundColor: Colors.teal,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -340,7 +345,7 @@ class AnotherPage extends StatelessWidget {
                     ),
                     child: Text(
                       languge == "Amharic" ? 'ሰገራ ምርምራ 2' : 'Stool 2',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),

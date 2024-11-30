@@ -6,6 +6,8 @@ void main() {
 }
 
 class labCatagory extends StatelessWidget {
+  const labCatagory({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +21,8 @@ class labCatagory extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -28,10 +32,10 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stool Categories'),
+        title: const Text('Stool Categories'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
             // CategoryCard(
@@ -70,7 +74,8 @@ class CategoryCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  CategoryCard({
+  const CategoryCard({
+    super.key,
     required this.title,
     required this.color,
     required this.onTap,
@@ -89,12 +94,12 @@ class CategoryCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   color: Colors.white,
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward,
                 color: Colors.white,
               ),
@@ -107,6 +112,8 @@ class CategoryCard extends StatelessWidget {
 }
 
 class Stool1Page extends StatefulWidget {
+  const Stool1Page({super.key});
+
   @override
   _Stool1PageState createState() => _Stool1PageState();
 }
@@ -116,9 +123,9 @@ class _Stool1PageState extends State<Stool1Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stool 1 Details'),
+        title: const Text('Stool 1 Details'),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Details for Stool 1',
           style: TextStyle(fontSize: 24),
@@ -129,6 +136,8 @@ class _Stool1PageState extends State<Stool1Page> {
 }
 
 class Stool2Page extends StatefulWidget {
+  const Stool2Page({super.key});
+
   @override
   _Stool2PageState createState() => _Stool2PageState();
 }
@@ -138,9 +147,9 @@ class _Stool2PageState extends State<Stool2Page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stool 2 Details'),
+        title: const Text('Stool 2 Details'),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Details for Stool 2',
           style: TextStyle(fontSize: 24),

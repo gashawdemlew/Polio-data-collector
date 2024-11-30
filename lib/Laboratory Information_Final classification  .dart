@@ -13,7 +13,8 @@ class LaboratoryFinalClassificationForm extends StatefulWidget {
   final String epid;
   final String type;
 
-  LaboratoryFinalClassificationForm({
+  const LaboratoryFinalClassificationForm({
+    super.key,
     required this.epid,
     required this.type,
   });
@@ -34,6 +35,7 @@ class _LaboratoryFinalClassificationFormState
   String _finalCombinedITDResult = '';
   bool isSubmitting = false;
 
+  @override
   void initState() {
     super.initState();
     _loadUserDetails();
@@ -69,7 +71,7 @@ class _LaboratoryFinalClassificationFormState
 
   Future<void> _loadLanguage45() async {
     // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge); // or "English"
       resource12 = resources;
@@ -105,7 +107,7 @@ class _LaboratoryFinalClassificationFormState
       if (response.statusCode == 200) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Successfully registered')),
+          const SnackBar(content: Text('Successfully registered')),
         );
 
         // Check the widget.type
@@ -118,13 +120,13 @@ class _LaboratoryFinalClassificationFormState
       } else {
         print('Failed to submit form: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to register')),
+          const SnackBar(content: Text('Failed to register')),
         );
       }
     } catch (error) {
       print('Error submitting form: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred')),
+        const SnackBar(content: Text('An error occurred')),
       );
     } finally {
       setState(() {
@@ -145,7 +147,7 @@ class _LaboratoryFinalClassificationFormState
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Card(
             elevation: 4.0,
@@ -153,18 +155,18 @@ class _LaboratoryFinalClassificationFormState
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
+                  const Text(
                     'True AFP:  ',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
                       Expanded(
@@ -195,17 +197,17 @@ class _LaboratoryFinalClassificationFormState
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ  ውጤት:"
                         : "Final Cell Culture Result:",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -249,17 +251,17 @@ class _LaboratoryFinalClassificationFormState
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ ቀን ውጤቶች :"
                         : "Date Final Cell Culture Results:",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -275,9 +277,6 @@ class _LaboratoryFinalClassificationFormState
                         });
                       }
                     },
-                    child: Text(
-                      ff == "Amharic" ? "ቀን ይምረጡ" : "Select Date",
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -286,21 +285,24 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       elevation: 14,
                     ),
+                    child: Text(
+                      ff == "Amharic" ? "ቀን ይምረጡ" : "Select Date",
+                    ),
                   ),
                   Text(
                     'Selected Date (Final Cell Culture Results): ${_dateFinalCellCultureResults != null ? _dateFinalCellCultureResults!.toString().split(' ')[0] : "Not selected"}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ  አይቲዲ ውጤት:"
                         : "Final Combined ITD Result:",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -354,14 +356,11 @@ class _LaboratoryFinalClassificationFormState
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
                       _submitForm();
                     },
-                    child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -369,6 +368,9 @@ class _LaboratoryFinalClassificationFormState
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       elevation: 14,
+                    ),
+                    child: Text(
+                      isSubmitting ? 'Saving...' : 'Submit',
                     ),
                   ),
                 ],

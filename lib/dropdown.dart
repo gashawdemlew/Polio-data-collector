@@ -5,11 +5,13 @@ void main() {
 }
 
 class CascadeDropdown1 extends StatelessWidget {
+  const CascadeDropdown1({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: Text('Cascade Dropdown Example')),
+        appBar: AppBar(title: const Text('Cascade Dropdown Example')),
         body: CascadeDropdown(),
       ),
     );
@@ -17,6 +19,8 @@ class CascadeDropdown1 extends StatelessWidget {
 }
 
 class CascadeDropdown extends StatefulWidget {
+  const CascadeDropdown({super.key});
+
   @override
   _CascadeDropdownState createState() => _CascadeDropdownState();
 }
@@ -118,7 +122,7 @@ class _CascadeDropdownState extends State<CascadeDropdown> {
       child: Column(
         children: <Widget>[
           DropdownButton<String>(
-            hint: Text('Select Region'),
+            hint: const Text('Select Region'),
             value: _selectedRegion,
             items: locationData.keys.map((String region) {
               return DropdownMenuItem<String>(
@@ -136,7 +140,7 @@ class _CascadeDropdownState extends State<CascadeDropdown> {
           ),
           if (_selectedRegion != null)
             DropdownButton<String>(
-              hint: Text('Select Zone'),
+              hint: const Text('Select Zone'),
               value: _selectedZone,
               items: locationData[_selectedRegion!]!.keys.map((String zone) {
                 return DropdownMenuItem<String>(
@@ -153,7 +157,7 @@ class _CascadeDropdownState extends State<CascadeDropdown> {
             ),
           if (_selectedZone != null)
             DropdownButton<String>(
-              hint: Text('Select Woreda'),
+              hint: const Text('Select Woreda'),
               value: _selectedWoreda,
               items: locationData[_selectedRegion!]![_selectedZone!]!
                   .map((String woreda) {

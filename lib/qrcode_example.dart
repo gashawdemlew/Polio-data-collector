@@ -71,8 +71,8 @@ class QRCodeScreen extends StatelessWidget {
       );
 
       final recorder = PictureRecorder();
-      final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, 350, 350));
-      qrCode.paint(canvas, Size(350, 350));
+      final canvas = Canvas(recorder, const Rect.fromLTWH(0, 0, 350, 350));
+      qrCode.paint(canvas, const Size(350, 350));
 
       final picture = recorder.endRecording();
       final img = await picture.toImage(350, 350);
@@ -86,7 +86,7 @@ class QRCodeScreen extends StatelessWidget {
       await _channel.invokeMethod('saveImage', {'filePath': filePath});
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('QR Code saved to gallery')),
+        const SnackBar(content: Text('QR Code saved to gallery')),
       );
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -172,13 +172,13 @@ class QRCodeScreen extends StatelessWidget {
               ),
               size: const Size(350, 350),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _downloadQRCode(context),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
                 backgroundColor: CustomColors.testColor1, // Text color
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                     horizontal: 24, vertical: 12), // Button padding
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30), // Rounded corners
@@ -189,7 +189,7 @@ class QRCodeScreen extends StatelessWidget {
                 languge == "Amharic"
                     ? 'ጋለርይ ላይ አስቀምጥ'
                     : 'Save Image Into Gallery',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18, // Text size
                   fontWeight: FontWeight.bold, // Text weight
                 ),

@@ -5,6 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -35,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_profilePic == null) {
       // Handle error - profile picture not selected
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select a profile picture')),
+        const SnackBar(content: Text('Please select a profile picture')),
       );
       return;
     }
@@ -48,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _userTypeController.text.isEmpty) {
       // Handle error - required fields not filled
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all required fields')),
+        const SnackBar(content: Text('Please fill in all required fields')),
       );
       return;
     }
@@ -73,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
         var responseBody = json.decode(responseData);
         // Handle successful registration
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration successful')),
+          const SnackBar(content: Text('Registration successful')),
         );
         // Navigate to another page or perform other actions
       } else {
@@ -97,7 +99,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: const Text('Register'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -106,46 +108,46 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               TextField(
                 controller: _firstNameController,
-                decoration: InputDecoration(labelText: 'First Name'),
+                decoration: const InputDecoration(labelText: 'First Name'),
               ),
               TextField(
                 controller: _lastNameController,
-                decoration: InputDecoration(labelText: 'Last Name'),
+                decoration: const InputDecoration(labelText: 'Last Name'),
               ),
               TextField(
                 controller: _middleNameController,
-                decoration: InputDecoration(labelText: 'Middle Name'),
+                decoration: const InputDecoration(labelText: 'Middle Name'),
               ),
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
+                decoration: const InputDecoration(labelText: 'Email'),
               ),
               TextField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Password'),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
               ),
               TextField(
                 controller: _phoneController,
-                decoration: InputDecoration(labelText: 'Phone'),
+                decoration: const InputDecoration(labelText: 'Phone'),
               ),
               TextField(
                 controller: _userTypeController,
-                decoration: InputDecoration(labelText: 'User Type'),
+                decoration: const InputDecoration(labelText: 'User Type'),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _pickProfilePic,
-                child: Text('Select Profile Picture'),
+                child: const Text('Select Profile Picture'),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               _profilePic == null
-                  ? Text('No image selected.')
+                  ? const Text('No image selected.')
                   : Image.file(_profilePic!, height: 100, width: 100),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: _register,
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
             ],
           ),

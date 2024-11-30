@@ -47,6 +47,7 @@ class StoolSpecimensForm343 extends StatefulWidget {
 
   @override
   const StoolSpecimensForm343({
+    super.key,
     // required this.resources1,
     required this.epid_Number,
     // required this.longitude,
@@ -87,8 +88,8 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
   DateTime? _stool2DateSentToLab;
   DateTime? _stool1DateReceivedByLab;
   DateTime? _stool2DateReceivedByLab;
-  String _caseOrContact = '';
-  String _specimenCondition = '';
+  final String _caseOrContact = '';
+  final String _specimenCondition = '';
 
   String languge = "ccc";
   LanguageResources? resources;
@@ -97,6 +98,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
 
   late DateTime currentDate;
   late String formattedDate;
+  @override
   void initState() {
     super.initState();
     // getCurrentLocation();
@@ -124,7 +126,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
 
   Future<void> _loadLanguage45() async {
     // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge); // or "English"
       resource12 = resources;
@@ -178,7 +180,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form submitted successfully!')),
+          const SnackBar(content: Text('Form submitted successfully!')),
         );
         Navigator.pushReplacement(
             context,
@@ -216,7 +218,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         // color: Theme.of(context).backgroundColor,
         child: SingleChildScrollView(
           child: Card(
@@ -225,22 +227,22 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
                     resources?.stoolSpecimen()["dateStoolCollected"] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     resources?.stoolSpecimen()["stool1"] ?? '',
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -255,9 +257,6 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                         });
                       }
                     },
-                    child: Text(
-                      resources?.stoolSpecimen()["selectDate"] ?? '',
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -268,15 +267,18 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       ),
                       elevation: 14, // Add elevation
                     ),
+                    child: Text(
+                      resources?.stoolSpecimen()["selectDate"] ?? '',
+                    ),
                   ),
                   Text(
-                    '${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_stool1DateCollected != null ? _stool1DateCollected!.toString().split(' ')[0] : "${resources?.stoolSpecimen()["notSelected"] ?? ""}"}',
+                    '${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_stool1DateCollected != null ? _stool1DateCollected!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     resources?.stoolSpecimen()["stool2"] ?? '',
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -291,9 +293,6 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                         });
                       }
                     },
-                    child: Text(
-                      resources?.stoolSpecimen()["selectDate"] ?? '',
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -304,11 +303,14 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       ),
                       elevation: 14, // Add elevation
                     ),
+                    child: Text(
+                      resources?.stoolSpecimen()["selectDate"] ?? '',
+                    ),
                   ),
                   // Text(
                   //   '${widget.resources1?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DateCollected != null ? _stool2DateCollected!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ""}"}',
                   // ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   // Text(
                   //   widget.resources1?.stoolSpecimen()["Daysafteronset"] ?? '',
                   //   style: TextStyle(
@@ -383,21 +385,21 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                   //   ),
                   // ),
                   Text(
-                    '${resources?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DaysAfterOnset != null ? _stool2DaysAfterOnset!.toString().split(' ')[0] : "${resources?.stoolSpecimen()["notSelected"] ?? ""}"}',
+                    '${resources?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DaysAfterOnset != null ? _stool2DaysAfterOnset!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     resources?.stoolSpecimen()["DateSenttoLab"] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     resources?.stoolSpecimen()["stool1"] ?? '',
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -412,7 +414,6 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                         });
                       }
                     },
-                    child: Text(resources?.stoolSpecimen()["selectDate"] ?? ''),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -423,13 +424,14 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       ),
                       elevation: 14, // Add elevation
                     ),
+                    child: Text(resources?.stoolSpecimen()["selectDate"] ?? ''),
                   ),
                   Text(
-                    '${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_stool1DateSentToLab != null ? _stool1DateSentToLab!.toString().split(' ')[0] : "${resources?.stoolSpecimen()["notSelected"] ?? ""}"}',
+                    '${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_stool1DateSentToLab != null ? _stool1DateSentToLab!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(resources?.stoolSpecimen()["stool2"] ?? ""),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -444,7 +446,6 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                         });
                       }
                     },
-                    child: Text(resources?.stoolSpecimen()["selectDate"] ?? ''),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -455,6 +456,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       ),
                       elevation: 14, // Add elevation
                     ),
+                    child: Text(resources?.stoolSpecimen()["selectDate"] ?? ''),
                   ),
                   Text(
                     'Selected Date (Stool 2): ${_stool2DateSentToLab != null ? _stool2DateSentToLab!.toString().split(' ')[0] : "Not selected"}',
@@ -533,7 +535,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                   // Text(
                   //   '${widget.resources1?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DateReceivedByLab != null ? _stool2DateReceivedByLab!.toString().split(' ')[0] : "${widget.resources1?.stoolSpecimen()["notSelected"] ?? ""}"}',
                   // ),
-                  SizedBox(height: 36.0),
+                  const SizedBox(height: 36.0),
                   // Text(
                   //   widget.resources1?.stoolSpecimen()["CaseorContact"] ?? "",
                   //   style: TextStyle(
@@ -649,7 +651,7 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                   //     ),
                   //   ],
                   // ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
                       // Submit form data
@@ -726,10 +728,6 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       //             first_name: widget.first_name,
                       //             last_name: widget.last_name)));
                     },
-                    // child: Text(resources?.patientDemographic()["next"] ?? ''),
-                    child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor:
@@ -739,6 +737,10 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                             8.0), // Adjust the border radius
                       ),
                       elevation: 14, // Add elevation
+                    ),
+                    // child: Text(resources?.patientDemographic()["next"] ?? ''),
+                    child: Text(
+                      isSubmitting ? 'Saving...' : 'Submit',
                     ),
                   ),
                 ],

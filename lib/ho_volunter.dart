@@ -7,6 +7,8 @@ import 'package:camera_app/color.dart';
 import 'package:video_player/video_player.dart'; // Assuming this is your custom color file
 
 class DemographiVolPage extends StatefulWidget {
+  const DemographiVolPage({super.key});
+
   @override
   _DemographiVolPageState createState() => _DemographiVolPageState();
 }
@@ -76,7 +78,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
         // Message status updated successfully
         print('Message status updated to seen');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Message status updated to seen'),
             duration: Duration(seconds: 3),
           ),
@@ -84,7 +86,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
       } else {
         print('Error updating message status: ${response.statusCode}');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Error updating message status'),
             duration: Duration(seconds: 3),
           ),
@@ -93,7 +95,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
     } catch (error) {
       print('Error: $error');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('An error occurred while updating the message status'),
           duration: Duration(seconds: 3),
         ),
@@ -121,7 +123,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
           userDetails['selectedLanguage'] == 'Amharic'
               ? 'የበጎ ፍቃደኛ መረጃዎች'
               : 'Demographic Records', // Use an empty string as a fallback
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         backgroundColor:
             CustomColors.testColor1, // Assuming you have custom colors
@@ -140,7 +142,8 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
                     backgroundColor: Colors.blueAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -151,7 +154,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     userDetails['selectedLanguage'] == 'Amharic'
                         ? 'ሁሉንም አሳይ'
                         : "Show All",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
@@ -161,7 +164,8 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
                     backgroundColor: Colors.orangeAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -172,7 +176,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     userDetails['selectedLanguage'] == 'Amharic'
                         ? 'ያልታዩትን  አሳይ'
                         : "Unread",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
                 ElevatedButton(
@@ -182,7 +186,8 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
                     backgroundColor: Colors.greenAccent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -193,7 +198,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                     userDetails['selectedLanguage'] == 'Amharic'
                         ? 'የታዩትን  አሳይ'
                         : "seen",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
               ],
@@ -203,7 +208,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                 future: _futureVols,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -240,7 +245,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                               padding: const EdgeInsets.all(16.0),
                               child: Row(
                                 children: [
-                                  SizedBox(width: 16.0),
+                                  const SizedBox(width: 16.0),
                                   Container(
                                     child: Column(
                                       crossAxisAlignment:
@@ -290,7 +295,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                                             navigateToDetailPage(vol);
                                           },
                                           style: ElevatedButton.styleFrom(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 horizontal: 15, vertical: 7),
                                             backgroundColor: Colors.blueAccent,
                                             shape: RoundedRectangleBorder(
@@ -304,7 +309,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
                                                     'Amharic'
                                                 ? 'ተጨማሪ  አሳይ'
                                                 : "View Detail",
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontSize: 16,
                                                 color: Colors.white),
                                           ),
@@ -333,7 +338,7 @@ class _DemographiVolPageState extends State<DemographiVolPage> {
 class DetailPage extends StatelessWidget {
   final Map<String, dynamic> vol;
   final String languge;
-  DetailPage({required this.vol, required this.languge});
+  const DetailPage({super.key, required this.vol, required this.languge});
 
   @override
   Widget build(BuildContext context) {
@@ -349,12 +354,12 @@ class DetailPage extends StatelessWidget {
             children: [
               Text(
                 languge == 'Amharic' ? 'የበጎ ፍቃደኛ መረጃዎች' : 'Demographic Records',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ClipRRect(
                 borderRadius: BorderRadius.circular(8.0),
                 child: Image.network(
@@ -364,12 +369,12 @@ class DetailPage extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Region: ${vol['region']}\nPhone: ${vol['phonNo']}',
-                style: TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 18),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               VideoPlayerWidget(
                 videoUrl: vol['video_url'],
               ),
@@ -419,7 +424,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 aspectRatio: _controller.value.aspectRatio,
                 child: VideoPlayer(_controller),
               )
-            : Center(child: CircularProgressIndicator()),
+            : const Center(child: CircularProgressIndicator()),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -440,7 +445,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.volume_up, color: Colors.blue),
+              icon: const Icon(Icons.volume_up, color: Colors.blue),
               onPressed: () {
                 setState(() {
                   _controller

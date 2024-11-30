@@ -31,7 +31,8 @@ class VolTakeMediaScreen extends StatefulWidget {
   final String selected_health_officer;
   // final String epid_number;
 
-  VolTakeMediaScreen({
+  const VolTakeMediaScreen({
+    super.key,
     // required this.epid_number,
     required this.imagePath,
     required this.first_name,
@@ -126,7 +127,7 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _elapsedSeconds++;
         if (_elapsedSeconds >= 10) {
@@ -190,12 +191,12 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
                   aspectRatio: 9 / 16, // Fullscreen portrait aspect ratio
                   child: CameraPreview(_controller!),
                 )
-              : Center(child: CircularProgressIndicator()),
+              : const Center(child: CircularProgressIndicator()),
           Positioned(
             top: 40,
             left: 20,
             child: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -212,26 +213,27 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
                         children: [
                           FadeTransition(
                             opacity: _animation,
-                            child: Icon(
+                            child: const Icon(
                               Icons.fiber_manual_record,
                               color: Colors.red,
                               size: 30,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           Text(
                             formatTime(_elapsedSeconds),
-                            style: TextStyle(fontSize: 20, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 20, color: Colors.white),
                           ),
                           ElevatedButton(
                             onPressed: _stopRecording,
-                            child: Text('Stop Recording'),
+                            child: const Text('Stop Recording'),
                           ),
                         ],
                       )
                     : ElevatedButton(
                         onPressed: _startRecording,
-                        child: Text('Start Recording'),
+                        child: const Text('Start Recording'),
                       ),
               ],
             ),
@@ -258,7 +260,8 @@ class DisplayVideoScreen1 extends StatefulWidget {
   final String selected_health_officer;
   // final String epid_number;
 
-  DisplayVideoScreen1({
+  const DisplayVideoScreen1({
+    super.key,
     required this.videoPath,
     // required this.epid_number,
     required this.imagePath,
@@ -312,7 +315,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     });
 
     // Timer to hide the message after 15 seconds
-    Timer(Duration(seconds: 15), () {
+    Timer(const Duration(seconds: 15), () {
       if (mounted) {
         setState(() {
           showMessage = false;
@@ -368,7 +371,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
       final responseData = json.decode(responseBody);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data submitted successfully')),
+        const SnackBar(content: Text('Data submitted successfully')),
       );
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -389,7 +392,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Uploading Image and Video',
           style: TextStyle(
             color: Colors.white,
@@ -403,8 +406,8 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
             Container(
               width: double.infinity,
               color: Colors.orangeAccent,
-              padding: EdgeInsets.all(8.0),
-              child: Text(
+              padding: const EdgeInsets.all(8.0),
+              child: const Text(
                 "Please Wait! Uploading Image and Video…",
                 style: TextStyle(
                   fontSize: 16.0,
@@ -414,24 +417,25 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                 textAlign: TextAlign.center,
               ),
             ),
-          SizedBox(height: 220), // Add some spacing below the message
+          const SizedBox(height: 220), // Add some spacing below the message
           Center(
             child: ElevatedButton(
               onPressed: isSaving ? null : () => postClinicalData(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColors.testColor1,
-                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 32.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                textStyle: TextStyle(
+                textStyle: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               child: isSaving
-                  ? SizedBox(
+                  ? const SizedBox(
                       height: 24.0,
                       width: 24.0,
                       child: CircularProgressIndicator(
@@ -439,7 +443,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                         color: Colors.white,
                       ),
                     )
-                  : Text(
+                  : const Text(
                       'Upload',
                       style: TextStyle(
                         color: Colors.white,

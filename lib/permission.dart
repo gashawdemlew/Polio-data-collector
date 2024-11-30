@@ -5,7 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 class PermissionCheckScreen extends StatefulWidget {
   final String epid_number;
 
-  PermissionCheckScreen({required this.epid_number});
+  const PermissionCheckScreen({super.key, required this.epid_number});
 
   @override
   _PermissionCheckScreenState createState() => _PermissionCheckScreenState();
@@ -44,7 +44,7 @@ class _PermissionCheckScreenState extends State<PermissionCheckScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(child: CircularProgressIndicator()),
     );
   }

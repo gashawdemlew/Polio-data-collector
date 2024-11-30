@@ -35,6 +35,7 @@ class ClinicalHistoryForm extends StatefulWidget {
 
   @override
   const ClinicalHistoryForm({
+    super.key,
     // required this.latitude,
     // required this.phoneNo,
     // required this.longitude,
@@ -49,6 +50,7 @@ class ClinicalHistoryForm extends StatefulWidget {
     required this.epid_Number,
   });
 
+  @override
   _ClinicalHistoryFormState createState() => _ClinicalHistoryFormState();
 }
 
@@ -73,6 +75,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
 
   late DateTime currentDate;
   late String formattedDate;
+  @override
   void initState() {
     super.initState();
     // getCurrentLocation();
@@ -100,7 +103,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
 
   Future<void> _loadLanguage45() async {
     // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge); // or "English"
       resource12 = resources;
@@ -170,7 +173,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form submitted successfully!')),
+          const SnackBar(content: Text('Form submitted successfully!')),
         );
         Navigator.pushReplacement(
             context,
@@ -211,22 +214,22 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         // color: Theme.of(context).backgroundColor,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   resources?.clinicalHistory()["dateAfterOnset"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 ElevatedButton(
                   onPressed: () async {
                     final DateTime? picked = await showDatePicker(
@@ -241,7 +244,6 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       });
                     }
                   },
-                  child: Text(resources?.clinicalHistory()["selectDate"] ?? ""),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor:
@@ -252,17 +254,18 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                     elevation: 14, // Add elevation
                   ),
+                  child: Text(resources?.clinicalHistory()["selectDate"] ?? ""),
                 ),
                 Text(
-                    "${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset ?? "${resources?.stoolSpecimen()["notSelected"] ?? ""}"}"),
+                    "${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset ?? resources?.stoolSpecimen()["notSelected"] ?? ""}"),
                 Text(
                   resources?.clinicalHistory()["feverAtOnset"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Expanded(
@@ -293,16 +296,16 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["flaccidAndSuddenParalysis"] ??
                       "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Expanded(
@@ -335,15 +338,15 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["paralysisProgressed"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Expanded(
@@ -376,15 +379,15 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["asymmetric"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Expanded(
@@ -413,15 +416,15 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["siteOfParalysis"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -487,10 +490,10 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["totalOpvDoses"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -506,15 +509,15 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       ' ${resources?.clinicalHistory()["EntertotalOPVdose"] ?? ""}',
                       ' ${resources?.clinicalHistory()["EntertotalOPVdose"] ?? ""} '),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   resources?.clinicalHistory()["admittedToHospital"] ?? "",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Row(
                   children: [
                     Expanded(
@@ -544,15 +547,15 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   ],
                 ),
                 if (_admittedToHospital == 'Yes') ...[
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     resources?.clinicalHistory()["DateofAdmission"] ?? "",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -574,7 +577,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                   Text(
                     '${resources?.stoolSpecimen()["selectedDate"] ?? ""}: ${_dateOfAdmission ?? "Not selected"}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     onChanged: (value) {
                       setState(() {
@@ -582,12 +585,12 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       });
                     },
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText:
                           resources?.clinicalHistory()["MedicalRecordNo"] ?? "",
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     onChanged: (value) {
                       setState(() {
@@ -595,13 +598,13 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                       });
                     },
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       labelText:
                           resources?.clinicalHistory()["FacilityName"] ?? "",
                     ),
                   ),
                 ],
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 // Text(
                 //   'Date stool collected (Stool 1):',
                 //   style: TextStyle(
@@ -715,7 +718,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                 // Text(
                 //   'Selected Date (Stool 1): ${_daysAfterOnset ?? "Not selected"}',
                 // ),
-                SizedBox(height: 56.0),
+                const SizedBox(height: 56.0),
                 ElevatedButton(
                   onPressed: () {
                     _submitForm();
@@ -768,9 +771,6 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
 
                     // )));
                   },
-                  child: Text(
-                    isSubmitting ? 'Saving...' : 'Submit',
-                  ),
                   // child: Text(resources?.patientDemographic()["next"] ?? ''),
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
@@ -781,6 +781,9 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
                           8.0), // Adjust the border radius
                     ),
                     elevation: 14, // Add elevation
+                  ),
+                  child: Text(
+                    isSubmitting ? 'Saving...' : 'Submit',
                   ),
                 ),
               ],

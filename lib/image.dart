@@ -13,7 +13,8 @@ import 'package:permission_handler/permission_handler.dart'; // Add this line
 class TakePictureScreen extends StatefulWidget {
   final String epid_number;
 
-  TakePictureScreen({
+  const TakePictureScreen({
+    super.key,
     required this.epid_number,
   });
 
@@ -136,14 +137,14 @@ class TakePictureScreenState extends State<TakePictureScreen>
       appBar: AppBar(
         title: Text(
           languge == "Amharic" ? 'ፎቶ አንሳ' : 'Take Picture',
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
         backgroundColor: CustomColors.testColor1,
       ),
       body: !_isCameraInitialized
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<void>(
               future: _initializeControllerFuture,
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -160,7 +161,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
                             backgroundColor: CustomColors.testColor1,
                             child: ScaleTransition(
                               scale: _animation,
-                              child: Icon(Icons.camera_alt),
+                              child: const Icon(Icons.camera_alt),
                             ),
                           ),
                         ),
@@ -168,7 +169,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
@@ -181,7 +182,8 @@ class DisplayPictureScreen extends StatelessWidget {
   final String epid_number;
   final String languge;
 
-  DisplayPictureScreen({
+  const DisplayPictureScreen({
+    super.key,
     required this.epid_number,
     required this.languge,
     required this.imagePath,

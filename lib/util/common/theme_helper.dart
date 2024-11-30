@@ -68,16 +68,15 @@ class ThemeHelper {
 
   ButtonStyle buttonStyle() {
     return ButtonStyle(
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),
       ),
-      minimumSize: MaterialStateProperty.all(const Size(50, 50)),
+      minimumSize: WidgetStateProperty.all(const Size(50, 50)),
       backgroundColor:
-          MaterialStateProperty.all(const Color.fromARGB(0, 7, 128, 227)),
-      shadowColor:
-          MaterialStateProperty.all(const Color.fromARGB(0, 234, 7, 7)),
+          WidgetStateProperty.all(const Color.fromARGB(0, 7, 128, 227)),
+      shadowColor: WidgetStateProperty.all(const Color.fromARGB(0, 234, 7, 7)),
     );
   }
 
@@ -88,7 +87,7 @@ class ThemeHelper {
       actions: [
         TextButton(
           style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.black38)),
+              backgroundColor: WidgetStateProperty.all(Colors.black38)),
           onPressed: () {
             Navigator.of(context).pop();
           },

@@ -65,7 +65,8 @@ class EnvironmentMetrologyForm extends StatefulWidget {
   // final String last_name;
 
   @override
-  EnvironmentMetrologyForm({
+  const EnvironmentMetrologyForm({
+    super.key,
     required this.resources1,
     required this.epid_number,
 
@@ -105,6 +106,7 @@ class EnvironmentMetrologyForm extends StatefulWidget {
     // required this.last_name,
     // required this.phoneNo,
   });
+  @override
   _EnvironmentMetrologyFormState createState() =>
       _EnvironmentMetrologyFormState();
 }
@@ -127,8 +129,8 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
   TextEditingController soilMoistureController = TextEditingController();
   TextEditingController city = TextEditingController();
   TextEditingController snow = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -177,11 +179,11 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
 
   void _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? first_name = prefs.getString('first_name');
+    String? firstName = prefs.getString('first_name');
     String? phoneNo = prefs.getString('phoneNo');
-    if (first_name != null) {
+    if (firstName != null) {
       setState(() {
-        _emailController.text = first_name;
+        _emailController.text = firstName;
       });
     }
 
@@ -319,7 +321,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form submitted successfully!')),
+          const SnackBar(content: Text('Form submitted successfully!')),
         );
 
         _showConfirmationDialog(context, () {
@@ -354,7 +356,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
       List<Placemark> placemarks =
           await placemarkFromCoordinates(latitude, longitude);
 
-      if (placemarks != null && placemarks.isNotEmpty) {
+      if (placemarks.isNotEmpty) {
         Placemark currentPlace = placemarks[0];
         setState(() {
           address =
@@ -371,7 +373,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
   }
 
   Future<void> fetchWeatherData() async {
-    final apiKey = 'ab35dbe46a3a4c838547c896b36ce867';
+    const apiKey = 'ab35dbe46a3a4c838547c896b36ce867';
 
     final response = await http.get(
       Uri.parse(
@@ -423,11 +425,11 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         // color: Theme.of(context).backgroundColor,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -444,8 +446,8 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 //       '${widget.resources1?.environmentalMethodology()["city"] ?? ''}',
                 //       ' ${widget.resources1?.patientDemographic()["city"] ?? ''} '),
                 // ),
-                SizedBox(height: 8.0),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 TextFormField(
                   controller: tempController,
                   keyboardType: TextInputType.number,
@@ -455,11 +457,13 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      '${widget.resources1?.environmentalMethodology()["tempreture"] ?? ''}',
+                      widget.resources1
+                              ?.environmentalMethodology()["tempreture"] ??
+                          '',
                       ' ${widget.resources1?.patientDemographic()["tempreture"] ?? ''} '),
                 ),
-                SizedBox(height: 16.0),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 16.0),
+                const SizedBox(height: 8.0),
                 TextFormField(
                   controller: rainfallController,
                   keyboardType: TextInputType.number,
@@ -469,10 +473,12 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      '${widget.resources1?.environmentalMethodology()["rainfall"] ?? ''}',
+                      widget.resources1
+                              ?.environmentalMethodology()["rainfall"] ??
+                          '',
                       ' ${widget.resources1?.patientDemographic()["rainfall"] ?? ''} '),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: humidityController,
                   keyboardType: TextInputType.number,
@@ -482,10 +488,12 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                      '${widget.resources1?.environmentalMethodology()["humidity"] ?? ''}',
+                      widget.resources1
+                              ?.environmentalMethodology()["humidity"] ??
+                          '',
                       ' ${widget.resources1?.patientDemographic()["humidity"] ?? ''} '),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 // TextFormField(
                 //   controller: snow,
                 //   // keyboardType: TextInputType.number,
@@ -498,8 +506,8 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 //       '${widget.resources1?.environmentalMethodology()["snow"] ?? ''}',
                 //       ' ${widget.resources1?.patientDemographic()["snow"] ?? ''} '),
                 // ),
-                SizedBox(height: 16.0),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 16.0),
+                const SizedBox(height: 8.0),
                 // TextFormField(
                 //   controller: soilMoistureController,
                 //   keyboardType: TextInputType.number,
@@ -512,8 +520,8 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 //       '${widget.resources1?.environmentalMethodology()["description"] ?? ''}',
                 //       ' ${widget.resources1?.patientDemographic()["description"] ?? ''} '),
                 // ),
-                SizedBox(height: 16.0),
-                Container(
+                const SizedBox(height: 16.0),
+                SizedBox(
                   width: 370,
                   child: ElevatedButton(
                     onPressed: () {
@@ -571,11 +579,6 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                       // );
                       // });
                     },
-                    child: Text(
-                      isSubmitting
-                          ? (xx == "Amharic" ? 'ቀጣይ' : 'Next')
-                          : (xx == "Amharic" ? 'ቀጣይ' : 'Next..'),
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -583,6 +586,11 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       elevation: 14,
+                    ),
+                    child: Text(
+                      isSubmitting
+                          ? (xx == "Amharic" ? 'ቀጣይ' : 'Next')
+                          : (xx == "Amharic" ? 'ቀጣይ' : 'Next..'),
                     ),
                   ),
                 ),

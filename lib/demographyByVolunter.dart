@@ -13,6 +13,8 @@ import 'package:location/location.dart' as location;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DemographicForm extends StatefulWidget {
+  const DemographicForm({super.key});
+
   @override
   _DemographicFormState createState() => _DemographicFormState();
 }
@@ -25,7 +27,7 @@ class _DemographicFormState extends State<DemographicForm> {
   String languge = "ccc";
   String languge1 = "";
 
-  String _selectedLanguage = "English";
+  final String _selectedLanguage = "English";
 
   LanguageResources? resource;
   final TextEditingController first_name = TextEditingController();
@@ -44,7 +46,7 @@ class _DemographicFormState extends State<DemographicForm> {
 
   Future<void> _loadLanguage45() async {
     // Simulate language loading
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() {
       resources = LanguageResources(languge); // or "English"
       resource12 = resources;
@@ -71,6 +73,7 @@ class _DemographicFormState extends State<DemographicForm> {
 
   Map<String, dynamic> userDetails = {};
 
+  @override
   void initState() {
     super.initState();
     // getCurrentLocation();
@@ -1370,7 +1373,7 @@ class _DemographicFormState extends State<DemographicForm> {
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to fetch health officers')));
+            const SnackBar(content: Text('Failed to fetch health officers')));
       }
     }
   }
@@ -1418,13 +1421,13 @@ class _DemographicFormState extends State<DemographicForm> {
                   : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again..'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
                 onConfirm(); // Calls the callback to navigate to TakePictureScreen
@@ -1487,10 +1490,10 @@ class _DemographicFormState extends State<DemographicForm> {
 
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Data submitted successfully')));
+            const SnackBar(content: Text('Data submitted successfully')));
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to submit data')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to submit data')));
       }
     }
   }
@@ -1531,7 +1534,7 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   controller: first_name,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 TextFormField(
@@ -1548,7 +1551,7 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   controller: last_name,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
 
@@ -1602,7 +1605,7 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                 ),
                 // const SizedBox(height: 16.0),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1632,7 +1635,7 @@ class _DemographicFormState extends State<DemographicForm> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1663,7 +1666,7 @@ class _DemographicFormState extends State<DemographicForm> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1694,7 +1697,7 @@ class _DemographicFormState extends State<DemographicForm> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16,
                 ),
                 DropdownButtonFormField<String>(
@@ -1721,9 +1724,9 @@ class _DemographicFormState extends State<DemographicForm> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Text('Coordinates: Lat ($lat), Long ($long)'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1733,7 +1736,7 @@ class _DemographicFormState extends State<DemographicForm> {
                     //   },
                     //   child: Text('Submit'),
                     // ),
-                    Container(
+                    SizedBox(
                       width: 300,
                       child: ElevatedButton(
                         onPressed: () {

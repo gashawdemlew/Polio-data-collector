@@ -14,6 +14,8 @@ void main() {
 }
 
 class userList extends StatelessWidget {
+  const userList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,6 +31,8 @@ class userList extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -45,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  @override
   void initState() {
     super.initState();
     _loadUserDetails1();
@@ -82,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: CustomColors.testColor1,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -94,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: Text(
           languge2 == "Amharic" ? "የተጠቃሚዎች ዝርዝር" : "User List",
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -106,18 +111,19 @@ class _MyHomePageState extends State<MyHomePage> {
         future: fetchUsers(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No users found'));
+            return const Center(child: Text('No users found'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 var user = snapshot.data![index];
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
                   ),
@@ -129,12 +135,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         Text(
                           '${user['first_name']} ${user['last_name']}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: 8),
                         Text(
                           'Phone: ${user['phoneNo']}',
                           style: TextStyle(
@@ -142,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Role: ${user['user_role']}',
                           style: TextStyle(
@@ -150,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Zone: ${user['zone']}',
                           style: TextStyle(
@@ -158,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
                           'Woreda: ${user['woreda']}',
                           style: TextStyle(
@@ -181,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
               MaterialPageRoute(builder: (context) => RegisterScreen()));
         },
         backgroundColor: CustomColors.testColor1,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),

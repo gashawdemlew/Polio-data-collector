@@ -35,6 +35,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 // }
 
 class UserProfile extends StatefulWidget {
+  const UserProfile({super.key});
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -130,7 +132,7 @@ class _ProfilePageState extends State<UserProfile> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile updated successfully!')),
+          const SnackBar(content: Text('Profile updated successfully!')),
         );
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -139,7 +141,7 @@ class _ProfilePageState extends State<UserProfile> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update profile')),
+          const SnackBar(content: Text('Failed to update profile')),
         );
       }
     }
@@ -151,10 +153,10 @@ class _ProfilePageState extends State<UserProfile> {
       appBar: AppBar(
         title: Text(
           languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile page",
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -169,24 +171,25 @@ class _ProfilePageState extends State<UserProfile> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 50,
                 backgroundImage:
                     NetworkImage('https://via.placeholder.com/150'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 languge == "Amharic" ? 'አስተካክል' : 'Edit Your Profile',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
                     TextFormField(
                       controller: _firstNameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'First Name',
                         border: OutlineInputBorder(),
                       ),
@@ -197,10 +200,10 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _lastNameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Last Name',
                         border: OutlineInputBorder(),
                       ),
@@ -211,10 +214,10 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _phoneNoController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Phone Number',
                         border: OutlineInputBorder(),
                       ),
@@ -225,10 +228,10 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _zoneController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Zone',
                         border: OutlineInputBorder(),
                       ),
@@ -239,10 +242,10 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _woredaController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Woreda',
                         border: OutlineInputBorder(),
                       ),
@@ -253,10 +256,10 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _regionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Region',
                         border: OutlineInputBorder(),
                       ),
@@ -267,11 +270,11 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(),
                       ),
@@ -282,18 +285,9 @@ class _ProfilePageState extends State<UserProfile> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _updateProfile,
-                      child: Text(
-                        languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
-                        style: TextStyle(
-                          // fontSize: 24.0, // Changes the font size
-                          fontWeight: FontWeight.bold, // Makes the text bold
-                          color: Colors.white, // Changes the text color
-                          // letterSpacing: 1.2, // Adds space between letters
-                        ),
-                      ),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor:
@@ -304,11 +298,20 @@ class _ProfilePageState extends State<UserProfile> {
                         ),
                         elevation: 14, // Add elevation
                       ),
+                      child: Text(
+                        languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
+                        style: TextStyle(
+                          // fontSize: 24.0, // Changes the font size
+                          fontWeight: FontWeight.bold, // Makes the text bold
+                          color: Colors.white, // Changes the text color
+                          // letterSpacing: 1.2, // Adds space between letters
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // _buildInfoCard('First Name', firstName, Icons.person),
               // _buildInfoCard('Last Name', lastname, Icons.person),
               // _buildInfoCard('Phone Number', phoneNo, Icons.phone),
@@ -325,7 +328,7 @@ class _ProfilePageState extends State<UserProfile> {
 
   Widget _buildInfoCard(String title, String subtitle, IconData icon) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         leading: Icon(icon, size: 40),
         title: Text(title),

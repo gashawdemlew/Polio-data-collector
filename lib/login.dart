@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:camera_app/forget_password.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,8 @@ void main() {
 }
 
 class MyApp78 extends StatelessWidget {
+  const MyApp78({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,6 +32,8 @@ class MyApp78 extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -36,8 +41,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LanguageResources resources = LanguageResources('English');
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String? _selectedLanguage = 'English'; // Default value
   bool _isLoading = false; // Loading state variable
 
@@ -90,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       result = await _connectivity.checkConnectivity();
       print("XXXXXXXX $result");
-    } on PlatformException catch (e) {
+    } on PlatformException {
       print('Couldn\'t check connectivity status');
       return;
     }
@@ -107,9 +112,11 @@ class _LoginPageState extends State<LoginPage> {
 
   String xx = "";
   Future<void> _updateConnectionStatus(List<ConnectivityResult> result) async {
-    setState(() {
-      _connectionStatus = result;
-    });
+    if (mounted) {
+      setState(() {
+        _connectionStatus = result;
+      });
+    }
     // ignore: avoid_print
     print('Connectivity changed: $_connectionStatus');
   }
@@ -122,9 +129,11 @@ class _LoginPageState extends State<LoginPage> {
 
       if (connectivityResult.toString() !=
           [ConnectivityResult.none].toString()) {
-        setState(() {
-          _isLoading = true;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = true;
+          });
+        }
 
         try {
           if (_emailController.text == "admin@gmail.com" &&
@@ -140,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
             );
             print(
                 'Login successful: ${response['message']}   ${response['token']}');
-            print('Response:   ${response}');
+            print('Response:   $response');
 
             // Save credentials to shared preferences
             await prefs.setString('email', _emailController.text);
@@ -165,9 +174,11 @@ class _LoginPageState extends State<LoginPage> {
           print('Error: $e');
           _showErrorDialog('Login failed: $e');
         } finally {
-          setState(() {
-            _isLoading = false;
-          });
+          if (mounted) {
+            setState(() {
+              _isLoading = false;
+            });
+          }
         }
       } else {
         // Check stored credentials locally
@@ -190,193 +201,245 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
+        title: const Text('Error'),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
   }
 
-  @override
+  bool _isObscured = true;
+
+  void _onForgetPassword() {
+    // Add logic for forget password functionality
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 80.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Image.asset('assets/im/heder.jpg'),
-                SizedBox(
-                  height: 40,
+      body: Column(
+        children: [
+          // Custom Header Section
+          Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFF4A90E2), Color(0xFF007AFF)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(40.0),
+                bottomRight: Radius.circular(40.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: const Offset(0, 4),
+                  blurRadius: 8.0,
                 ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20.0),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(
+                    'assets/im/heder.jpg',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _selectedLanguage == "Amharic" ? "ሰላም!" : "Welcome!",
+                        style: const TextStyle(
+                          fontSize: 32.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              offset: Offset(1.5, 1.5),
+                              color: Colors.black38,
+                              blurRadius: 2.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _selectedLanguage,
+                          dropdownColor: Colors.white,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _selectedLanguage = newValue!;
+                              _saveSelectedLanguage(newValue);
+                            });
+                          },
+                          icon: const Icon(Icons.language, color: Colors.white),
+                          items: <String>['English', 'Amharic', 'AfanOromo']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value == 'Amharic'
+                                    ? 'አማርኛ'
+                                    : value == 'AfanOromo'
+                                        ? 'Afaan Oromoo'
+                                        : value,
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ]),
+                const SizedBox(height: 10.0),
                 Text(
                   _selectedLanguage == "Amharic"
-                      ? "እንኳን  በደህና መጡ!"
-                      : "Welcome ",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  "Polio Data Collector and Diagnosis APP!",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                DropdownButtonHideUnderline(
-                    child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                    border: Border.all(
-                      color: Colors.deepPurpleAccent,
-                      width: 2,
-                    ),
-                  ),
-                  child: DropdownButton<String>(
-                    value: _selectedLanguage,
-                    hint: Text(
-                      'Select Language',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedLanguage = newValue!;
-                        _saveSelectedLanguage(newValue);
-                      });
-                    },
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                    iconSize: 36.0,
-                    elevation: 16,
-                    style: TextStyle(
-                      color: Colors.deepPurpleAccent,
-                      fontSize: 18.0,
-                    ),
-                    dropdownColor: Colors.white,
-                    items: <String>['English', 'Amharic', 'AfanOromo']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value == 'Amharic'
-                              ? 'አማርኛ'
-                              : value == 'AfanOromo'
-                                  ? 'Afaan Oromoo'
-                                  : value, // Keep the original value for 'English'
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                )),
-                SizedBox(height: 30.0),
-                TextFormField(
-                  controller: _emailController,
-                  style: TextStyle(color: Colors.black),
-                  decoration: InputDecoration(
-                    labelText:
-                        _selectedLanguage == "Amharic" ? "ስልክ ቁጥር" : "Phone No",
-                    labelStyle: TextStyle(color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: CustomColors.testColor1),
-                    ),
-                  ),
-                  validator: _validateEmail,
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Text(
-                    _selectedLanguage == "Amharic"
-                        ? "የይለፍ ቃል  እረስተዋል?"
-                        : "Forget Password?",
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: CustomColors.testColor1,
-                    ),
+                      ? "የፖሊዮ ዳታ ሰብሳቢ እና ዲያግኖሲስ መተግበሪያ!"
+                      : "Polio Data Collector and Diagnosis APP!",
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    color: Colors.white70,
                   ),
                 ),
-                SizedBox(height: 20.0),
-                TextFormField(
-                  controller: _passwordController,
-                  style: TextStyle(color: Colors.black),
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText:
-                        _selectedLanguage == "Amharic" ? "ይለፍ ቃል" : "Password",
-                    labelStyle: TextStyle(color: Colors.black),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                      borderSide: BorderSide(color: CustomColors.testColor1),
-                    ),
-                  ),
-                  validator: _validatePassword,
-                ),
-                SizedBox(height: 50.0),
-                _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: _login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: CustomColors.testColor1,
-                          elevation: 5,
-                          padding: EdgeInsets.symmetric(vertical: 15.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                        child: Text(
-                          _selectedLanguage == "Amharic" ? "ግባ" : "Login",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
               ],
             ),
           ),
-        ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    // Phone Input
+                    TextFormField(
+                      controller: _emailController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: _selectedLanguage == "Amharic"
+                            ? "ስልክ ቁጥር"
+                            : "Phone No",
+                        labelStyle: const TextStyle(color: Colors.black),
+                        prefixIcon: const Icon(Icons.phone),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
+                      ),
+                      validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 20.0),
+                    // Password Input
+                    TextFormField(
+                      controller: _passwordController,
+                      style: const TextStyle(color: Colors.black),
+                      obscureText: _isObscured,
+                      decoration: InputDecoration(
+                        labelText: _selectedLanguage == "Amharic"
+                            ? "ይለፍ ቃል"
+                            : "Password",
+                        labelStyle: const TextStyle(color: Colors.black),
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isObscured
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
+                      ),
+                      validator: _validatePassword,
+                    ),
+                    // const SizedBox(height: 20.0),
+                    // Forget Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: _onForgetPassword,
+                        child: Text(
+                          _selectedLanguage == "Amharic"
+                              ? "የይለፍ ቃል ማስታወሻ"
+                              : "Forgot Password?",
+                          style: const TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30.0),
+                    // Login Button
+                    _isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : ElevatedButton(
+                            onPressed: _login,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              elevation: 5,
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            child: Text(
+                              _selectedLanguage == "Amharic" ? "ግባ" : "Login",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                    const SizedBox(height: 20.0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Footer Section
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "© 2024 Polio Data Collector. All rights reserved.",
+              style: const TextStyle(color: Colors.grey, fontSize: 12.0),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }

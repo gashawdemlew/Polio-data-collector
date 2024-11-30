@@ -7,12 +7,14 @@ void main() {
 }
 
 class CustomForm extends StatelessWidget {
+  const CustomForm({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Advanced Custom Form'),
+          title: const Text('Advanced Custom Form'),
         ),
         body: CustomForm34(),
       ),
@@ -21,6 +23,8 @@ class CustomForm extends StatelessWidget {
 }
 
 class CustomForm34 extends StatefulWidget {
+  const CustomForm34({super.key});
+
   @override
   _CustomFormState createState() => _CustomFormState();
 }
@@ -37,7 +41,7 @@ class _CustomFormState extends State<CustomForm34> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -53,7 +57,7 @@ class _CustomFormState extends State<CustomForm34> {
                     });
                   },
                 ),
-                Text('TextField'),
+                const Text('TextField'),
                 Radio<String>(
                   value: 'File',
                   groupValue: _selectedOption,
@@ -63,7 +67,7 @@ class _CustomFormState extends State<CustomForm34> {
                     });
                   },
                 ),
-                Text('File'),
+                const Text('File'),
                 Radio<String>(
                   value: 'Dropdown',
                   groupValue: _selectedOption,
@@ -73,7 +77,7 @@ class _CustomFormState extends State<CustomForm34> {
                     });
                   },
                 ),
-                Text('Dropdown'),
+                const Text('Dropdown'),
                 Radio<String>(
                   value: 'Checkbox',
                   groupValue: _selectedOption,
@@ -83,7 +87,7 @@ class _CustomFormState extends State<CustomForm34> {
                     });
                   },
                 ),
-                Text('Checkbox'),
+                const Text('Checkbox'),
                 Radio<String>(
                   value: 'DatePicker',
                   groupValue: _selectedOption,
@@ -93,7 +97,7 @@ class _CustomFormState extends State<CustomForm34> {
                     });
                   },
                 ),
-                Text('DatePicker'),
+                const Text('DatePicker'),
               ],
             ),
             if (_selectedOption == 'TextField') _buildTextField(),
@@ -101,10 +105,10 @@ class _CustomFormState extends State<CustomForm34> {
             if (_selectedOption == 'Dropdown') _buildDropdown(),
             if (_selectedOption == 'Checkbox') _buildCheckbox(),
             if (_selectedOption == 'DatePicker') _buildDatePicker(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _handleSubmit,
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -115,7 +119,7 @@ class _CustomFormState extends State<CustomForm34> {
   Widget _buildTextField() {
     return TextFormField(
       controller: _textController,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Enter text',
       ),
       validator: (value) {
@@ -132,9 +136,9 @@ class _CustomFormState extends State<CustomForm34> {
       children: [
         ElevatedButton(
           onPressed: _pickFile,
-          child: Text('Upload File'),
+          child: const Text('Upload File'),
         ),
-        if (_filePath != null) Text('Selected file: $_filePath'),
+        Text('Selected file: $_filePath'),
       ],
     );
   }
@@ -153,7 +157,7 @@ class _CustomFormState extends State<CustomForm34> {
           _dropdownValue = value!;
         });
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Select an option',
       ),
       validator: (value) {
@@ -167,7 +171,7 @@ class _CustomFormState extends State<CustomForm34> {
 
   Widget _buildCheckbox() {
     return CheckboxListTile(
-      title: Text('Accept Terms and Conditions'),
+      title: const Text('Accept Terms and Conditions'),
       value: _checkboxValue,
       onChanged: (value) {
         setState(() {
@@ -184,10 +188,10 @@ class _CustomFormState extends State<CustomForm34> {
         Text(_selectedDate == null
             ? 'No date selected'
             : DateFormat.yMd().format(_selectedDate)),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         ElevatedButton(
           onPressed: _pickDate,
-          child: Text('Select Date'),
+          child: const Text('Select Date'),
         ),
       ],
     );

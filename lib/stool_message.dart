@@ -11,6 +11,8 @@ import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
 
 class YU extends StatelessWidget {
+  const YU({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,6 +26,8 @@ class YU extends StatelessWidget {
 }
 
 class ClinicDataScreen extends StatefulWidget {
+  const ClinicDataScreen({super.key});
+
   @override
   _ClinicDataScreenState createState() => _ClinicDataScreenState();
 }
@@ -82,7 +86,7 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
         ),
         backgroundColor: CustomColors.testColor1,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -98,11 +102,11 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
         future: futureData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No data available'));
+            return const Center(child: Text('No data available'));
           } else {
             final data = snapshot.data!;
             return ListView.builder(
@@ -111,12 +115,14 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
                 final item = data[index];
                 return Card(
                   elevation: 5,
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   child: ListTile(
                     title: Text(item.id,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text('Name: ${item.name}'),
-                    trailing: Icon(Icons.arrow_forward_ios, color: Colors.teal),
+                    trailing:
+                        const Icon(Icons.arrow_forward_ios, color: Colors.teal),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -157,20 +163,22 @@ class ClinicData {
 class ClinicDetailScreen extends StatelessWidget {
   final ClinicData clinicData;
 
-  ClinicDetailScreen({required this.clinicData});
+  const ClinicDetailScreen({super.key, required this.clinicData});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Stool Session')),
+      appBar: AppBar(title: const Text('Stool Session')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Name: ${clinicData.name}', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text('Epid: ${clinicData.id}', style: TextStyle(fontSize: 16)),
+            Text('Name: ${clinicData.name}',
+                style: const TextStyle(fontSize: 20)),
+            const SizedBox(height: 10),
+            Text('Epid: ${clinicData.id}',
+                style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),

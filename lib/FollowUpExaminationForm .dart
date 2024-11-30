@@ -59,7 +59,8 @@ class FollowUpExaminationForm extends StatefulWidget {
   // final String last_name;
 
   @override
-  FollowUpExaminationForm({
+  const FollowUpExaminationForm({
+    super.key,
     required this.resources1,
     required this.epid_Number,
 
@@ -108,13 +109,13 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
   DateTime? _dateFollowUpExamination;
   final TextEditingController _dateOfDeathController = TextEditingController();
 
-  Map<String, bool> _residualParalysis = {
+  final Map<String, bool> _residualParalysis = {
     'Right arm': false,
     'Left leg': false,
     'Right leg': false,
     'Left arm ': false,
   };
-  Map<String, bool> _residualParalysis1 = {
+  final Map<String, bool> _residualParalysis1 = {
     "ግራ ክንድ": false,
     "ቀኝ ክንድ": false,
     "ግራ እግር": false,
@@ -170,7 +171,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
       if (response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Form submitted successfully!')),
+          const SnackBar(content: Text('Form submitted successfully!')),
         );
         Navigator.pushReplacement(
             context,
@@ -209,7 +210,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
         backgroundColor: CustomColors.testColor1,
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Card(
             elevation: 4.0,
@@ -217,7 +218,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -225,12 +226,12 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                     widget.resources1
                             ?.followUp()["DateofFollowupExamination"] ??
                         '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   ElevatedButton(
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
@@ -245,11 +246,6 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                         });
                       }
                     },
-                    child: Text(
-                      widget.resources1
-                              ?.followUp()["DateofFollowupExamination"] ??
-                          '',
-                    ),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -258,19 +254,24 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                       ),
                       elevation: 14,
                     ),
+                    child: Text(
+                      widget.resources1
+                              ?.followUp()["DateofFollowupExamination"] ??
+                          '',
+                    ),
                   ),
                   Text(
                     ' ${widget.resources1?.followUp()["selectedDate"] ?? ''}: ${_dateFollowUpExamination != null ? _dateFollowUpExamination!.toString().split(' ')[0] : "Not selected"}',
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     widget.resources1?.followUp()["ResidualParalysis"] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: widget.resources1 == "Amharic"
@@ -279,14 +280,14 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  key + ":",
-                                  style: TextStyle(
+                                  "$key:",
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 CheckboxListTile(
-                                  title: Text('Yes'),
+                                  title: const Text('Yes'),
                                   value: _residualParalysis1[key],
                                   onChanged: (value) {
                                     setState(() {
@@ -294,7 +295,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                               ],
                             );
                           }).toList()
@@ -303,12 +304,12 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  key + ":",
-                                  style: TextStyle(
+                                  "$key:",
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 CheckboxListTile(
                                   title: Text(
                                       widget.resources1?.followUp()["yes"] ??
@@ -320,20 +321,20 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                               ],
                             );
                           }).toList(),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Text(
                     widget.resources1?.followUp()["FindingsatFollowup"] ?? '',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -378,13 +379,13 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                                 widget.resources1?.followUp()["DateofDeath"] ??
                                     '',
                             hintText: 'Select date of death',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
                           ),
                         ),
                       ],
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
                       // Submit form data
@@ -456,9 +457,6 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
 
                       // );
                     },
-                    child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
-                    ),
                     // child:
                     //  Text(
                     //     widget.resources1?.patientDemographic()["next"] ?? ''),
@@ -469,6 +467,9 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       elevation: 14,
+                    ),
+                    child: Text(
+                      isSubmitting ? 'Saving...' : 'Submit',
                     ),
                   ),
                 ],

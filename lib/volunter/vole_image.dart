@@ -24,7 +24,8 @@ class VolTakePictureScreen extends StatefulWidget {
 
   final String phonNo;
 
-  VolTakePictureScreen({
+  const VolTakePictureScreen({
+    super.key,
     // required this.epidNumber,
     required this.first_name,
     required this.last_name,
@@ -133,11 +134,11 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a Picture'),
+        title: const Text('Take a Picture'),
         backgroundColor: CustomColors.testColor1,
       ),
       body: !_isCameraInitialized
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<void>(
               future: _initializeControllerFuture,
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
@@ -154,7 +155,7 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
                             backgroundColor: CustomColors.testColor1,
                             child: ScaleTransition(
                               scale: _animation,
-                              child: Icon(Icons.camera_alt),
+                              child: const Icon(Icons.camera_alt),
                             ),
                           ),
                         ),
@@ -162,7 +163,7 @@ class TakePictureScreenState extends State<VolTakePictureScreen>
                     ],
                   );
                 } else {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),
@@ -186,7 +187,8 @@ class DisplayPictureScreen extends StatelessWidget {
   final String selected_health_officer;
   // final String epid_number;
 
-  DisplayPictureScreen({
+  const DisplayPictureScreen({
+    super.key,
     // required this.epid_number,
     required this.imagePath,
     required this.first_name,
@@ -208,18 +210,18 @@ class DisplayPictureScreen extends StatelessWidget {
           false, // Prevents dismissing the dialog by tapping outside
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text(
+          title: const Text('Confirmation'),
+          content: const Text(
               'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop(); // Closes the dialog
                 onConfirm(); // Calls the callback to navigate to TakeMediaScreen
@@ -235,7 +237,7 @@ class DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Preview Picture'),
+        title: const Text('Preview Picture'),
         backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
@@ -279,7 +281,7 @@ class DisplayPictureScreen extends StatelessWidget {
                 ),
                 elevation: 14, // Add elevation
               ),
-              child: Text('Next'),
+              child: const Text('Next'),
             ),
           ),
         ],
