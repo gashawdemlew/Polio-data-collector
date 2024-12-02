@@ -57,8 +57,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     final fullName = _fullNameController.text.trim();
     final phoneNumber = _phoneNumberController.text.trim();
 
-    if (fullName.isEmpty || phoneNumber.isEmpty) {
-      _showSnackbar('Full Name and Phone Number are required.');
+    if (phoneNumber.isEmpty) {
+      _showSnackbar('Phone Number are required.');
       return;
     }
 
@@ -81,6 +81,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         _smsStatus = 'SMS sent successfully: $result';
       });
       _showSnackbar('SMS sent successfully.');
+      await _updateStatus(phoneNumber, 'pending');
     } on PlatformException catch (e) {
       debugPrint('Error sending SMS: ${e.message}');
       _showSnackbar('Failed to send SMS: ${e.message}');
@@ -91,7 +92,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 
   Future<String> _fetchPassword(String phoneNo) async {
-    const apiUrl = 'http://192.168.8.228:7476/user/getUserByPhoNno';
+    const apiUrl = 'http://192.168.47.228:7476/user/getUserByPhoNno';
     print(apiUrl);
 
     try {
@@ -118,6 +119,28 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  Future<void> _updateStatus(String phoneNo, String status) async {
+    const apiUrl = 'http://192.168.8.228:7476/user/updateStatusByPhoneNo';
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'phoneNo': phoneNo, 'status': status}),
+      );
+
+      if (response.statusCode == 200) {
+        _showSnackbar('Status updated to $status.');
+      } else {
+        debugPrint('Failed to update status: ${response.body}');
+        _showSnackbar('Failed to update status.');
+      }
+    } catch (e) {
+      debugPrint('Error updating status: $e');
+      _showSnackbar('Error updating status.');
+    }
   }
 
   @override

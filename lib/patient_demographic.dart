@@ -1452,7 +1452,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
           epid_Number = responseBody['epid_number'];
         });
         print(epid_Number);
-        print('Form submitted successfully!');
+        print('Form submitted successfully!  ${responseBody}');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Form submitted successfully!')),
         );

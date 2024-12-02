@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:camera_app/forget_pass/confirm_password.dart';
 import 'package:camera_app/forget_password.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -147,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
               phoneNo: _emailController.text,
               password: _passwordController.text,
             );
+
             print(
                 'Login successful: ${response['message']}   ${response['token']}');
             print('Response:   $response');
@@ -156,19 +158,29 @@ class _LoginPageState extends State<LoginPage> {
             await prefs.setString('userType', response['user_role'] ?? "");
             await prefs.setString('first_name', response['first_name'] ?? "");
             await prefs.setString('last_name', response['last_name'] ?? "");
-
             await prefs.setString('phoneNo', response['phoneNo'] ?? "");
             await prefs.setString('zone', response['zone'] ?? "");
             await prefs.setString('woreda', response['woreda'] ?? "");
             await prefs.setString('region', response['region'] ?? "");
-
             await prefs.setInt('id', response['user_id'] ?? 0);
             await prefs.setString('password', _passwordController.text);
             await prefs.setString(
                 'emergency_phonno', response['emergency_phonno'] ?? "");
 
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PolioDashboard()));
+            // Check user status
+            if (response['status'] == 'pending') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ConfirmPasswordPage(
+                    userId: response['user_id'],
+                  ),
+                ),
+              );
+            } else {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PolioDashboard()));
+            }
           }
         } catch (e) {
           print('Error: $e');
@@ -215,8 +227,11 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isObscured = true;
 
-  void _onForgetPassword() {
-    // Add logic for forget password functionality
+  void _onForgetPassword(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ForgetPassword()),
+    );
   }
 
   Widget build(BuildContext context) {
@@ -391,7 +406,7 @@ class _LoginPageState extends State<LoginPage> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: _onForgetPassword,
+                        onPressed: () => _onForgetPassword(context),
                         child: Text(
                           _selectedLanguage == "Amharic"
                               ? "የይለፍ ቃል ማስታወሻ"

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:camera_app/blog/create_blog.dart';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/commite/list_petients.dart';
 import 'package:camera_app/commite/results.dart';
 import 'package:camera_app/demographyByVolunter.dart';
 import 'package:camera_app/ho_volunter.dart';
@@ -314,8 +315,7 @@ class _Drawer45State extends State<Drawer45> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => EpidDataPage(
-                              epidNumber: "CE-KE-DU-11/29/2024-E-042"),
+                          builder: (context) => PatientDataPage(),
                         ),
                       );
                     },
