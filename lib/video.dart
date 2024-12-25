@@ -147,16 +147,22 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
 
     try {
       XFile videoFile = await _controller!.stopVideoRecording();
-      final File video = File(videoFile.path);
+      final directory = await getApplicationDocumentsDirectory();
+      final String newPath = join(directory.path, '${DateTime.now()}.mp4');
+
+      // Move or rename the file to the desired location with the `.mp4` extension
+      final File newVideoFile = await File(videoFile.path).rename(newPath);
+
       setState(() {
         _isRecording = false;
         _timer?.cancel();
       });
+
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (BuildContext context) => DisplayVideoScreen(
-            videoPath: video.path,
+            videoPath: newVideoFile.path,
             imagePath: widget.imagePath,
             epid_number: widget.epid_number,
           ),
@@ -335,7 +341,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
     // Adding video file
     if (widget.videoPath.isNotEmpty) {
       var videoFile = File(widget.videoPath);
-      var videoMimeType = lookupMimeType(widget.videoPath) ?? 'video/mp4';
+      var videoMimeType = 'video/mp4';
 
       request.files.add(await http.MultipartFile.fromPath(
         'video',
@@ -402,13 +408,17 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(languge == "Amharic"
-            ? 'Upload Video and  Audio'
-            : 'Upload Video and  Audio'),
+        title: Text(
+          languge == "Amharic"
+              ? 'Upload Video and  Audio'
+              : 'Upload Video and  Audio',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: CustomColors.testColor1,
       ),
       body: Column(
         children: [
+          Text(widget.videoPath),
           if (showMessage)
             Container(
               width: double.infinity,

@@ -7,14 +7,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class PolioDashboard extends StatefulWidget {
-  const PolioDashboard({super.key});
+class PolioDashboard1 extends StatefulWidget {
+  const PolioDashboard1({super.key});
 
   @override
   _PolioDashboardState createState() => _PolioDashboardState();
 }
 
-class _PolioDashboardState extends State<PolioDashboard> {
+class _PolioDashboardState extends State<PolioDashboard1> {
   bool _isDisposed = false;
 
   String userType = '';
@@ -177,6 +177,8 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
+          iconTheme: IconThemeData(color: Colors.white), // Set icon color here
+
           title: Text(
             'Welcome, User!',
             style: GoogleFonts.poppins(

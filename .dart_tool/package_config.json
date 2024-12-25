@@ -344,96 +344,6 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "google_ml_kit",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_ml_kit-0.19.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_barcode_scanning",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_barcode_scanning-0.13.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_commons",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_commons-0.9.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_digital_ink_recognition",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_digital_ink_recognition-0.13.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_entity_extraction",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_entity_extraction-0.14.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_face_detection",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_face_detection-0.12.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_face_mesh_detection",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_face_mesh_detection-0.3.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_image_labeling",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_image_labeling-0.13.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_language_id",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_language_id-0.12.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_object_detection",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_object_detection-0.14.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_pose_detection",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_pose_detection-0.13.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_selfie_segmentation",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_selfie_segmentation-0.9.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_smart_reply",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_smart_reply-0.12.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_text_recognition",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_text_recognition-0.14.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
-      "name": "google_mlkit_translation",
-      "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/google_mlkit_translation-0.12.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.16"
-    },
-    {
       "name": "hexcolor",
       "rootUri": "file:///C:/Users/hp/AppData/Local/Pub/Cache/hosted/pub.dev/hexcolor-3.0.1",
       "packageUri": "lib/",
@@ -1004,7 +914,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-11-24T11:46:00.772090Z",
+  "generated": "2024-12-07T04:10:32.550526Z",
   "generator": "pub",
   "generatorVersion": "3.7.0-155.0.dev",
   "flutterRoot": "file:///C:/flutter/flutter",

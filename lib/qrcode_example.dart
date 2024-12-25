@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:camera_app/color.dart';
+import 'package:camera_app/mainPage.dart';
+import 'package:camera_app/model_result/model_result.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:custom_qr_generator/custom_qr_generator.dart';
 import 'package:flutter/material.dart';
@@ -44,12 +46,19 @@ class QRCodeScreen extends StatelessWidget {
         'hofficer_phonno: $hofficer_phonno, ';
   }
   static const MethodChannel _channel = MethodChannel('gallery_saver');
-
   Future<void> _downloadQRCode(BuildContext context) async {
     try {
-      final directory = await getTemporaryDirectory();
-      final filePath = '${directory.path}/qr_code.png';
+      // Get the external directory
+      final directory = await getExternalStorageDirectory();
+      if (directory == null) {
+        throw Exception('External storage directory not found');
+      }
 
+      // Define file path with a unique name
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final filePath = '${directory.path}/qr_code_$timestamp.png';
+
+      // Generate the QR code as an image
       final qrCode = QrPainter(
         data: qrData,
         options: const QrOptions(
@@ -79,26 +88,27 @@ class QRCodeScreen extends StatelessWidget {
       final byteData = await img.toByteData(format: ImageByteFormat.png);
       final buffer = byteData!.buffer.asUint8List();
 
+      // Save the file
       final file = File(filePath);
       await file.writeAsBytes(buffer);
 
-      // Save to gallery
-      await _channel.invokeMethod('saveImage', {'filePath': filePath});
-
+      // Notify the user of success
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('QR Code saved to gallery')),
+        SnackBar(content: Text('QR Code saved at $filePath')),
       );
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => PolioDashboard(),
+          builder: (context) => MidelResult(
+            epidNumber: epid_number,
+          ),
         ),
       );
     } catch (e) {
-      print("DDDDDDDDDD  $e");
+      print("Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving QR Code: $e'),
-          duration: const Duration(seconds: 40),
+          duration: const Duration(seconds: 10),
         ),
       );
     }

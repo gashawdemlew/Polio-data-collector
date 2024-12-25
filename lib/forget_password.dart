@@ -1,3 +1,5 @@
+import 'package:camera_app/login.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -92,7 +94,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 
   Future<String> _fetchPassword(String phoneNo) async {
-    const apiUrl = 'http://192.168.47.228:7476/user/getUserByPhoNno';
+    String apiUrl = '${baseUrl}user/getUserByPhoNno';
     print(apiUrl);
 
     try {
@@ -122,10 +124,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   }
 
   Future<void> _updateStatus(String phoneNo, String status) async {
-    const apiUrl = 'http://192.168.8.228:7476/user/updateStatusByPhoneNo';
+    String apiUrl = '${baseUrl}user/updateUserPhoNo';
 
     try {
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'phoneNo': phoneNo, 'status': status}),
@@ -159,7 +161,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => PolioDashboard()),
+              MaterialPageRoute(builder: (context) => LoginPage()),
             );
           },
         ),

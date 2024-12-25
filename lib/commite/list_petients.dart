@@ -1,5 +1,9 @@
+import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/results.dart';
+import 'package:camera_app/mainPage.dart';
+import 'package:camera_app/mo/api.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -22,7 +26,7 @@ class _PatientDataPageState extends State<PatientDataPage>
   }
 
   Future<List<Patient>> fetchPatients() async {
-    const String url = "http://192.168.47.228:7476/clinic/getData1";
+    String url = "${baseUrl}clinic/getData1";
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -45,108 +49,214 @@ class _PatientDataPageState extends State<PatientDataPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Patient Data"),
-        backgroundColor: Colors.teal,
-        bottom: TabBar(
-          controller: _tabController,
-          onTap: (index) {
-            setState(() {
-              if (index == 0) {
-                selectedFilter = 'All';
-              } else if (index == 1) {
-                selectedFilter = 'pending';
-              } else if (index == 2) {
-                selectedFilter = 'Positive';
-              } else if (index == 3) {
-                selectedFilter = 'Negative';
-              }
-            });
-          },
-          tabs: const [
-            Tab(text: "All"),
-            Tab(text: "Pending"),
-            Tab(text: "Positive"),
-            Tab(text: "Negative"),
-          ],
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100.0),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [CustomColors.testColor1, Color(0xFF2575FC)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
+          ),
+          child: AppBar(
+            title: Text(
+              "Patient Data",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MainPage()),
+                );
+              },
+            ),
+            backgroundColor: Colors.transparent, // Make the AppBar transparent
+            bottom: TabBar(
+              controller: _tabController,
+              labelColor: Colors.white, // Set active tab text color
+              unselectedLabelColor:
+                  Colors.white54, // Set inactive tab text color
+              onTap: (index) {
+                setState(() {
+                  if (index == 0) {
+                    selectedFilter = 'All';
+                  } else if (index == 1) {
+                    selectedFilter = 'pending';
+                  } else if (index == 2) {
+                    selectedFilter = 'Positive';
+                  } else if (index == 3) {
+                    selectedFilter = 'Negative';
+                  }
+                });
+              },
+              tabs: const [
+                Tab(text: "All"),
+                Tab(text: "Pending"),
+                Tab(text: "Positive"),
+                Tab(text: "Negative"),
+              ],
+            ),
+          ),
         ),
       ),
-      body: FutureBuilder<List<Patient>>(
-        future: _patients,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No data available"));
-          } else {
-            List<Patient> filteredPatients = filterPatients(snapshot.data!);
-            return filteredPatients.isNotEmpty
-                ? ListView.builder(
-                    itemCount: filteredPatients.length,
-                    itemBuilder: (context, index) {
-                      Patient patient = filteredPatients[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  patient.epidNumber,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.person,
-                                        color: Colors.teal),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      patient.firstName?.isEmpty == false
-                                          ? "${patient.firstName} ${patient.lastName}"
-                                          : "Name not available",
-                                      style: const TextStyle(fontSize: 16),
+      body: Container(
+        color: const Color.fromARGB(251, 232, 229, 229),
+        child: FutureBuilder<List<Patient>>(
+          future: _patients,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text("No data available"));
+            } else {
+              List<Patient> filteredPatients = filterPatients(snapshot.data!);
+              return filteredPatients.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: filteredPatients.length,
+                      itemBuilder: (context, index) {
+                        Patient patient = filteredPatients[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Epid Number
+                                  Text(
+                                    patient.epidNumber,
+                                    style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EpidDataPage(
-                                          epidNumber: patient.epidNumber,
+                                  ),
+                                  const SizedBox(height: 10),
+
+                                  // Name Row
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.person,
+                                        color: Colors.teal,
+                                        size: 22,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          patient.firstName?.isEmpty == false
+                                              ? "${patient.firstName} ${patient.lastName}"
+                                              : "Name not available",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: const Text("View Details"),
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+
+                                  // Additional Field (e.g., Patient Age)
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Row(
+                                        children: [
+                                          const Icon(Icons.location_on,
+                                              color:
+                                                  Colors.blue), // Location icon
+                                          const SizedBox(
+                                              width:
+                                                  8), // Space between icon and text
+                                          Text(
+                                            patient.region != null
+                                                ? "${patient.woreda}/ ${patient.zone}/${patient.region}"
+                                                : "Address not available",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ],
+                                      ))
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Action Button
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Tooltip(
+                                      message: "View Details",
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EpidDataPage(
+                                                epidNumber: patient.epidNumber,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: CustomColors.testColor1,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: const Icon(
+                                            Icons
+                                                .view_list_outlined, // Choose an appropriate icon
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  )
-                : const Center(
-                    child: Text("No patients found for the selected filter."),
-                  );
-          }
-        },
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text("No patients found for the selected filter."),
+                    );
+            }
+          },
+        ),
       ),
     );
   }

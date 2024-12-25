@@ -1,7 +1,10 @@
 import 'package:camera_app/blog/fetch_blogs.dart';
+import 'package:camera_app/color.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:camera_app/profile.dart';
+import 'package:camera_app/protected/AuthGuard.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MainPage());
@@ -10,28 +13,23 @@ void main() {
 class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Advanced Navigation Bar',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: BottomNavScreen(),
+    return AuthGuard(
+      child: PolioDashboard(),
     );
   }
 }
 
-class BottomNavScreen extends StatefulWidget {
+class PolioDashboard extends StatefulWidget {
   @override
   _BottomNavScreenState createState() => _BottomNavScreenState();
 }
 
-class _BottomNavScreenState extends State<BottomNavScreen> {
+class _BottomNavScreenState extends State<PolioDashboard> {
   int _selectedIndex = 0;
 
   // List of pages for navigation
   final List<Widget> _pages = [
-    PolioDashboard(),
+    PolioDashboard1(),
     FetchBlogsScreen(),
     UserProfile(),
   ];
@@ -61,16 +59,14 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         ),
         child: BottomNavigationBar(
           backgroundColor: Colors.white,
-          selectedItemColor: Colors.teal,
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: CustomColors.testColor1,
+          unselectedItemColor: Colors.black,
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          selectedFontSize: 14,
-          unselectedFontSize: 12,
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
-          items: const [
+          items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
               label: 'Home',
@@ -84,37 +80,15 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
               label: 'Profile',
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-// Pages
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.teal, Colors.tealAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          selectedLabelStyle: GoogleFonts.poppins(
+            color: CustomColors.testColor1,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
           ),
-        ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            title: Text('Home'),
-            backgroundColor: Colors.teal.withOpacity(0.8),
-            elevation: 0,
-          ),
-          body: Center(
-            child: Text(
-              'Welcome to the Home Page!',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
+          unselectedLabelStyle: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),

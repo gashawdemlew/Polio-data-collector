@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:camera_app/blog/create_blog.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/list_petients.dart';
-import 'package:camera_app/commite/results.dart';
 import 'package:camera_app/demographyByVolunter.dart';
 import 'package:camera_app/ho_volunter.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
@@ -27,8 +26,7 @@ class Drawer45 extends StatefulWidget {
   final String userType;
   final String languge;
 
-  const Drawer45({
-    super.key,
+  Drawer45({
     required this.userType,
     required this.email,
     required this.languge,
@@ -96,7 +94,7 @@ class _Drawer45State extends State<Drawer45> {
   }
 
   Future<void> _loadLanguage45() async {
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   Future<void> initConnectivity() async {
@@ -104,7 +102,7 @@ class _Drawer45State extends State<Drawer45> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException {
+    } on PlatformException catch (e) {
       print('Couldn\'t check connectivity status');
       return;
     }
@@ -148,272 +146,295 @@ class _Drawer45State extends State<Drawer45> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-          color: Colors.white,
-          child: Column(// Use Column to avoid wrapping ListView in Expanded
-              children: <Widget>[
+        color: Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
             DrawerHeader(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [CustomColors.testColor1, Colors.red],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20), // Rounded edges
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [CustomColors.testColor1, Color(0xFF2575FC)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          CircleAvatar(
-                            radius: 45,
-                            backgroundColor: Colors.white.withOpacity(0.2),
-                          ),
-                          CircleAvatar(
-                              radius: 40,
-                              backgroundColor: Colors.white,
-                              // backgroundImage: widget.profileUrl != null
-                              // ? NetworkImage(widget.profileUrl!)
-                              // : null,
-                              child: Icon(
-                                Icons.person,
-                                color: CustomColors.testColor1,
-                                size: 50,
-                              )),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        "$fname $lname",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ])),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (widget.userType == "Health Officer")
-                    _buildListTile(
-                      context,
-                      icon: Icons.home,
-                      title: widget.languge == "Amharic"
-                          ? 'የበጎ ፍቃደኛ መልዕክት'
-                          : 'Volunteers Messages',
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DemographiVolPage()),
-                      ),
+                  SizedBox(height: 10),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.blue,
+                      size: 40,
                     ),
-                  if (widget.userType == "Laboratorist")
-                    ListTile(
-                      leading: const Icon(Icons.home, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? "ያልተሟላ ምርመራ"
-                            : 'incomplete investigation ',
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => YU(),
-                          ),
-                        );
-                      },
-                    ),
-                  if (widget.userType == "Laboratorist")
-                    ListTile(
-                      leading: const Icon(Icons.home, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? "Qrcode አንብብ"
-                            : 'Read QrCode ',
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const QRViewExample(),
-                          ),
-                        );
-                      },
-                    ),
-                  if (widget.userType == "Admin")
-                    ListTile(
-                      leading: const Icon(Icons.people, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? "የተጠቃሚ ምዝገባ"
-                            : 'User Registration ',
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => userList(),
-                          ),
-                        );
-                      },
-                    ),
-                  ListTile(
-                    leading:
-                        const Icon(Icons.account_circle, color: Colors.blue),
-                    title: Text(
-                      widget.resources1?.drawer()["profile"] ?? '',
-                      style: const TextStyle(color: Colors.blue),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => UserProfile(),
-                        ),
-                      );
-                    },
                   ),
-                  if (widget.userType == "Health Officer")
-                    ListTile(
-                      leading:
-                          const Icon(Icons.arrow_right, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? 'አዲሰ ታካሚ መዝግብ'
-                            : widget.languge == "AfanOromo"
-                                ? "Ergaa"
-                                : 'Create New Patient',
-                        style: const TextStyle(
-                            color: Color.fromRGBO(33, 150, 243, 1)),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => Patientdemographic(),
-                          ),
-                        );
-                      },
+                  Text(
+                    " $fname $lname",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
                     ),
-
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      "Results",
-                      style: const TextStyle(
-                          color: Color.fromRGBO(33, 150, 243, 1)),
-                    ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => PatientDataPage(),
-                        ),
-                      );
-                    },
                   ),
-                  // if (widget.userType == "Health Officer")
-                  ListTile(
-                    leading: const Icon(Icons.arrow_right, color: Colors.blue),
-                    title: Text(
-                      widget.languge == "Amharic"
-                          ? 'አዲሰ ብሎግ መዝግብ'
-                          : widget.languge == "AfanOromo"
-                              ? "Create New Blog"
-                              : 'Create New Blog',
-                      style: const TextStyle(color: Colors.blue),
+                  Text(
+                    widget.userType,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => CreateBlogScreen(),
-                        ),
-                      );
-                    },
-                  ),
-
-                  if (widget.userType == "Volunteers")
-                    ListTile(
-                      leading: const Icon(Icons.video_call, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? "የተጠረጠረ ታካሚ መዝግብ"
-                            : "Register Suspected Patient",
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () => _checkConnectivityAndNavigate(context),
-                    ),
-                  if (widget.userType == "Health Officer")
-                    ListTile(
-                      leading:
-                          const Icon(Icons.arrow_right, color: Colors.blue),
-                      title: Text(
-                        widget.languge == "Amharic"
-                            ? 'ያላለቁ የታካሚ መዝገቦች'
-                            : widget.languge == "AfanOromo"
-                                ? "Gosoota galtee"
-                                : 'Incomplete petient Records',
-                        style: const TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => DataListPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  const Divider(color: Colors.blue),
-
-                  ListTile(
-                    leading: const Icon(Icons.logout, color: Colors.red),
-                    title: Text(
-                      widget.resources1?.drawer()["logout"] ?? '',
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    onTap: () {
-                      _removeUserInfo();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                      );
-                    },
                   ),
                 ],
               ),
-            )
-          ])),
-    );
-  }
+            ),
 
-  ListTile _buildListTile(BuildContext context,
-      {required IconData icon,
-      required String title,
-      required VoidCallback onTap,
-      Color iconColor = Colors.blue}) {
-    return ListTile(
-      leading: Icon(icon, color: iconColor),
-      title: Text(
-        title,
-        style: GoogleFonts.poppins(
-          color: CustomColors.testColor1,
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.message_rounded, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'የበጎ ፍቃደኛ መልዕክት'
+                      : widget.languge == "AfanOromo"
+                          ? "Volunteers  Messages"
+                          : 'Volunteers  Messages',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DemographiVolPage(),
+                    ),
+                  );
+                },
+              ),
+
+            if (widget.userType == "Laboratorist")
+              ListTile(
+                leading: Icon(Icons.compare_outlined, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? "ያልተሟላ ምርመራ"
+                      : 'incomplete investigation ',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => YU(),
+                    ),
+                  );
+                },
+              ),
+            if (widget.userType == "Laboratorist")
+              ListTile(
+                leading: Icon(Icons.qr_code, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic" ? "QR code አንብብ" : 'Read QrCode ',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => QRViewExample(),
+                    ),
+                  );
+                },
+              ),
+            if (widget.userType == "Admin")
+              ListTile(
+                leading: const Icon(Icons.kebab_dining_outlined,
+                    color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'አዲሰ ብሎግ መዝግብ'
+                      : widget.languge == "AfanOromo"
+                          ? "Create New Blog"
+                          : 'Create New Blog',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreateBlogScreen(),
+                    ),
+                  );
+                },
+              ),
+            if (widget.userType == "Desicion_maker_commite")
+              ListTile(
+                leading:
+                    const Icon(Icons.summarize_outlined, color: Colors.black),
+                title: Text(
+                  "make Desicion ",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PatientDataPage(),
+                    ),
+                  );
+                },
+              ),
+            if (widget.userType == "Admin")
+              ListTile(
+                leading: Icon(Icons.people_outline, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? "የተጠቃሚ ምዝገባ"
+                      : 'User Registration ',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => userList(),
+                    ),
+                  );
+                },
+              ),
+            ListTile(
+              leading: Icon(Icons.people_alt_outlined, color: Colors.black),
+              title: Text(
+                widget.resources1?.drawer()["profile"] ?? '',
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(),
+                  ),
+                );
+              },
+            ),
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.add_box, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'አዲሰ ታካሚ መዝግብ'
+                      : widget.languge == "AfanOromo"
+                          ? "Ergaa"
+                          : 'Create New Patient',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Patientdemographic(),
+                    ),
+                  );
+                },
+              ),
+            if (widget.userType == "Volunteers")
+              ListTile(
+                leading: Icon(Icons.dashboard_customize, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? "የተጠረጠረ ታካሚ መዝግብ"
+                      : "Register Suspected Patient",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () => _checkConnectivityAndNavigate(context),
+              ),
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.incomplete_circle, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'ያላለቁ የታካሚ መዝገቦች'
+                      : widget.languge == "AfanOromo"
+                          ? "Gosoota galtee"
+                          : 'Incomplete patient Records',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => DataListPage(),
+                    ),
+                  );
+                },
+              ),
+            Divider(color: Colors.blue),
+            // ListTile(
+            //   leading: Icon(Icons.settings, color: Colors.blue),
+            //   title: Text(
+            //     widget.resources1?.drawer()["setting"] ?? '',
+            //     style: TextStyle(color: Colors.blue),
+            //   ),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //   },
+            // ),
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: Text(
+                widget.resources1?.drawer()["logout"] ?? '',
+                style: GoogleFonts.poppins(
+                  color: Colors.red,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onTap: () {
+                _removeUserInfo();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      hoverColor: CustomColors.testColor1.withOpacity(0.1),
-      tileColor: Colors.white,
     );
   }
 }

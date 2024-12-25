@@ -1395,6 +1395,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  void showError(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 3),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1644,12 +1653,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           password: passwordController.text,
                         );
                         print('User created: ${response['message']}');
+                        showError(context, ' ${response['message']}');
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => userList()));
                       } catch (e) {
-                        print('Error: $e');
+                        showError(context, 'Error: $e');
                       }
                     },
                     style: ElevatedButton.styleFrom(

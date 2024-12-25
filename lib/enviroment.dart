@@ -303,6 +303,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
       "epid_number": widget.epid_number,
       'tempreture': tempController.text,
       'rainfall': rainfallController.text,
+      "humidity": humidityController.text,
       "snow": snow.text,
       "user_id": userDetails['id'],
     });

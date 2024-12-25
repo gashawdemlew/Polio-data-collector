@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:camera_app/forget_pass/confirm_password.dart';
 import 'package:camera_app/forget_password.dart';
+import 'package:camera_app/mainPage.dart';
+import 'package:camera_app/user_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -141,8 +143,8 @@ class _LoginPageState extends State<LoginPage> {
               _passwordController.text == "admin@gmail.com") {
             await prefs.setString('email', "admin@gmail.com");
             await prefs.setString('userType', "Admin");
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PolioDashboard()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainPage()));
           } else {
             final response = await ApiService.loginUser(
               phoneNo: _emailController.text,

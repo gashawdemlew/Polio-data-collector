@@ -1,4 +1,5 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/login.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +140,7 @@ class _SmsSenderState extends State<SmsSender> {
             // Add navigation logic here to go back to the previous screen
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => PolioDashboard(),
+                builder: (context) => LoginPage(),
               ),
             );
           },

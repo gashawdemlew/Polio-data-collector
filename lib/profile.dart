@@ -1,7 +1,9 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/mainPage.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -150,190 +152,230 @@ class _ProfilePageState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile page",
-          style: const TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0),
+        child: AppBar(
+          iconTheme: IconThemeData(color: Colors.white), // Set icon color here
+
+          title: Text(
+            languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile Page",
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()),
+              );
+            },
+          ),
+          centerTitle: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [CustomColors.testColor1, Color(0xFF2575FC)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications, size: 26),
+              onPressed: () {
+                // Implement notification functionality
+              },
+              color: Colors.white,
+            ),
+            IconButton(
+              icon: Icon(Icons.people_alt, size: 26),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => UserProfile(),
+                  ),
+                );
+              },
+              color: Colors.white,
+            ),
+            SizedBox(width: 10), // Add spacing for better alignment
+          ],
         ),
-        backgroundColor: CustomColors.testColor1,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              const CircleAvatar(
-                radius: 50,
-                backgroundImage:
-                    NetworkImage('https://via.placeholder.com/150'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                languge == "Amharic" ? 'አስተካክል' : 'Edit Your Profile',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _firstNameController,
-                      decoration: const InputDecoration(
-                        labelText: 'First Name',
-                        border: OutlineInputBorder(),
+
+      // appBar: AppBar(
+      //   title: Text(
+      //     languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile Page",
+      //     style:
+      //         const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   ),
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back, color: Colors.white),
+      //     onPressed: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      //   backgroundColor: CustomColors.testColor1,
+      //   elevation: 10,
+      //   shadowColor: Colors.black54,
+      // ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFFEFCF9), Color(0xFFFEFCF9)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    // Add functionality to update profile picture
+                  },
+                  child: Stack(
+                    children: [
+                      const CircleAvatar(
+                        radius: 50,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your first name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _lastNameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Last Name',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your last name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _phoneNoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _zoneController,
-                      decoration: const InputDecoration(
-                        labelText: 'Zone',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your zone';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _woredaController,
-                      decoration: const InputDecoration(
-                        labelText: 'Woreda',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your woreda';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _regionController,
-                      decoration: const InputDecoration(
-                        labelText: 'Region',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your region';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: _updateProfile,
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor:
-                            CustomColors.testColor1, // Change the text color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8.0), // Adjust the border radius
-                        ),
-                        elevation: 14, // Add elevation
-                      ),
-                      child: Text(
-                        languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
-                        style: TextStyle(
-                          // fontSize: 24.0, // Changes the font size
-                          fontWeight: FontWeight.bold, // Makes the text bold
-                          color: Colors.white, // Changes the text color
-                          // letterSpacing: 1.2, // Adds space between letters
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.edit,
+                              color: CustomColors.testColor1, size: 18),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              // _buildInfoCard('First Name', firstName, Icons.person),
-              // _buildInfoCard('Last Name', lastname, Icons.person),
-              // _buildInfoCard('Phone Number', phoneNo, Icons.phone),
-              // _buildInfoCard('Zone', zone, Icons.map),
-              // _buildInfoCard('Woreda', woreda, Icons.location_on),
-              // _buildInfoCard('Region', region, Icons.location_city),
-              // _buildInfoCard('Password', password, Icons.lock),
-            ],
+                const SizedBox(height: 20),
+                Text(
+                  languge == "Amharic" ? 'አስተካክል' : 'Edit Your Profile',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        _buildTextField(
+                          controller: _firstNameController,
+                          label: languge == "Amharic" ? "ስም" : "First Name",
+                          icon: Icons.person,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _lastNameController,
+                          label: languge == "Amharic" ? "የአባት ስም" : "Last Name",
+                          icon: Icons.person_outline,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _phoneNoController,
+                          label:
+                              languge == "Amharic" ? "ስልክ ቁጥር" : "Phone Number",
+                          icon: Icons.phone,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _zoneController,
+                          label: languge == "Amharic" ? "ዞን" : "Zone",
+                          icon: Icons.location_on,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _woredaController,
+                          label: languge == "Amharic" ? "ወረዳ" : "Woreda",
+                          icon: Icons.map,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _regionController,
+                          label: languge == "Amharic" ? "ክልል" : "Region",
+                          icon: Icons.map_outlined,
+                        ),
+                        const SizedBox(height: 10),
+                        _buildTextField(
+                          controller: _passwordController,
+                          label: languge == "Amharic" ? "ፓስወርድ" : "Password",
+                          icon: Icons.lock,
+                          obscureText: true,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _updateProfile,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 80),
+                            foregroundColor: Colors.white,
+                            backgroundColor: CustomColors.testColor1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 10,
+                          ),
+                          child: Text(
+                            languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildInfoCard(String title, String subtitle, IconData icon) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ListTile(
-        leading: Icon(icon, size: 40),
-        title: Text(title),
-        subtitle: Text(subtitle),
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool obscureText = false,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon, color: CustomColors.testColor1),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        fillColor: Colors.white,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your $label';
+        }
+        return null;
+      },
     );
   }
 }

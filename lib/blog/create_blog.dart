@@ -1,5 +1,10 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/commite/list_petients.dart';
+import 'package:camera_app/mainPage.dart';
+import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,7 +48,7 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
     });
 
     final response = await http.post(
-      Uri.parse('http://192.168.8.228:7476/user/posts'),
+      Uri.parse('${baseUrl}user/posts'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'title': titleController.text,
@@ -72,21 +77,66 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Create Blog',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: CustomColors.testColor1,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.info_outline),
-            onPressed: () {
-              // Handle info button action
-            },
-          ),
-        ],
-      ),
+      appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.0),
+          child: AppBar(
+            iconTheme:
+                IconThemeData(color: Colors.white), // Set icon color here
+
+            title: Text(
+              "Create New Blog",
+              style: GoogleFonts.poppins(
+                color: const Color.fromRGBO(255, 255, 255, 1),
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PolioDashboard()),
+                );
+              },
+            ),
+            centerTitle: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [CustomColors.testColor1, Color(0xFF2575FC)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(20),
+                ),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.notifications, size: 26),
+                onPressed: () {
+                  // Implement notification functionality
+                },
+                color: Colors.white,
+              ),
+              IconButton(
+                icon: Icon(Icons.people_alt, size: 26),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => UserProfile(),
+                    ),
+                  );
+                },
+                color: Colors.white,
+              ),
+              SizedBox(width: 10), // Add spacing for better alignment
+            ],
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

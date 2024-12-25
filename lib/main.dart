@@ -32,25 +32,87 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _requestCameraPermission();
+    _checkPermissionsAndLoadUserInfo();
+  }
+
+  Future<void> _checkPermissionsAndLoadUserInfo() async {
+    await _requestCameraPermission();
     _loadUserInfo();
   }
 
   Future<void> _requestCameraPermission() async {
-    final status = await Permission.camera.request();
+    final status = await Permission.camera.status;
+
     if (status.isGranted) {
-      // Permission granted, proceed with camera functionality
-      debugPrint('Camera permission granted');
-    } else if (status.isDenied) {
-      // Permission denied, show a message to the user
-      debugPrint('Camera permission denied');
+      // Permission already granted
+      debugPrint('Camera permission already granted');
+      return;
+    }
+
+    if (status.isDenied) {
+      // Request permission if it was denied
+      final requestStatus = await Permission.camera.request();
+      handlePermissionStatus(requestStatus);
     } else if (status.isPermanentlyDenied) {
-      // Permission permanently denied, open app settings
-      await openAppSettings();
+      // Open settings dialog for permanently denied permissions
+      _showPermissionSettingsDialog();
     }
   }
 
-  _loadUserInfo() async {
+  void handlePermissionStatus(PermissionStatus status) {
+    if (status.isGranted) {
+      debugPrint('Camera permission granted');
+    } else if (status.isDenied) {
+      debugPrint('Camera permission denied');
+      _showPermissionDeniedDialog();
+    } else if (status.isPermanentlyDenied) {
+      debugPrint('Camera permission permanently denied');
+      _showPermissionSettingsDialog();
+    }
+  }
+
+  void _showPermissionDeniedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Permission Required'),
+        content: const Text(
+            'Camera access is required for this feature. Please allow camera access.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPermissionSettingsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Permission Required'),
+        content: const Text(
+            'Camera access is permanently denied. Please enable it in app settings.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              openAppSettings();
+            },
+            child: const Text('Open Settings'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userType = prefs.getString('userType') ?? '';
@@ -63,7 +125,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(),
       debugShowCheckedModeBanner: false,
-      home: email.isEmpty ? LoginPage() : MainPage(),
+      home: email.isEmpty ? const LoginPage() : MainPage(),
     );
   }
 }
