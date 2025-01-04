@@ -28,34 +28,28 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String userType = '';
   String email = '';
+  bool _isRequestingPermission = false; // Flag to track ongoing requests
 
   @override
   void initState() {
     super.initState();
-    _checkPermissionsAndLoadUserInfo();
-  }
-
-  Future<void> _checkPermissionsAndLoadUserInfo() async {
-    await _requestCameraPermission();
+    _requestCameraPermission();
     _loadUserInfo();
   }
 
   Future<void> _requestCameraPermission() async {
-    final status = await Permission.camera.status;
+    if (_isRequestingPermission)
+      return; // Return if a request is already ongoing
+    _isRequestingPermission = true;
 
-    if (status.isGranted) {
-      // Permission already granted
-      debugPrint('Camera permission already granted');
-      return;
-    }
-
-    if (status.isDenied) {
-      // Request permission if it was denied
-      final requestStatus = await Permission.camera.request();
-      handlePermissionStatus(requestStatus);
-    } else if (status.isPermanentlyDenied) {
-      // Open settings dialog for permanently denied permissions
-      _showPermissionSettingsDialog();
+    try {
+      final status = await Permission.camera.request();
+      handlePermissionStatus(status);
+    } catch (e) {
+      debugPrint('Error requesting camera permission: $e');
+    } finally {
+      _isRequestingPermission =
+          false; // Reset the flag when the request completes
     }
   }
 
@@ -68,6 +62,8 @@ class _MyAppState extends State<MyApp> {
     } else if (status.isPermanentlyDenied) {
       debugPrint('Camera permission permanently denied');
       _showPermissionSettingsDialog();
+    } else {
+      debugPrint('Unhandled permission status: $status');
     }
   }
 

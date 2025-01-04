@@ -80,7 +80,10 @@ class _EpidDataPageState extends State<MidelResult> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MainPage()),
+              );
             },
           ),
           centerTitle: false,
@@ -247,6 +250,7 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
           apiResponse = json.decode(response.body);
         });
         print("API Response: ${response.body}");
+        print("Input: ${inputData}");
       } else {
         setState(() {
           apiResponse = {
@@ -320,7 +324,6 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: const Text("Epid Data Display")),
       body: Center(
         child: isSubmitting
             ? const CircularProgressIndicator()
@@ -328,29 +331,14 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Response Result",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors
-                              .blueAccent, // Make the text color more vibrant
-                          letterSpacing: 1.5, // Add spacing between letters
-                          shadows: [
-                            Shadow(
-                              offset: Offset(2.0, 2.0), // Offset for shadow
-                              blurRadius: 3.0, // Blur for shadow
-                              color: Colors.grey, // Shadow color
-                            ),
-                          ],
-                        ),
-                      ),
+                      buildResultTitle(),
+                      const SizedBox(height: 20),
+                      // Conditional rendering of the API response display
+                      if (apiResponse != null)
+                        buildApiResponseDisplay(apiResponse!),
+
                       const SizedBox(height: 16),
-                      Text(
-                        "Result: ${apiResponse}",
-                        style: const TextStyle(fontSize: 16),
-                      ),
+
                       const SizedBox(height: 8),
                     ],
                   )
@@ -370,6 +358,78 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
                     ),
                   ),
       ),
+    );
+  }
+
+  Widget buildResultTitle() {
+    return Text(
+      "Response Result",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w900,
+        color: Colors.deepPurple[600],
+        letterSpacing: 1.8,
+        shadows: const [
+          Shadow(
+            offset: Offset(3.0, 3.0),
+            blurRadius: 4.0,
+            color: Colors.black26,
+          ),
+        ],
+        decoration: TextDecoration.underline,
+        decorationColor: Colors.deepPurple[200],
+        decorationThickness: 2,
+      ),
+    );
+  }
+
+  Widget buildApiResponseDisplay(Map<String, dynamic> response) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[100], // Light background for contrast
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey[300]!), // Light border
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildResponseRow("Prediction:", response["prediction"] ?? "N/A",
+              icon: Icons.analytics),
+          buildResponseRow(
+              "Confidence:", "${response["confidence_interval"] ?? "N/A"}%",
+              icon: Icons.thumb_up),
+          const SizedBox(
+            height: 8,
+          ),
+          buildResponseRow("Message:", response["message"] ?? "N/A",
+              icon: Icons.info),
+        ],
+      ),
+    );
+  }
+
+  Widget buildResponseRow(String title, String value, {IconData? icon}) {
+    return Row(
+      children: [
+        if (icon != null)
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(icon, color: Colors.grey[700], size: 20),
+          ),
+        Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

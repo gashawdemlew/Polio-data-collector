@@ -159,22 +159,23 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
 
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      userDetails = {
-        'email': prefs.getString('email') ?? 'N/A',
-        'userType': prefs.getString('userType') ?? 'N/A',
-        'firstName': prefs.getString('first_name') ?? 'N/A',
-        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
-        'zone': prefs.getString('zone') ?? 'N/A',
-        'woreda': prefs.getString('woreda') ?? 'N/A',
-        'id': prefs.getInt('id') ?? 'N/A',
-        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
-      };
-    });
-    setState(() {
-      xx = userDetails['selectedLanguage'];
-    });
+    if (mounted) {
+      setState(() {
+        userDetails = {
+          'email': prefs.getString('email') ?? 'N/A',
+          'userType': prefs.getString('userType') ?? 'N/A',
+          'firstName': prefs.getString('first_name') ?? 'N/A',
+          'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+          'zone': prefs.getString('zone') ?? 'N/A',
+          'woreda': prefs.getString('woreda') ?? 'N/A',
+          'id': prefs.getInt('id') ?? 'N/A',
+          'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+        };
+      });
+      setState(() {
+        xx = userDetails['selectedLanguage'];
+      });
+    }
   }
 
   void _loadUserData() async {

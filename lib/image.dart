@@ -35,7 +35,8 @@ class TakePictureScreenState extends State<TakePictureScreen>
   void initState() {
     super.initState();
     _loadUserDetails();
-    _requestCameraPermission();
+    _initializeCamera();
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -51,16 +52,6 @@ class TakePictureScreenState extends State<TakePictureScreen>
         }
       });
     _animationController.forward();
-  }
-
-  Future<void> _requestCameraPermission() async {
-    if (await Permission.camera.request().isGranted) {
-      // If permission is granted, initialize the camera
-      _initializeCamera();
-    } else {
-      // Handle permission denied case if necessary
-      print('Camera permission not granted');
-    }
   }
 
   Future<void> _initializeCamera() async {

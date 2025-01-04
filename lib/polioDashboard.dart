@@ -198,7 +198,7 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
+                bottom: Radius.circular(4),
               ),
             ),
           ),
@@ -221,7 +221,7 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
               },
               color: Colors.white,
             ),
-            SizedBox(width: 10), // Add spacing for better alignment
+            // SizedBox(width: 10), // Add spacing for better alignment
           ],
         ),
       ),
@@ -234,7 +234,7 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
+                    // const SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
