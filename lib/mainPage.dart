@@ -5,6 +5,7 @@ import 'package:camera_app/profile.dart';
 import 'package:camera_app/protected/AuthGuard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MainPage());
@@ -26,6 +27,7 @@ class PolioDashboard extends StatefulWidget {
 
 class _BottomNavScreenState extends State<PolioDashboard> {
   int _selectedIndex = 0;
+  String? _selectedLanguage = 'English'; // Default value
 
   // List of pages for navigation
   final List<Widget> _pages = [
@@ -33,6 +35,20 @@ class _BottomNavScreenState extends State<PolioDashboard> {
     FetchBlogsScreen(),
     UserProfile(),
   ];
+  void initState() {
+    super.initState();
+    loadLanguage();
+  }
+
+  Future<void> loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'English';
+    if (mounted) {
+      setState(() {
+        _selectedLanguage = storedLanguage;
+      });
+    }
+  }
 
   // Update the selected index
   void _onItemTapped(int index) {
@@ -69,15 +85,27 @@ class _BottomNavScreenState extends State<PolioDashboard> {
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
-              label: 'Home',
+              label: _selectedLanguage == "Amharic"
+                  ? "ቤት"
+                  : _selectedLanguage == "AfanOromo"
+                      ? "mana"
+                      : "home",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.article_outlined),
-              label: 'Blog',
+              label: _selectedLanguage == "Amharic"
+                  ? "ብሎግ"
+                  : _selectedLanguage == "AfanOromo"
+                      ? "Biloogii"
+                      : "blog",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
-              label: 'Profile',
+              label: _selectedLanguage == "Amharic"
+                  ? "መገለጫ"
+                  : _selectedLanguage == "AfanOromo"
+                      ? "Ibsama"
+                      : "Profile",
             ),
           ],
           selectedLabelStyle: GoogleFonts.poppins(

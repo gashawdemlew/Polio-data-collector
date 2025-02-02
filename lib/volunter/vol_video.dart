@@ -5,10 +5,12 @@ import 'package:camera_app/ReviewPage.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/mainPage.dart';
 import 'package:camera_app/mo/api.dart';
+// import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
 import 'package:camera_app/qrcode_example.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
@@ -163,8 +165,6 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
               woreda: widget.woreda,
               gender: widget.gender,
               phonNo: widget.phonNo,
-              lat: widget.lat,
-              long: widget.long,
               selected_health_officer: widget.selected_health_officer
 
               // epid_number: widget.epid_number,
@@ -250,21 +250,18 @@ class DisplayVideoScreen1 extends StatefulWidget {
   final String videoPath;
   final String phonNo;
   final String gender;
-
   final String first_name;
   final String last_name;
   final String region;
   final String zone;
   final String woreda;
-  final String lat;
-  final String long;
+  // final String lat;
+  // final String long;
   final String selected_health_officer;
-  // final String epid_number;
 
   const DisplayVideoScreen1({
     super.key,
     required this.videoPath,
-    // required this.epid_number,
     required this.imagePath,
     required this.gender,
     required this.phonNo,
@@ -273,8 +270,8 @@ class DisplayVideoScreen1 extends StatefulWidget {
     required this.region,
     required this.zone,
     required this.woreda,
-    required this.lat,
-    required this.long,
+    // required this.lat,
+    // required this.long,
     required this.selected_health_officer,
   });
 
@@ -284,13 +281,16 @@ class DisplayVideoScreen1 extends StatefulWidget {
 
 class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   bool isSaving = false;
-  bool showMessage = false; // New state variable to control message visibility
+  bool showMessage = false;
   Map<String, dynamic> userDetails = {};
+  String? _latitude;
+  String? _longitude;
 
   @override
   void initState() {
     super.initState();
     _loadUserDetails();
+    _getCurrentLocation(); // Fetch location on initialization
   }
 
   Future<void> _loadUserDetails() async {
@@ -309,13 +309,70 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     });
   }
 
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Location services are disabled.')));
+      setState(() {
+        _latitude = null;
+        _longitude = null;
+      });
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permissions are denied')));
+        setState(() {
+          _latitude = null;
+          _longitude = null;
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Location permissions are permanently denied, we cannot request permissions.')));
+      setState(() {
+        _latitude = null;
+        _longitude = null;
+      });
+      return;
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _latitude = position.latitude.toString();
+        _longitude = position.longitude.toString();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Error fetching location: $e')));
+      setState(() {
+        _latitude = null;
+        _longitude = null;
+      });
+    }
+  }
+
   Future<void> postClinicalData(BuildContext context) async {
     setState(() {
       isSaving = true;
-      showMessage = true; // Show message when the saving starts
+      showMessage = true;
     });
 
-    // Timer to hide the message after 15 seconds
     Timer(const Duration(seconds: 15), () {
       if (mounted) {
         setState(() {
@@ -325,6 +382,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     });
 
     final url = '${baseUrl}clinic/upload';
+    print(url);
     var request = http.MultipartRequest('POST', Uri.parse(url));
 
     request.headers['Content-Type'] = 'multipart/form-data';
@@ -338,8 +396,12 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
       'woreda': widget.woreda,
       'zone': widget.zone,
       'gender': widget.gender,
-      'phonNo': widget.phonNo
+      'phonNo': widget.phonNo,
+      "user_id": userDetails['id'],
+      'lat': _latitude ?? '0.0',
+      'long': _longitude ?? '0.0',
     });
+    print(request.fields);
 
     // Adding image file
     if (widget.imagePath.isNotEmpty) {
@@ -393,8 +455,8 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Uploading Image and Video',
+        title: Text(
+          'Upload Multimedia Info',
           style: TextStyle(
             color: Colors.white,
           ),
@@ -418,10 +480,12 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                 textAlign: TextAlign.center,
               ),
             ),
-          const SizedBox(height: 220), // Add some spacing below the message
+          const SizedBox(height: 220),
           Center(
             child: ElevatedButton(
-              onPressed: isSaving ? null : () => postClinicalData(context),
+              onPressed: _latitude == null || _longitude == null || isSaving
+                  ? null
+                  : () => postClinicalData(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: CustomColors.testColor1,
                 padding: const EdgeInsets.symmetric(
@@ -444,12 +508,17 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                         color: Colors.white,
                       ),
                     )
-                  : const Text(
-                      'Upload',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
+                  : _latitude == null || _longitude == null
+                      ? const Text(
+                          'Fetching Location...',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : const Text(
+                          'Upload',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
             ),
           ),
         ],

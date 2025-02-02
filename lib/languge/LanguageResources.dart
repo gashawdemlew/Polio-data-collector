@@ -5,13 +5,36 @@ class LanguageResources {
 
   Map<String, String> loginLanguage() {
     return {
-      "welcomeMessage": language == "Amharic" ? "እንኳን ደህና ቆዩ" : "Welcome Back",
-      "email": language == "Amharic" ? "እሜይል" : "Email",
-      "forgetPassword":
-          language == "Amharic" ? "ፓሥዎርድ እረስትተዋለ?" : "Forget Password?",
-      "password": language == "Amharic" ? "ፓሥዎርድ" : "Password",
-      "loginButton": language == "Amharic" ? "ግባ" : "Login",
-      "selectLanguage": language == "Amharic" ? "ቋንቋ ምረጥ" : "Select Language",
+      "welcomeMessage": language == "Amharic"
+          ? "እንኳን ደህና ቆዩ"
+          : language == "AfanOromo"
+              ? "Baga nagaan deebitan"
+              : "Welcome Back",
+      "email": language == "Amharic"
+          ? "እሜይል"
+          : language == "AfanOromo"
+              ? "Imeelii"
+              : "Email",
+      "forgetPassword": language == "Amharic"
+          ? "ፓሥዎርድ እረስትተዋለ?"
+          : language == "AfanOromo"
+              ? "Jecha darbii irraanfattanii?"
+              : "Forget Password?",
+      "password": language == "Amharic"
+          ? "ፓሥዎርድ"
+          : language == "AfanOromo"
+              ? "Jecha darbii"
+              : "Password",
+      "loginButton": language == "Amharic"
+          ? "ግባ"
+          : language == "AfanOromo"
+              ? "Seenii"
+              : "Login",
+      "selectLanguage": language == "Amharic"
+          ? "ቋንቋ ምረጥ"
+          : language == "AfanOromo"
+              ? "Afaan filadhu"
+              : "Select Language",
     };
   }
 
@@ -197,15 +220,27 @@ class LanguageResources {
           ? 'ከተጀመረ በኋላ ቀናት'
           : language == "AfanOromo"
               ? "Guyyaa itti jalqabe"
-              : 'Date After Onset',
-      "selectDate": language == "Amharic" ? 'ቀን ይምረጡ' : 'Select Date',
+              : 'Date of Onset',
+      "selectDate": language == "Amharic"
+          ? 'ቀን ይምረጡ'
+          : language == "AfanOromo"
+              ? "Guyyaa filadhu"
+              : 'Select Date',
       "feverAtOnset": language == "Amharic"
           ? 'በመጀመሪያው የተነሳብል እንቅልፍ'
           : language == "AfanOromo"
               ? "Ho’a qaamaa guyyaa itti jalqabee"
-              : 'Fever At Onset',
-      "yes": language == "Amharic" ? 'አዎ' : 'Yes',
-      "no": language == "Amharic" ? 'አይደለም' : 'No',
+              : 'Fever at Onset',
+      "yes": language == "Amharic"
+          ? 'አዎ'
+          : language == "AfanOromo"
+              ? "Eeyyee"
+              : 'Yes',
+      "no": language == "Amharic"
+          ? 'አይደለም'
+          : language == "AfanOromo"
+              ? "Lakki"
+              : 'No',
       "flaccidAndSuddenParalysis": language == "Amharic"
           ? 'ደካማ እና ድንገተኛ ፓራላይሲስ'
           : language == "AfanOromo"
@@ -288,7 +323,7 @@ class LanguageResources {
           ? 'የሰገራ ናሙና ቅጽ'
           : language == "AfanOromo"
               ? "Saamuda sagaraa"
-              : 'Stool Specimen Form',
+              : 'Stool Speciman Information',
       "dateStoolCollected": language == "Amharic"
           ? 'የሰገራ የተሰበሰበበት  ቀን '
           : language == "AfanOromo"
@@ -346,7 +381,11 @@ class LanguageResources {
               : 'Date Sent to Lab',
       "negative": language == "Amharic" ? 'አይደለም' : 'Negative',
       "pending": language == "Amharic" ? 'በመጠባበቅ ላይ' : 'Pending',
-      "submit": language == "Amharic" ? 'አስገባ' : 'Submit',
+      "submit": language == "Amharic"
+          ? 'አስገባ'
+          : language == "AfanOromo"
+              ? "Ergi"
+              : 'Submit',
     };
   }
 
@@ -356,12 +395,15 @@ class LanguageResources {
           ? 'የክትትል ምርመራ'
           : language == "AfanOromo"
               ? "Qorannoo hordoffii "
-              : 'Follow Up Investigation',
+              : 'Follow up Investigation',
       "patientRecovered":
           language == "Amharic" ? 'ታካሚው አገገማል' : 'Patient Recovered',
       "yes": language == "Amharic" ? 'አዎ' : 'Yes',
-      "Losttofollowup":
-          language == "Amharic" ? 'ለመከታተል ጠፋ' : 'Lost to follow-up',
+      "Losttofollowup": language == "Amharic"
+          ? 'ለመከታተል ጠፋ'
+          : language == "AfanOromo"
+              ? "Hordoffiin addaancite"
+              : 'Lost to follow-up',
       "no": language == "Amharic" ? 'አይደለም' : 'No',
       "DateofDeath": language == "Amharic" ? 'የሞት ቀን' : 'Date of Death',
       "ResidualParalysis": language == "Amharic"
@@ -378,8 +420,10 @@ class LanguageResources {
       "recovered":
           language == "Amharic" ? 'አለባበሱ እንዴት ነው?' : 'Recovered Status',
       "DateofFollowupExamination": language == "Amharic"
-          ? '  የክትትል ምርመራ ቀን'
-          : 'Date of Follow-up Examination',
+          ? "በክትትል ውስጥ ያሉ ግኝቶች"
+          : language == "AfanOromo"
+              ? "Guyyaa qorannoo hordoffii"
+              : 'Date of Follow-up',
       "FindingsatFollowup:": language == "Amharic"
           ? 'በክትትል ውስጥ ያሉ ግኝቶች'
           : 'Findings at Follow-up:',
@@ -387,7 +431,11 @@ class LanguageResources {
       "rightArm": language == "Amharic" ? 'የቀኝ ክንድ' : 'Right Arm',
       "leftLeg": language == "Amharic" ? 'ግራ እግር' : 'Left Leg',
       "rightLeg": language == "Amharic" ? 'የቀኝ እግር' : 'Right Leg',
-      "submit": language == "Amharic" ? 'አስገባ' : 'Submit',
+      "submit": language == "Amharic"
+          ? 'አስገባ'
+          : language == "AfanOromo"
+              ? "Ergi"
+              : 'Submit',
     };
   }
 

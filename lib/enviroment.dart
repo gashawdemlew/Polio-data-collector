@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:camera_app/ReviewPage.dart';
+import 'package:camera_app/camera_test.dart';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/components/appbar.dart';
 import 'package:camera_app/home_page.dart';
 import 'package:camera_app/image.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/permission.dart';
 import 'package:camera_app/pushMessage.dart';
+import 'package:camera_app/stool/date_stool.collected.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,90 +24,10 @@ class EnvironmentMetrologyForm extends StatefulWidget {
   final LanguageResources? resources1;
   final String epid_number;
 
-  // final String latitude;
-  // final String longitude;
-
-  // final String name;
-
-  // final String gender;
-  // final String dateofbirth;
-  // final String region;
-  // final String zone;
-
-  // final String woreda;
-
-  // final String feverAtOnset;
-  // final String flaccidParalysis;
-  // final String paralysisProgressed;
-  // final String asymmetric;
-  // final String siteOfParalysis;
-  // final int totalOPVDoses;
-  // final String admittedToHospital;
-  // final String dateOfAdmission;
-  // final String medicalRecordNo;
-  // final String facilityName;
-  // final String dateStool1;
-  // final String dateStool2;
-  // final String daysAfterOnset;
-
-  // final String stool1DateCollected;
-  // final String stool2DateCollected;
-  // final String stool1DaysAfterOnset;
-  // final String stool2DaysAfterOnset;
-  // final String stool1DateSentToLab;
-  // final String stool2DateSentToLab;
-  // final String stool1DateReceivedByLab;
-  // final String stool2DateReceivedByLab;
-  // final String caseOrContact;
-  // final String specimenCondition;
-  // final String residualParalysis;
-
-  // final String phoneNo;
-
-  // final String first_name;
-  // final String last_name;
-
-  @override
   const EnvironmentMetrologyForm({
     super.key,
     required this.resources1,
     required this.epid_number,
-
-    // required this.latitude,
-    // required this.longitude,
-    // required this.name,
-    // required this.gender,
-    // required this.dateofbirth,
-    // required this.zone,
-    // required this.region,
-    // required this.woreda,
-    // required this.feverAtOnset,
-    // required this.flaccidParalysis,
-    // required this.paralysisProgressed,
-    // required this.asymmetric,
-    // required this.siteOfParalysis,
-    // required this.totalOPVDoses,
-    // required this.admittedToHospital,
-    // required this.dateOfAdmission,
-    // required this.medicalRecordNo,
-    // required this.facilityName,
-    // required this.dateStool1,
-    // required this.dateStool2,
-    // required this.daysAfterOnset,
-    // required this.stool1DateCollected,
-    // required this.stool2DateCollected,
-    // required this.stool1DaysAfterOnset,
-    // required this.stool1DateSentToLab,
-    // required this.stool2DateSentToLab,
-    // required this.stool1DateReceivedByLab,
-    // required this.stool2DateReceivedByLab,
-    // required this.caseOrContact,
-    // required this.specimenCondition,
-    // required this.stool2DaysAfterOnset,
-    // required this.residualParalysis,
-    // required this.first_name,
-    // required this.last_name,
-    // required this.phoneNo,
   });
   @override
   _EnvironmentMetrologyFormState createState() =>
@@ -138,10 +61,20 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
     _loadUserDetails1();
     _loadUserData();
     _loadUserInfo();
-    getCurrentLocation().then((_) {
-      fetchWeatherData();
-      _loadUserDetails();
+    _fetchInitialData();
+  }
+
+  Future<void> _fetchInitialData() async {
+    setState(() {
+      _isFetchingData = true;
     });
+    await getCurrentLocation();
+    await fetchWeatherData();
+
+    setState(() {
+      _isFetchingData = false;
+    });
+    _loadUserDetails();
   }
 
   String? first_name;
@@ -233,44 +166,46 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
     }
   }
 
-  void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Prevents dismissing the dialog by tapping outside
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            xx == "Amharic" ? "ማረጋገጫ" : "Confirmation",
-          ),
-          content: Text(
-            xx == "Amharic"
-                ? 'እባክዎ ጥራት ያለ እና ያልተለወጠ የምስል ይዘግቡ። የምስል እንደተለወጠ ቢሆን ወደ እንደገና ይጠይቃል።'
-                : 'Please capture unblurred quality image without losing important information about the patient.',
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                xx == "Amharic" ? "አቁም" : "Cancel",
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
-              },
-            ),
-            TextButton(
-              child: Text(
-                xx == "Amharic" ? "እሺ" : "OK",
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
-                onConfirm(); // Calls the callback to navigate to TakePictureScreen
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible:
+  //         false, // Prevents dismissing the dialog by tapping outside
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(
+  //           xx == "Amharic" ? "ማረጋገጫ" : "Confirmation",
+  //         ),
+  //         content: Text(
+  //           xx == "Amharic"
+  //               ? 'እባክዎ ጥራት ያለ እና ያልተለወጠ የምስል ይዘግቡ። የምስል እንደተለወጠ ቢሆን ወደ እንደገና ይጠይቃል።'
+  //               : 'Please capture unblurred quality image without losing important information about the patient.',
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: Text(
+  //               xx == "Amharic" ? "አቁም" : "Cancel",
+  //             ),
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Closes the dialog
+  //             },
+  //           ),
+  //           TextButton(
+  //             child: Text(
+  //               xx == "Amharic" ? "እሺ" : "OK",
+  //             ),
+  //             onPressed: () {
+  //               Navigator.of(context).pop(); // Closes the dialog
+  //               onConfirm(); // Calls the callback to navigate to TakePictureScreen
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  bool _isFetchingData = true; // Flag to track API fetch state
 
   Map<String, dynamic> userDetails = {};
 
@@ -308,7 +243,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
       "snow": snow.text,
       "user_id": userDetails['id'],
     });
-
+    print(body);
     setState(() {
       isSubmitting = true;
     });
@@ -326,15 +261,13 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
           const SnackBar(content: Text('Form submitted successfully!')),
         );
 
-        _showConfirmationDialog(context, () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TakePictureScreen(
-                    // resources1: widget.resources1,
-                    epid_number: widget.epid_number),
-              ));
-        });
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DateStoolcollected(
+                epid_Number: widget.epid_number,
+              ),
+            ));
       } else {
         print('Failed to submit form: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -415,16 +348,13 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          xx == "Amharic" ? "የ አካባቢ  መረጃ" : "Methodology Information ",
-          style: GoogleFonts.splineSans(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: CustomColors.testColor1,
+      backgroundColor: Colors.grey[100],
+      appBar: CustomAppBar(
+        title: xx == "Amharic"
+            ? "የ አካባቢ  መረጃ"
+            : xx == "AfanOromo"
+                ? "Odeeffannoo Mala"
+                : "Metrology Information",
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -435,22 +365,9 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // TextFormField(
-                //   controller: city,
-                //   keyboardType: TextInputType.number,
-                //   // onChanged: (value) {
-                //   //   setState(() {
-                //   //     _dailyHumidity = double.tryParse(value);
-                //   //   });
-                //   // },
-
-                //   decoration: ThemeHelper().textInputDecoration(
-                //       '${widget.resources1?.environmentalMethodology()["city"] ?? ''}',
-                //       ' ${widget.resources1?.patientDemographic()["city"] ?? ''} '),
-                // ),
-                const SizedBox(height: 8.0),
                 const SizedBox(height: 8.0),
                 TextFormField(
+                  readOnly: true,
                   controller: tempController,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
@@ -467,6 +384,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 const SizedBox(height: 16.0),
                 const SizedBox(height: 8.0),
                 TextFormField(
+                  readOnly: true,
                   controller: rainfallController,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
@@ -482,6 +400,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
+                  readOnly: true,
                   controller: humidityController,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
@@ -496,91 +415,17 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                       ' ${widget.resources1?.patientDemographic()["humidity"] ?? ''} '),
                 ),
                 const SizedBox(height: 16.0),
-                // TextFormField(
-                //   controller: snow,
-                //   // keyboardType: TextInputType.number,
-                //   // onChanged: (value) {
-                //   //   setState(() {
-                //   //     _dailyHumidity = double.tryParse(value);
-                //   //   });
-                //   // },
-                //   decoration: ThemeHelper().textInputDecoration(
-                //       '${widget.resources1?.environmentalMethodology()["snow"] ?? ''}',
-                //       ' ${widget.resources1?.patientDemographic()["snow"] ?? ''} '),
-                // ),
                 const SizedBox(height: 16.0),
-                const SizedBox(height: 8.0),
-                // TextFormField(
-                //   controller: soilMoistureController,
-                //   keyboardType: TextInputType.number,
-                //   onChanged: (value) {
-                //     setState(() {
-                //       _dailySoilMoisture = double.tryParse(value);
-                //     });
-                //   },
-                //   decoration: ThemeHelper().textInputDecoration(
-                //       '${widget.resources1?.environmentalMethodology()["description"] ?? ''}',
-                //       ' ${widget.resources1?.patientDemographic()["description"] ?? ''} '),
-                // ),
                 const SizedBox(height: 16.0),
                 SizedBox(
                   width: 370,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _submitForm();
-                      // _showConfirmationDialog(context, () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => TakePictureScreen(
-                      //       rainfall: rainfallController.text,
-                      //       snow: snow.text,
-                      //       humidity: humidityController.text,
-                      //       tempreture: tempController.text,
-                      //       latitude: widget.latitude,
-                      //       longitude: widget.longitude,
-                      //       gender: widget.gender,
-                      //       dateofbirth: widget.dateofbirth,
-                      //       epid_number: widget.epid_number,
-                      //       first_name: widget.first_name,
-                      //       last_name: widget.last_name,
-                      //       zone: widget.zone,
-                      //       region: widget.region,
-                      //       woreda: widget.woreda,
-                      //       feverAtOnset: widget.feverAtOnset,
-                      //       flaccidParalysis: widget.flaccidParalysis,
-                      //       paralysisProgressed: widget.paralysisProgressed,
-                      //       asymmetric: widget.asymmetric,
-                      //       siteOfParalysis: widget.siteOfParalysis,
-                      //       totalOPVDoses: widget.totalOPVDoses,
-                      //       admittedToHospital: widget.admittedToHospital,
-                      //       dateOfAdmission: widget.dateOfAdmission,
-                      //       medicalRecordNo: widget.medicalRecordNo,
-                      //       facilityName: widget.facilityName,
-                      //       dateStool1: widget.dateStool1,
-                      //       dateStool2: widget.dateStool2,
-                      //       daysAfterOnset: widget.daysAfterOnset,
-                      //       stool1DateCollected: widget.stool1DateCollected,
-                      //       stool2DateCollected: widget.stool2DateCollected,
-                      //       stool1DaysAfterOnset: widget.stool1DaysAfterOnset,
-                      //       stool1DateSentToLab: widget.stool1DateSentToLab,
-                      //       stool2DateSentToLab: widget.stool2DateSentToLab,
-                      //       stool1DateReceivedByLab:
-                      //           widget.stool1DateReceivedByLab,
-                      //       stool2DateReceivedByLab:
-                      //           widget.stool2DateReceivedByLab,
-                      //       caseOrContact: widget.caseOrContact,
-                      //       specimenCondition: widget.specimenCondition,
-                      //       stool2DaysAfterOnset: widget.stool2DaysAfterOnset,
-                      //       residualParalysis: widget.residualParalysis,
-                      //       hofficer_phonno: _passwordController.text,
-                      //       hofficer_name: _emailController.text,
-                      //       phoneNo: widget.phoneNo,
-                      //     ),
-                      // //   ),
-                      // );
-                      // });
-                    },
+                    onPressed: _isFetchingData
+                        ? null
+                        : () {
+                            // Disable button when fetching
+                            _submitForm();
+                          },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: CustomColors.testColor1,
@@ -589,13 +434,37 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
                       ),
                       elevation: 14,
                     ),
-                    child: Text(
-                      isSubmitting
-                          ? (xx == "Amharic" ? 'ቀጣይ' : 'Next')
-                          : (xx == "Amharic" ? 'ቀጣይ' : 'Next..'),
-                    ),
+                    child: isSubmitting
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: Colors
+                                    .white, // Change color to match your theme
+                                strokeWidth: 3.0, // Adjust thickness
+                              ),
+                              SizedBox(
+                                  width:
+                                      10), // Space between indicator and text
+                              Text(
+                                xx == "Amharic" ? 'እየጫነ ነው...' : 'Loading...',
+                              ),
+                            ],
+                          )
+                        : Text(
+                            xx == "Amharic"
+                                ? 'ቀጣይ'
+                                : xx == "AfanOromo"
+                                    ? 'Ergi'
+                                    : 'Next',
+                          ),
                   ),
                 ),
+                if (_isFetchingData)
+                  Center(
+                    child:
+                        CircularProgressIndicator(), // Show loading indicator while data is fetching
+                  ),
               ],
             ),
           ),

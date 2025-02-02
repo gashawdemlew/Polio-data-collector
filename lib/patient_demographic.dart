@@ -14,7 +14,6 @@ import 'package:location/location.dart' as location;
 // import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
 // import SharedPreferences from 'my_shared_preferences_package'
 
@@ -92,6 +91,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
 
   double latitude = 0.0;
   double longitude = 0.0;
+  bool _locationFetched = false; // Flag to track if location is fetched
+
   Future<void> getCurrentLocation() async {
     var locationPlugin = location.Location();
 
@@ -111,6 +112,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
       setState(() {
         latitude = locationData.latitude ?? 0.0;
         longitude = locationData.longitude ?? 0.0;
+        _locationFetched = true; // Set the flag to true after fetching
         print(latitude);
       });
 
@@ -353,7 +355,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 hint: Text(
-                  languge == "Amharic" ? "ጾታ ምረጥ" : "Select Gender",
+                  languge == "Amharic"
+                      ? "ጾታ ምረጥ"
+                      : languge == "AfanOromo"
+                          ? "Saala filadhu"
+                          : "Select Gender",
                 ),
                 value: _selectedGender,
                 dropdownColor: Colors.white,
@@ -405,9 +411,13 @@ class _PatientdemographicState extends State<Patientdemographic> {
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 hint: Text(
-                  languge == "Amharic" ? "ክልል ምረጥ" : "Select Region",
+                  languge == "Amharic"
+                      ? "ክልል ምረጥ"
+                      : languge == "AfanOromo"
+                          ? "Naannoo filadhu"
+                          : "Select Region",
                 ),
-                dropdownColor: const Color.fromARGB(255, 213, 144, 144),
+                dropdownColor: Colors.white,
                 value: _selectedRegion,
                 items: locationData.keys.map((String region) {
                   return DropdownMenuItem<String>(
@@ -436,7 +446,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
               if (_selectedRegion != null)
                 DropdownButtonFormField<String>(
                   hint: Text(
-                    languge == "Amharic" ? "ዞን ምረጥ" : "Select Zone",
+                    languge == "Amharic"
+                        ? "ዞን ምረጥ"
+                        : languge == "AfanOromo"
+                            ? "Zoonii filadhu"
+                            : "Select Zone",
                   ),
                   value: _selectedZone,
                   dropdownColor: Colors.white,
@@ -467,7 +481,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
               if (_selectedZone != null)
                 DropdownButtonFormField<String>(
                   hint: Text(
-                    languge == "Amharic" ? "ወረዳ ምረጥ" : "Select Woreda",
+                    languge == "Amharic"
+                        ? "ወረዳ ምረጥ"
+                        : languge == "AfanOromo"
+                            ? "Woreeda filadhu"
+                            : "Select Woreda",
                   ),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
@@ -498,22 +516,25 @@ class _PatientdemographicState extends State<Patientdemographic> {
               SizedBox(
                 width: 370,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Trigger form validation
-                    if (_formKey.currentState!.validate()) {
-                      _submitForm();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content:
-                                Text('Please fill out all required fields')),
-                      );
-                    }
-                  },
+                  onPressed: _locationFetched
+                      ? () {
+                          // Trigger form validation
+                          if (_formKey.currentState!.validate()) {
+                            _submitForm();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text(
+                                      'Please fill out all required fields')),
+                            );
+                          }
+                        }
+                      : null, // Disable the button when location isn't fetched
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor:
-                        CustomColors.testColor1, // Change the text color
+                    backgroundColor: _locationFetched
+                        ? CustomColors.testColor1
+                        : Colors.grey, // Change the text color
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                           8.0), // Adjust the border radius

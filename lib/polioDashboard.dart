@@ -1,6 +1,7 @@
 import 'package:camera_app/color.dart';
 import 'package:camera_app/drawer.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
+import 'package:camera_app/mainPage.dart';
 import 'package:camera_app/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,15 +29,10 @@ class _PolioDashboardState extends State<PolioDashboard1> {
   void initState() {
     super.initState();
     _loadUserInfo();
-    _loadLanguage45();
-    _loadLanguage().then((_) {
-      setState(() {
-        _selectedLanguage = languge;
-        resources = LanguageResources(languge);
-      });
-    });
+    _loadInitialLanguage(); // Load initial language before building.
   }
 
+  // Load User info
   Future<void> _loadUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -45,29 +41,36 @@ class _PolioDashboardState extends State<PolioDashboard1> {
     });
   }
 
+  // Handle dispose
   void dispose() {
     _isDisposed = true;
     super.dispose();
   }
 
+  // Load language from shared preferences
   Future<void> _loadLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
     if (mounted) {
       setState(() {
         languge = storedLanguage;
-      });
-    }
-  }
-
-  Future<void> _loadLanguage45() async {
-    await Future.delayed(const Duration(seconds: 1));
-    if (!_isDisposed) {
-      setState(() {
         resources = LanguageResources(languge);
         resource12 = resources;
       });
     }
+  }
+
+  // Load Initial Language and resources.
+  Future<void> _loadInitialLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'English';
+
+    setState(() {
+      _selectedLanguage = storedLanguage;
+      languge = storedLanguage;
+      resources = LanguageResources(languge);
+      resource12 = resources;
+    });
   }
 
   final List<String> imagePaths = [
@@ -135,12 +138,43 @@ Pooliyoo
 ⦁	Polio is caused by the poliovirus and spreads through contaminated water or food
 
   ''';
+
+  final String WhatisthePolioVirusOM = '''
+
+Pooliyoon dhukkuba vaayirasii baay’ee daddarbaa ta’ee fi adda durummaan daa’imman xixiqqoo miidhudha. Umrii guutuu laamsha’uu fi yeroo tokko tokko du’aaf nama saaxiluu danda’a. Pooliyoon vaayirasii pooliyootiin kan dhufu yoo ta’u, karaa bishaanii ykn nyaata faalameen kan daddarbudha.
+
+  ''';
+
+  final String WhatisthePolioVirusAm = '''
+
+⦁ ፖሊዮ በጣም ተላላፊ የቫይረስ በሽታ ሲሆን በዋነኛነት ትንንሽ ልጆችን ያጠቃል
+⦁ የእድሜ ልክ ሽባነትን ሊያስከትል እና በአንዳንድ ሁኔታዎችም ለሞት ሊዳርግ ይችላል።
+⦁ ፖሊዮ በፖሊዮ ቫይረስ የሚመጣ ሲሆን በተበከለ ውሃ ወይም ምግብ ይተላለፋል
+
+  ''';
+
   final String AboutPolioAntennaAPP = '''
 PolioAntenna is a mobile app that automates acute flaccid paralysis (AFP) surveillance by collecting real-time multimedia data—forms, images, and videos. It offers immediate diagnoses of the polio virus, serving as a vital tool for community volunteers and public health officials. By streamlining data collection, PolioAntenna enhances outbreak monitoring and response, while its user-friendly interface allows volunteers to efficiently input critical information, strengthening public health efforts.
   ''';
 
+  final String AboutPolioAntennaAPPOM = '''
+Apilikeeshiniin Pooliyoo anteenaa apilikeeshinii unkaalee ragaa waytawaa itti sassaaban, suuraa fi viidiyoo fayyadamuun hordoffii [faana dhahiinsa] dhibee laamshessaa (acute flaccid paralysis (AFP)) si’oomsudha. Dabalataanis ragaa fudhate irrati hundaa’uun Pooliyoo tahuu fi dhiisuu kan adda baasuu waan ta’eef appilikeeshinii tola ooltota hawaasaa fi ogeessota fayyaa gargaaruu irrati gahee guddaa qabudha. 
+Sassaabii odeeffannoo sirreessuudhaan, appilikeeshiniin pooliyoo anteenaa hordoffii [faana dhahiinsa] fi deebii [tarkaanfii] yeroo weeraraa kan guddisu [fooyyessu] yoo ta’u, intarfeesii fayyadamtootaaf mijatu qabaachuun isaa, tola ooltonni hawaasaa odeeffannoo murteessaa ta’e gahumsaan akka galchan kan taasisu fi tattaaffii fayyaa hawaasaa kan cimsu dha.
+  ''';
+  final String AboutPolioAntennaAPPAM = '''
+ፖሊዮአንቴና የተንቀሳቃሽ ስልክ መተግበሪያ ነው አጣዳፊ ፍላይድ ፓራላይዝስ (AFP) በእውነተኛ ጊዜ የመልቲሚዲያ መረጃዎችን - ቅርጾችን፣ ምስሎችን እና ቪዲዮዎችን በመሰብሰብ። ለማህበረሰብ በጎ ፈቃደኞች እና የህዝብ ጤና ባለስልጣናት አስፈላጊ መሳሪያ ሆኖ የሚያገለግል የፖሊዮ ቫይረስ አፋጣኝ ምርመራዎችን ያቀርባል። የመረጃ አሰባሰብን በማሳለጥ፣ፖሊዮአንቴና የወረርሽኙን ክትትል እና ምላሽ ያሻሽላል፣ለተጠቃሚ ምቹ የሆነ በይነገጽ በጎ ፈቃደኞች ወሳኝ መረጃዎችን በብቃት እንዲያገቡ ያስችላቸዋል፣የህዝብ ጤና ጥረቶችን ያጠናክራል።  ''';
+
   final String AboutRAPPS = '''
 RAPPS is a project that is part of a global IDRC-funded initiative on AI for Global Health. It aims to improve polio surveillance sensitivity through responsible AI in a decolonized approach using local capacity and local data focusing on empowering underserved groups. Click/copy the link (https://www.polioantenna.org/) to get more information about the project
+  ''';
+
+  final String AboutRAPPSOM = '''
+Projectiin RAPPS qaama pirojeektii inisheetiivii sammuu [hubannoo] nam-tolchee fayyaa addunyaaf jedhuun dhaabbata IDRC jedhamuun deeggaramuudha.
+Kaayyoon isaas sammuu [hubannoo] nam-tolchee (AI)  itti gaafatamummaa qabu fayyadamuun, dandeettii fi ragaa naannoo bu’uureffachuun, akkasumas naannoowwan tajaajila gahaa hin arganne humneessuun ariitii fi gahumsa hordoffii [faana dhahiinsa] pooliyoo vaayirasii fooyyessuudha. Oddeeffannoo Dabalataaf (https:// www.polipantenna.org/)
+
+  ''';
+  final String AboutRAPPSAM = '''
+RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  አካል የሆነ ፕሮጀክት ነው. የአካባቢ አቅምን እና የአካባቢ መረጃን በመጠቀም ያልተገለገሉ ቡድኖችን በማብቃት ላይ በማተኮር ኃላፊነት በተሞላበት AI አማካኝነት የፖሊዮ ክትትልን ስሜት ለማሻሻል ያለመ ነው። ስለ ፕሮጀክቱ ተጨማሪ መረጃ ለማግኘት ሊንኩን ይንኩ/ይቅዱ (https://www.polioantenna.org/)
   ''';
 
   final String AFP = '''
@@ -151,9 +185,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
 
   final String AFPafm = '''
 (AFP)
-- Hordoffiin AFP tattaaffii addunyaa pooliyoo dhabamsiisuuf taasifamu keessatti tooftaa ijoodha
-- AFP’n taatee daa’ima waggaa 15 gadi ta’e irratti dadhabbii ykn laamsha’uu akka tasaa kutaa qaama kamiyyuu keessatti uumamudha
-- Hordoffiin taatee AFP infekshinii pooliyoo ta’uu danda’an adda baasuu fi tarkaanfiiwwan fayyaa hawaasaa ilaallatan qajeelchuuf gargaara
+- Hordoffiin [Faana dhahiinsi] AFP tattaaffii akka addunyaati pooliyoo dhabamsiisuuf taasifamu keessatti tooftaa ijoodha. 
+- AFP jechuun daa’ima waggaa 15 gadi ta’e keessatti kutaa qaama kamiyyuu keessatti akka tasaa dadhabbii ykn laamsha’uu dha
+- Hordoffiin [Faana dhahiinsi] AFP infekshinii pooliyoo ta’uu danda’u adda baasuu fi deebii [tarkaanfii] fayyaa hawaasaa qajeelchuuf gargaara
+
+
 
   ''';
   final String AFPam = '''
@@ -164,6 +200,19 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
   ''';
 
   final double _scale = 1.0;
+
+  void _saveSelectedLanguage(String language) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedLanguage', language);
+    _loadLanguage(); //reload language resources
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your Phone No';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +229,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            'Welcome, User!',
+            languge == "Amharic"
+                ? "ሰላም!"
+                : languge == "AfanOromo"
+                    ? "Anaa dhufu!"
+                    : "Welcome, User!",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -203,24 +256,52 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
             ),
           ),
           actions: [
-            IconButton(
-              icon: Icon(Icons.notifications, size: 26),
-              onPressed: () {
-                // Implement notification functionality
-              },
-              color: Colors.white,
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedLanguage,
+                dropdownColor: Colors.white,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedLanguage = newValue!;
+                    _saveSelectedLanguage(newValue);
+                  });
+
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MainPage(), // Replace with your page widget
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.language, color: Colors.white),
+                items: <String>['English', 'Amharic', 'AfanOromo']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value == 'Amharic'
+                          ? 'አማርኛ'
+                          : value == 'AfanOromo'
+                              ? 'Afaan Oromoo'
+                              : value,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-            IconButton(
-              icon: Icon(Icons.people_alt, size: 26),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => UserProfile(),
-                  ),
-                );
-              },
-              color: Colors.white,
-            ),
+
+            // IconButton(
+            //   icon: Icon(Icons.people_alt, size: 26),
+            //   onPressed: () {
+            //     Navigator.of(context).push(
+            //       MaterialPageRoute(
+            //         builder: (context) => UserProfile(),
+            //       ),
+            //     );
+            //   },
+            //   color: Colors.white,
+            // ),
             // SizedBox(width: 10), // Add spacing for better alignment
           ],
         ),
@@ -267,7 +348,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                   color: CustomColors.testColor1, size: 26),
                               const SizedBox(width: 8),
                               Text(
-                                'About RAPPS',
+                                languge == "Amharic"
+                                    ? "ስለ RAPPS"
+                                    : languge == "AfanOromo"
+                                        ? "Waa’ee RAPPS"
+                                        : 'About RAPPS',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 20,
@@ -284,7 +369,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            AboutRAPPS,
+                            languge == "Amharic"
+                                ? AboutRAPPSAM
+                                : languge == "AfanOromo"
+                                    ? AboutRAPPSOM
+                                    : AboutRAPPS,
                             textAlign: TextAlign.justify,
                             style: GoogleFonts.poppins(
                               fontSize: 14,
@@ -318,7 +407,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Learn More',
+                                    languge == "Amharic"
+                                        ? "ተጨማሪ እይ"
+                                        : languge == "AfanOromo"
+                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -378,10 +471,14 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                               Icon(Icons.info_outline,
                                   color: CustomColors.testColor1, size: 26),
                               const SizedBox(width: 8),
-                              const Text(
-                                'About Polio Antenna APP',
+                              Text(
+                                languge == "Amharic"
+                                    ? "ስለ ፖሊዮ አንቴና አፕ"
+                                    : languge == "AfanOromo"
+                                        ? "Waa’ee Apilikeeshinee Pooliyoo anteenaa"
+                                        : 'About Polio Antenna APP',
                                 style: TextStyle(
-                                  fontSize: 22,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
@@ -396,7 +493,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            AboutPolioAntennaAPP,
+                            languge == "Amharic"
+                                ? AboutPolioAntennaAPPAM
+                                : languge == "AfanOromo"
+                                    ? AboutPolioAntennaAPPOM
+                                    : AboutPolioAntennaAPP,
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               fontSize: 16,
@@ -429,7 +530,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Learn More',
+                                    languge == "Amharic"
+                                        ? "ተጨማሪ እይ"
+                                        : languge == "AfanOromo"
+                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -470,8 +575,12 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                               Icon(Icons.info,
                                   color: CustomColors.testColor1, size: 26),
                               const SizedBox(width: 8),
-                              const Text(
-                                'What is the Polio Virus???',
+                              Text(
+                                languge == "Amharic"
+                                    ? "የፖሊዮ ቫይረስ ምንድነው?"
+                                    : languge == "AfanOromo"
+                                        ? "Vaayirasiin Pooliyoo maali?"
+                                        : 'What is the Polio Virus?',
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -488,7 +597,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            WhatisthePolioVirus,
+                            languge == "Amharic"
+                                ? WhatisthePolioVirusAm
+                                : languge == "AfanOromo"
+                                    ? WhatisthePolioVirusOM
+                                    : WhatisthePolioVirus,
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               fontSize: 16,
@@ -514,7 +627,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Learn More',
+                                    languge == "Amharic"
+                                        ? "ተጨማሪ እይ"
+                                        : languge == "AfanOromo"
+                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -558,9 +675,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                               Text(
                                 languge == "Amharic"
                                     ? 'AFP ስለላ'
-                                    : "AFP Surveillance",
+                                    : languge == "AfanOromo"
+                                        ? "  Hordoffii [faana dhahiinsa] AFP"
+                                        : "AFP Surveillance",
                                 style: const TextStyle(
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
@@ -605,7 +724,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Learn More',
+                                    languge == "Amharic"
+                                        ? "ተጨማሪ እይ"
+                                        : languge == "AfanOromo"
+                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
@@ -657,7 +780,9 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                               Text(
                                 languge == "Amharic"
                                     ? "የፖሊዮ ሁኔታ"
-                                    : 'Polio Status',
+                                    : languge == "AfanOromo"
+                                        ? "Sadarkaa Pooliyoon irra jiru"
+                                        : 'Polio Status',
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -710,7 +835,11 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Learn More',
+                                    languge == "Amharic"
+                                        ? "ተጨማሪ እይ"
+                                        : languge == "AfanOromo"
+                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,

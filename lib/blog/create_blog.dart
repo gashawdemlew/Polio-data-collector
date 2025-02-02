@@ -1,5 +1,7 @@
 import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/list_petients.dart';
+import 'package:camera_app/components/appbar.dart';
+import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mainPage.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/profile.dart';
@@ -19,6 +21,12 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
   final authorController = TextEditingController();
+  String userType = '';
+  String email = '';
+  String _selectedLanguage = "English";
+  String languge = "ccc";
+  LanguageResources? resources;
+  LanguageResources? resource12;
 
   bool isSubmitting = false;
 
@@ -40,6 +48,19 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
   void initState() {
     super.initState();
     _loadUserDetails();
+    _loadLanguage();
+  }
+
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
+    if (mounted) {
+      setState(() {
+        languge = storedLanguage;
+        resources = LanguageResources(languge);
+        resource12 = resources;
+      });
+    }
   }
 
   Future<void> createBlog() async {
@@ -77,66 +98,13 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: AppBar(
-            iconTheme:
-                IconThemeData(color: Colors.white), // Set icon color here
-
-            title: Text(
-              "Create New Blog",
-              style: GoogleFonts.poppins(
-                color: const Color.fromRGBO(255, 255, 255, 1),
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PolioDashboard()),
-                );
-              },
-            ),
-            centerTitle: false,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [CustomColors.testColor1, Color(0xFF2575FC)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(20),
-                ),
-              ),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.notifications, size: 26),
-                onPressed: () {
-                  // Implement notification functionality
-                },
-                color: Colors.white,
-              ),
-              IconButton(
-                icon: Icon(Icons.people_alt, size: 26),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => UserProfile(),
-                    ),
-                  );
-                },
-                color: Colors.white,
-              ),
-              SizedBox(width: 10), // Add spacing for better alignment
-            ],
-          )),
+      appBar: CustomAppBar(
+        title: languge == "Amharic"
+            ? "አዲስ ብሎግ ይፍጠሩ"
+            : languge == "AfanOromo"
+                ? "Biloogii haaraa uumi"
+                : "Create New Blog",
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -146,7 +114,11 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
               TextFormField(
                 controller: titleController,
                 decoration: InputDecoration(
-                  labelText: 'Title',
+                  labelText: languge == "Amharic"
+                      ? "ርዕስ"
+                      : languge == "AfanOromo"
+                          ? "Mata duree"
+                          : "Blog Topic",
                   prefixIcon: Icon(Icons.title),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -160,7 +132,11 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                 readOnly: true,
                 controller: authorController,
                 decoration: InputDecoration(
-                  labelText: 'Author',
+                  labelText: languge == "Amharic"
+                      ? "ደራሲ"
+                      : languge == "AfanOromo"
+                          ? "Barreessaa"
+                          : "Author",
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -173,7 +149,11 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
               TextFormField(
                 controller: contentController,
                 decoration: InputDecoration(
-                  labelText: 'Content',
+                  labelText: languge == "Amharic"
+                      ? "ደራሲ"
+                      : languge == "AfanOromo"
+                          ? "Qabiyyee"
+                          : "Blog Content",
                   prefixIcon: Icon(Icons.text_fields),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -188,7 +168,7 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: CustomColors.testColor1, // Button color
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 16),
                   textStyle: TextStyle(fontSize: 18),
@@ -204,7 +184,12 @@ class _CreateBlogScreenState extends State<CreateBlogScreen> {
                     ? CircularProgressIndicator(
                         color: Colors.white,
                       )
-                    : Text('Submit',
+                    : Text(
+                        languge == "Amharic"
+                            ? "መዝግብ"
+                            : languge == "AfanOromo"
+                                ? "Galchuu"
+                                : "Post Blog",
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold)),
               ),

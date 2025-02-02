@@ -89,7 +89,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
         body: jsonEncode(formData),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Successfully registered  ${widget.type}'),

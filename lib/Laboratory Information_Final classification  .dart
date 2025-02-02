@@ -105,7 +105,7 @@ class _LaboratoryFinalClassificationFormState
         headers: {'Content-Type': 'application/json'},
         body: body,
       );
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print('Form submitted successfully!');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Successfully registered')),

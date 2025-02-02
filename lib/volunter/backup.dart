@@ -1,39 +1,21 @@
 import 'dart:ui' as ui;
 import 'package:camera/camera.dart';
 import 'package:camera_app/components/appbar.dart';
-import 'package:camera_app/image.dart';
-import 'package:camera_app/util/color/color.dart';
-import 'package:camera_app/video.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 
 // Constants for better code maintainability.
 const double _blurSigma = 10.0; // Standard blur radius
 const double _initialRectSize = 20.0;
 
-class TakePictureScreen extends StatefulWidget {
-  final String epid_number;
-
-  const TakePictureScreen({
-    super.key,
-    required this.epid_number,
-  });
-
+class CameraPage extends StatefulWidget {
   @override
   _CameraPageState createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<TakePictureScreen>
-    with WidgetsBindingObserver {
+class _CameraPageState extends State<CameraPage> with WidgetsBindingObserver {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   Future<void>? _initializeControllerFuture;
@@ -109,16 +91,13 @@ class _CameraPageState extends State<TakePictureScreen>
     try {
       final image = await _cameraController!.takePicture();
       final directory = await getTemporaryDirectory();
-      final path = join(directory.path, '${DateTime.now()}.jpg');
+      final path = join(directory.path, '${DateTime.now()}.png');
 
       await image.saveTo(path);
       if (mounted) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => BlurImageScreen(
-              imagePath: path,
-              epid_number: widget.epid_number,
-            ),
+            builder: (context) => BlurImageScreen(imagePath: path),
           ),
         );
       }
@@ -161,13 +140,8 @@ class _CameraPageState extends State<TakePictureScreen>
 
 class BlurImageScreen extends StatefulWidget {
   final String imagePath;
-  final String epid_number;
-  // final String language;
-  const BlurImageScreen({
-    required this.imagePath,
-    required this.epid_number,
-    // required this.language
-  });
+
+  const BlurImageScreen({required this.imagePath});
 
   @override
   _BlurImageScreenState createState() => _BlurImageScreenState();
@@ -188,7 +162,6 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserDetails();
     _loadImage();
   }
 
@@ -213,29 +186,6 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
         setState(() => _isLoading = false);
       }
     }
-  }
-
-  Map<String, dynamic> userDetails = {};
-  String languge = '';
-  Future<void> _loadUserDetails() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      userDetails = {
-        'email': prefs.getString('email') ?? 'N/A',
-        'userType': prefs.getString('userType') ?? 'N/A',
-        'firstName': prefs.getString('first_name') ?? 'N/A',
-        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
-        'zone': prefs.getString('zone') ?? 'N/A',
-        'woreda': prefs.getString('woreda') ?? 'N/A',
-        'id': prefs.getInt('id') ?? 'N/A',
-        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
-      };
-    });
-
-    setState(() {
-      languge = userDetails['selectedLanguage'];
-    });
   }
 
   // Calculate the scaling factors for the image
@@ -307,22 +257,18 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
       }
 
       final directory = await getTemporaryDirectory();
-      final path = join(directory.path, 'blurred_${DateTime.now()}.jpg');
+      final path = join(directory.path, 'blurred_${DateTime.now()}.png');
       final file = File(path);
       await file.writeAsBytes(data.buffer.asUint8List());
 
       if (mounted) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ImagePreview(
-              imagePath: path,
-              epid_number: widget.epid_number,
-              languge: languge,
-            ),
+            builder: (context) => ImagePreview(imagePath: path),
           ),
         );
       }
-      // _showSnackBar('Blurred image saved to $path');
+      _showSnackBar('Blurred image saved to $path');
     } catch (e) {
       _showErrorSnackBar("Error processing image: $e");
     } finally {
@@ -346,24 +292,9 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: CustomColors.testColor1,
-            title: Text(
-              languge == "Amharic"
-                  ? "ምስልን አደብዝዝ"
-                  : languge == "AfanOromo"
-                      ? "Fakkii jajjabeessuu"
-                      : "Blur Image",
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              IconButton(
-                  icon: const Icon(Icons.save), onPressed: _saveBlurredImage)
-            ]),
+        appBar: AppBar(title: const Text('Blur Image'), actions: [
+          IconButton(icon: const Icon(Icons.save), onPressed: _saveBlurredImage)
+        ]),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : LayoutBuilder(builder: (context, constraints) {
@@ -450,242 +381,21 @@ class BlurPainter extends CustomPainter {
   bool shouldRepaint(BlurPainter oldDelegate) => true;
 }
 
-class ImagePreview extends StatefulWidget {
+class ImagePreview extends StatelessWidget {
   final String imagePath;
-  final String languge;
-  final String epid_number;
 
-  const ImagePreview({
-    Key? key,
-    required this.imagePath,
-    required this.languge,
-    required this.epid_number,
-  }) : super(key: key);
-
-  @override
-  _ImagePreviewState createState() => _ImagePreviewState();
-}
-
-class _ImagePreviewState extends State<ImagePreview> {
-  String? _errorMessage;
-  String? _apiResponse;
-  bool _isLoading = false;
-
-  Future<void> _uploadImage(String imagePath) async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _apiResponse = null;
-    });
-
-    final String url =
-        'https://polio-image-classification-api.vercel.app/polio_classification?epid_number=${widget.epid_number}';
-
-    print("Image path: ${widget.imagePath}");
-    File imageFile = File(imagePath);
-    print("File exists: ${await imageFile.exists()}");
-    if (!await imageFile.exists()) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = "Error: The file '$imagePath' does not exist.";
-      });
-      return;
-    }
-    // Compress the image
-    XFile? compressedFile = await FlutterImageCompress.compressAndGetFile(
-      imagePath,
-      "${imagePath.substring(0, imagePath.lastIndexOf('.'))}-compressed.jpg",
-      quality: 85,
-    );
-    print("Compressed file path: ${compressedFile?.path}");
-
-    if (compressedFile == null) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = "Error: Could not compress the image.";
-      });
-      return;
-    }
-    File compressedImageFile = File(compressedFile.path);
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers['accept'] = 'application/json';
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'input_image',
-          compressedImageFile.path,
-          contentType: MediaType('image', 'jpeg'),
-        ),
-      );
-
-      var response = await request.send().timeout(const Duration(seconds: 120));
-      print("Response status code: ${response.statusCode}"); // ADD THIS LINE
-      print("Response data: ${response}"); // ADD THIS LINE
-
-      var responseData = await http.Response.fromStream(response);
-      print("Response data: ${responseData.body}"); // ADD THIS LINE
-
-      if (response.statusCode == 200) {
-        var responseData = await http.Response.fromStream(response);
-        var decodedResponse = json.decode(responseData.body);
-        setState(() {
-          _isLoading = false;
-          _apiResponse = decodedResponse.toString();
-        });
-
-        _showConfirmationDialog(context, () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => TakeMediaScreen(
-                imagePath: widget.imagePath,
-                epid_number: widget.epid_number,
-              ),
-            ),
-          );
-        });
-      } else {
-        setState(() {
-          _isLoading = false;
-          _errorMessage =
-              "Error: ${response.statusCode} ${response.reasonPhrase}";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _isLoading = false;
-        _errorMessage = "An error occurred: $e";
-      });
-
-      _showConfirmationDialog(context, () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => TakeMediaScreen(
-              imagePath: widget.imagePath,
-              epid_number: widget.epid_number,
-            ),
-          ),
-        );
-      });
-    }
-  }
-
-  void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(widget.languge == "Amharic" ? 'አረጋግጥ' : 'Confirmation'),
-          content: Text(widget.languge == "Amharic"
-              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
-              : widget.languge == "AfanOromo"
-                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
-                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text(widget.languge == "Amharic" ? 'አጥፋ' : 'Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text(widget.languge == "Amharic" ? 'እሽ' : 'ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                onConfirm();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  const ImagePreview({Key? key, required this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: widget.languge == "Amharic"
-            ? "ምስልን አስቀድመው ይመልከቱ"
-            : widget.languge == "AfanOromo"
-                ? "Fakkii dursee ilaali"
-                : "Preview image",
-      ),
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: viewportConstraints.maxHeight,
-              ),
-              child: IntrinsicHeight(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(
-                            16.0), // Added padding around image
-                        alignment: Alignment.center,
-                        child: Image.file(File(widget.imagePath)),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print("Upload button pressed!"); // ADD THIS LINE
-                          _uploadImage(widget.imagePath);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              CustomColors.testColor1, // Set background color
-                          foregroundColor: Colors.white, // Set text color
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16),
-                          textStyle: const TextStyle(fontSize: 18),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          elevation: 5, // Add shadow
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text('Next'),
-                      ),
-                    ),
-                    if (_errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                      ),
-                    if (_apiResponse != null)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "Api Response: $_apiResponse",
-                          style: const TextStyle(color: Colors.green),
-                        ),
-                      ),
-                    const SizedBox(height: 20), // Added spacing at bottom
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Preview Image'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: Center(child: Image.file(File(imagePath))));
   }
 }

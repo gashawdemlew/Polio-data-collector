@@ -139,7 +139,9 @@ class _DemographiVolPageState extends State<DemographiVolPage>
         title: Text(
           userDetails['selectedLanguage'] == 'Amharic'
               ? 'የበጎ ፍቃደኛ መረጃዎች'
-              : 'Demographic Records',
+              : userDetails['selectedLanguage'] == 'AfanOromo'
+                  ? "Galmee Hawaasummaa"
+                  : 'Demographic Records',
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 20,
@@ -154,24 +156,29 @@ class _DemographiVolPageState extends State<DemographiVolPage>
             Tab(
               text: userDetails['selectedLanguage'] == 'Amharic'
                   ? 'ሁሉንም አሳይ (${unseenCount + seenCount})'
-                  : 'All (${unseenCount + seenCount})',
+                  : userDetails['selectedLanguage'] == 'AfanOromo'
+                      ? 'Hunda (${unseenCount + seenCount})'
+                      : "All",
             ),
             Tab(
               // Remove the 'text' property
               child: Text(
                 userDetails['selectedLanguage'] == 'Amharic'
                     ? 'ያልታዩትን አሳይ ($unseenCount)'
-                    : 'Unseen ($unseenCount)',
+                    : userDetails['selectedLanguage'] == 'AfanOromo'
+                        ? "haaraa ($unseenCount)"
+                        : 'Unseen ($unseenCount)',
                 style: TextStyle(
                   color: unseenCount > 0 ? Colors.yellow : Colors.white54,
                 ),
               ),
             ),
             Tab(
-              text: userDetails['selectedLanguage'] == 'Amharic'
-                  ? 'የታዩትን አሳይ ($seenCount)'
-                  : 'Seen ($seenCount)',
-            ),
+                text: userDetails['selectedLanguage'] == 'Amharic'
+                    ? 'የታዩትን አሳይ ($seenCount)'
+                    : userDetails['selectedLanguage'] == 'AfanOromo'
+                        ? "Ilaalameera ($seenCount)"
+                        : 'Seen ($seenCount)'),
           ],
         ),
       ),

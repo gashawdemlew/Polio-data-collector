@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:camera_app/blog/create_blog.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/list_petients.dart';
+import 'package:camera_app/modelResults/complete_peitient.dart';
 import 'package:camera_app/demographyByVolunter.dart';
 import 'package:camera_app/ho_volunter.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
@@ -158,7 +159,7 @@ class _Drawer45State extends State<Drawer45> {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(20),
+                  bottom: Radius.circular(6),
                 ),
               ),
               child: Column(
@@ -201,8 +202,8 @@ class _Drawer45State extends State<Drawer45> {
                   widget.languge == "Amharic"
                       ? 'የበጎ ፍቃደኛ መልዕክት'
                       : widget.languge == "AfanOromo"
-                          ? "Volunteers  Messages"
-                          : 'Volunteers  Messages',
+                          ? "Ergaa Tola ooltotaa"
+                          : 'Volunteer message',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -224,7 +225,9 @@ class _Drawer45State extends State<Drawer45> {
                 title: Text(
                   widget.languge == "Amharic"
                       ? "ያልተሟላ ምርመራ"
-                      : 'incomplete investigation ',
+                      : widget.languge == "AfanOromo"
+                          ? "qorannoo guutuu hin taane"
+                          : 'incomplete investigation ',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -243,7 +246,11 @@ class _Drawer45State extends State<Drawer45> {
               ListTile(
                 leading: Icon(Icons.qr_code, color: Colors.black),
                 title: Text(
-                  widget.languge == "Amharic" ? "QR code አንብብ" : 'Read QrCode ',
+                  widget.languge == "Amharic"
+                      ? "QR code አንብብ"
+                      : widget.languge == "AfanOromo"
+                          ? "QrCode dubbisi"
+                          : 'Read QrCode ',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -266,7 +273,7 @@ class _Drawer45State extends State<Drawer45> {
                   widget.languge == "Amharic"
                       ? 'አዲሰ ብሎግ መዝግብ'
                       : widget.languge == "AfanOromo"
-                          ? "Create New Blog"
+                          ? "Biloogii haaraa uumi"
                           : 'Create New Blog',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
@@ -287,7 +294,11 @@ class _Drawer45State extends State<Drawer45> {
                 leading:
                     const Icon(Icons.summarize_outlined, color: Colors.black),
                 title: Text(
-                  "make Desicion ",
+                  widget.languge == "Amharic"
+                      ? 'ውሳኔ ያድርጉ'
+                      : widget.languge == "AfanOromo"
+                          ? "Murtoo kennuu"
+                          : 'make Desicion',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -308,7 +319,9 @@ class _Drawer45State extends State<Drawer45> {
                 title: Text(
                   widget.languge == "Amharic"
                       ? "የተጠቃሚ ምዝገባ"
-                      : 'User Registration ',
+                      : widget.languge == "AfanOromo"
+                          ? "Galmee Fayyadamtootaa"
+                          : 'User Registration ',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -370,7 +383,9 @@ class _Drawer45State extends State<Drawer45> {
                 title: Text(
                   widget.languge == "Amharic"
                       ? "የተጠረጠረ ታካሚ መዝግብ"
-                      : "Register Suspected Patient",
+                      : widget.languge == "AfanOromo"
+                          ? "Dhukkubsataa shakkame galmeess"
+                          : "Register Suspected Patient",
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
@@ -378,6 +393,30 @@ class _Drawer45State extends State<Drawer45> {
                   ),
                 ),
                 onTap: () => _checkConnectivityAndNavigate(context),
+              ),
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.format_list_bulleted_rounded,
+                    color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'ያለቀ የታካሚ መዝገቦች'
+                      : widget.languge == "AfanOromo"
+                          ? "Galmee dhukkubsataa guutuu hin taane"
+                          : 'Complete patient Records',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Complete(),
+                    ),
+                  );
+                },
               ),
             if (widget.userType == "Health Officer")
               ListTile(
@@ -402,6 +441,7 @@ class _Drawer45State extends State<Drawer45> {
                   );
                 },
               ),
+
             Divider(color: Colors.blue),
             // ListTile(
             //   leading: Icon(Icons.settings, color: Colors.blue),

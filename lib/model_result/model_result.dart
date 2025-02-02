@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/list_petients.dart';
 import 'package:camera_app/mainPage.dart';
@@ -8,11 +10,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class MidelResult extends StatefulWidget {
   final String epidNumber;
+  final String imagePath;
 
-  const MidelResult({Key? key, required this.epidNumber}) : super(key: key);
+  const MidelResult(
+      {Key? key, required this.epidNumber, required this.imagePath})
+      : super(key: key);
 
   @override
   State<MidelResult> createState() => _EpidDataPageState();
@@ -70,7 +78,7 @@ class _EpidDataPageState extends State<MidelResult> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "View Model Data",
+            "View Model Results",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -138,6 +146,7 @@ class _EpidDataPageState extends State<MidelResult> {
             final sharedPrefsData = snapshot.data!;
 
             return EpidDataDisplay(
+              imagePath: widget.imagePath,
               epidNumber: widget.epidNumber,
               data: data,
               onEdit: () async {
@@ -156,14 +165,16 @@ class _EpidDataPageState extends State<MidelResult> {
 
 class EpidDataDisplay extends StatefulWidget {
   final Map<String, dynamic> data;
+  final String imagePath;
   final VoidCallback onEdit;
-  final String epidNumber; // Add epid_number to fetch data dynamically
+  final String epidNumber;
 
   const EpidDataDisplay({
     Key? key,
     required this.data,
     required this.onEdit,
-    required this.epidNumber, // Initialize epid_number
+    required this.imagePath,
+    required this.epidNumber,
   }) : super(key: key);
 
   @override
@@ -175,20 +186,140 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
   bool isLoading = true;
   String? errorMessage;
 
+  bool isSubmitting = false;
+  Map<String, dynamic>? apiResponse;
+
+  String? _filePath;
+  String? _fileName;
+  bool _isLoading = false;
+  String? _errorMessage;
+  String? _apiResponse;
+  bool _isImageUploading = false;
+
   @override
   void initState() {
     super.initState();
-    fetchEpidData(); // Fetch data when the widget initializes
+    uploadImage();
+    fetchEpidData();
+  }
+  // Map<String, dynamic>? _apiResponse;
+
+  String _responseMessage = '';
+  bool _isUploading = false;
+  Map<String, dynamic>? _responseData;
+  Map<String, dynamic>? _responseData1;
+
+  String message = "";
+  String suspected = "";
+  String confidence_interval = "";
+
+  String message1 = "";
+  String prediction = "";
+  String confidence_interval1 = "";
+
+  Future<void> uploadImage() async {
+    final String url =
+        'https://polio-image-classification-api.vercel.app/polio_classification';
+
+    File imageFile = File(widget.imagePath);
+    if (!await imageFile.exists()) {
+      setState(() {
+        _responseMessage =
+            "Error: The file '${widget.imagePath}' does not exist.";
+      });
+      return;
+    }
+
+    setState(() {
+      _isUploading = true;
+      _responseMessage = '';
+    });
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.headers['accept'] = 'application/json';
+
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'input_image',
+          widget.imagePath,
+        ),
+      );
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseData = await http.Response.fromStream(response);
+        setState(() {
+          _responseData = json.decode(responseData.body);
+
+          _responseMessage = "Output: ${responseData.body}";
+        });
+
+        print("XXXXXXXXXXXXXXXXXXX ${_responseData}");
+        print("prediction ${_responseData!['prediction']}");
+        print("confidence_interval ${_responseData!['confidence_interval']}");
+        print("message ${_responseData!['message']}");
+      } else {
+        setState(() {
+          _responseMessage =
+              "Error: ${response.statusCode} ${response.reasonPhrase}";
+
+          suspected = _responseData!['suspected'];
+          confidence_interval = _responseData!['prediction'];
+          message = _responseData!['message'];
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _responseMessage = "An error occurred: $e";
+      });
+    } finally {
+      setState(() {
+        _isUploading = false;
+      });
+    }
   }
 
-  bool isSubmitting = false;
+  Future<void> postData() async {
+    final url = Uri.parse(
+        "${baseUrl}ModelRoute/data"); // Replace with your API endpoint
 
-  Map<String, dynamic>? apiResponse;
+    // Sample data to be sent in the POST request
+    final Map<String, dynamic> data = {
+      "epid_number": widget.epidNumber,
+      'message': message,
+      'suspected': suspected,
+      "confidence_interval": confidence_interval1,
+      'message1': message1,
+      'suspected1': prediction,
+      "confidence_interval1": confidence_interval1
+    };
+    print(data);
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json', // Set the content type
+        },
+        body: jsonEncode(data), // Convert map to JSON
+      );
+
+      // Check the response status
+      if (response.statusCode == 200) {
+        print('Response data: ${response.body}');
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception occurred: $e');
+    }
+  }
 
   Future<void> postToApi(Map<String, dynamic> results) async {
     setState(() {
       isSubmitting = true;
-      apiResponse = null; // Reset the response
+      apiResponse = null;
     });
 
     try {
@@ -235,22 +366,39 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
         'month': currentDate.month,
         'season': getSeason(currentDate.month),
       };
-      print(inputData);
+      print("API Input: $inputData");
       const String apiUrl =
           "https://gashudemman-poliosuspectedcaseprediction.hf.space/predict";
 
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(inputData),
-      );
+      final response = await http
+          .post(
+            Uri.parse(apiUrl),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode(inputData),
+          )
+          .timeout(const Duration(seconds: 60));
+      print('API Response Code: ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        setState(() {
-          apiResponse = json.decode(response.body);
-        });
+        _responseData1 = json.decode(response.body);
+
+        try {
+          setState(() {
+            apiResponse = json.decode(response.body);
+            message1 = _responseData1!['prediction'] ?? "";
+
+            prediction = _responseData1!['suspected'] ?? "";
+            double confidence_interval1 = double.tryParse(
+                    _responseData1!['confidence_interval']?.toString() ?? "") ??
+                0.0;
+          });
+        } catch (e) {
+          setState(() {
+            apiResponse = {"message": "Invalid Json Format : $e"};
+          });
+          print("JSON decode error: $e");
+        }
         print("API Response: ${response.body}");
-        print("Input: ${inputData}");
       } else {
         setState(() {
           apiResponse = {
@@ -286,6 +434,7 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
 
   Future<void> fetchEpidData() async {
     final String endpoint = "clinic/getAllMultimedia";
+    final String baseUrl = "https://testgithub.polioantenna.org/api/v1/";
 
     try {
       final response = await http.get(
@@ -324,8 +473,17 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: isSubmitting
+      body: Column(children: [
+        // Text(apiResponse.toString()),
+
+        if (_isUploading) CircularProgressIndicator(),
+        SizedBox(height: 20),
+
+        // Text(_responseData['message']??""),
+
+        Text(_responseMessage),
+        // Text(widget.imagePath),
+        isSubmitting
             ? const CircularProgressIndicator()
             : apiResponse != null
                 ? Column(
@@ -333,31 +491,56 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
                     children: [
                       buildResultTitle(),
                       const SizedBox(height: 20),
-                      // Conditional rendering of the API response display
                       if (apiResponse != null)
                         buildApiResponseDisplay(apiResponse!),
-
                       const SizedBox(height: 16),
-
                       const SizedBox(height: 8),
                     ],
                   )
                 : ElevatedButton(
                     onPressed: () {
                       postToApi(widget.data['results']);
+                      // uploadImage();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
                     child: const Text(
-                      "View Model Result",
+                      "Fech MethrologyModel",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-      ),
+
+        SizedBox(
+          height: 20,
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await postData(); // Make sure postData is async if it involves a future
+            // Optionally you can uncomment this if you're uploading an image
+            // await uploadImage();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MainPage()), // Replace MainPage() with your actual main page widget
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+          ),
+          child: const Text(
+            "Save To Db",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ]),
     );
   }
 
@@ -388,9 +571,9 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.grey[100], // Light background for contrast
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: Colors.grey[300]!), // Light border
+        border: Border.all(color: Colors.grey[300]!),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,7 +616,3 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
     );
   }
 }
-
-// Placeholder widget for video player (you need to implement this)
-
-// Placeholder widget for video player (you need to implement this)

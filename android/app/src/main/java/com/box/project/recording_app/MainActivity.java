@@ -83,37 +83,45 @@ public class MainActivity extends FlutterActivity {
       result.error("UNAVAILABLE", "SMS sending failed", null);
     }
   }
-
-  private void saveImageToGallery(String filePath, MethodChannel.Result result) {
+private void saveImageToGallery(String filePath, MethodChannel.Result result) {
     try {
-      ContentValues values = new ContentValues();
-      values.put(MediaStore.Images.Media.DISPLAY_NAME, new File(filePath).getName());
-      values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-      values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/");
-      values.put(MediaStore.Images.Media.IS_PENDING, true);
-
-      Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-      if (uri != null) {
-        OutputStream out = getContentResolver().openOutputStream(uri);
-        if (out != null) {
-          Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-          bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-          out.flush();
-          out.close();
-          
-          values.put(MediaStore.Images.Media.IS_PENDING, false);
-          getContentResolver().update(uri, values, null, null);
-          
-          result.success("Image saved successfully");
-        } else {
-          result.error("UNAVAILABLE", "Failed to get output stream", null);
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        if (bitmap == null) {
+            result.error("UNAVAILABLE", "Failed to decode image", null);
+            return;
         }
-      } else {
-        result.error("UNAVAILABLE", "Failed to insert image", null);
-      }
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "qr_code_" + System.currentTimeMillis() + ".png");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/QR_Codes/");
+        values.put(MediaStore.Images.Media.IS_PENDING, 1);
+
+        Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        if (uri == null) {
+            result.error("UNAVAILABLE", "Failed to insert image into MediaStore", null);
+            return;
+        }
+
+        try (OutputStream out = getContentResolver().openOutputStream(uri)) {
+            if (out != null) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                out.flush();
+            } else {
+                result.error("UNAVAILABLE", "Failed to open output stream", null);
+                return;
+            }
+        }
+
+        // Mark file as finished
+        values.clear();
+        values.put(MediaStore.Images.Media.IS_PENDING, 0);
+        getContentResolver().update(uri, values, null, null);
+
+        result.success("Image saved successfully at: " + uri.toString());
     } catch (Exception e) {
-      result.error("UNAVAILABLE", "Failed to save image: " + e.getMessage(), null);
+        result.error("UNAVAILABLE", "Failed to save image: " + e.getMessage(), null);
     }
-  }
+}
+
 }

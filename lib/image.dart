@@ -4,16 +4,17 @@ import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/video.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart'; // Add this line
 
-class TakePictureScreen extends StatefulWidget {
+class TakePictureScreen1 extends StatefulWidget {
   final String epid_number;
 
-  const TakePictureScreen({
+  const TakePictureScreen1({
     super.key,
     required this.epid_number,
   });
@@ -22,7 +23,7 @@ class TakePictureScreen extends StatefulWidget {
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
-class TakePictureScreenState extends State<TakePictureScreen>
+class TakePictureScreenState extends State<TakePictureScreen1>
     with SingleTickerProviderStateMixin {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
@@ -35,8 +36,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
   void initState() {
     super.initState();
     _loadUserDetails();
-    _initializeCamera();
-
+    _checkAndRequestPermission();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -54,6 +54,26 @@ class TakePictureScreenState extends State<TakePictureScreen>
     _animationController.forward();
   }
 
+  Future<void> _checkAndRequestPermission() async {
+    if (await Permission.camera.isGranted) {
+      _initializeCamera();
+    } else {
+      final status = await Permission.camera.request();
+      if (status.isGranted) {
+        _initializeCamera();
+      } else {
+        setState(() {
+          _isCameraInitialized = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Camera permission is required to use this feature.'),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _initializeCamera() async {
     try {
       cameras = await availableCameras();
@@ -66,7 +86,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
         _isCameraInitialized = true;
       });
     } catch (e) {
-      print(e);
+      print('Error initializing camera: $e');
     }
   }
 
@@ -95,7 +115,9 @@ class TakePictureScreenState extends State<TakePictureScreen>
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (_isCameraInitialized) {
+      _controller.dispose();
+    }
     _animationController.dispose();
     super.dispose();
   }
@@ -168,7 +190,7 @@ class TakePictureScreenState extends State<TakePictureScreen>
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends StatefulWidget {
   final String imagePath;
   final String epid_number;
   final String languge;
@@ -180,31 +202,67 @@ class DisplayPictureScreen extends StatelessWidget {
     required this.imagePath,
   });
 
+  @override
+  _DisplayPictureScreenState createState() => _DisplayPictureScreenState();
+}
+
+class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
+  bool _isImageLoaded = false;
+  double _imageScale = 1.0;
+  String? _errorMessage;
+  File? _imageFile;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadImage();
+  }
+
+  Future<void> _loadImage() async {
+    try {
+      _imageFile = File(widget.imagePath);
+      if (await _imageFile!.exists()) {
+        await Future.delayed(const Duration(milliseconds: 300));
+        setState(() {
+          _isImageLoaded = true;
+        });
+      } else {
+        _errorMessage = 'Image file not found.';
+        setState(() {});
+      }
+    } on PlatformException catch (e) {
+      _errorMessage = 'Error loading image: $e';
+      setState(() {});
+    } catch (e) {
+      _errorMessage = 'An unexpected error occurred while loading the image.';
+      setState(() {});
+    }
+  }
+
   void _showConfirmationDialog(BuildContext context, VoidCallback onConfirm) {
     showDialog(
       context: context,
-      barrierDismissible:
-          false, // Prevents dismissing the dialog by tapping outside
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(languge == "Amharic" ? 'አረጋግጥ' : 'Confirmation'),
-          content: Text(languge == "Amharic"
+          title: Text(widget.languge == "Amharic" ? 'አረጋግጥ' : 'Confirmation'),
+          content: Text(widget.languge == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
-              : languge == "AfanOromo"
+              : widget.languge == "AfanOromo"
                   ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
                   : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
-              child: Text(languge == "Amharic" ? 'አጥፋ' : 'Cancel'),
+              child: Text(widget.languge == "Amharic" ? 'አጥፋ' : 'Cancel'),
               onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text(languge == "Amharic" ? 'እሽ' : 'ok'),
+              child: Text(widget.languge == "Amharic" ? 'እሽ' : 'ok'),
               onPressed: () {
-                Navigator.of(context).pop(); // Closes the dialog
-                onConfirm(); // Calls the callback to navigate to TakeMediaScreen
+                Navigator.of(context).pop();
+                onConfirm();
               },
             ),
           ],
@@ -216,46 +274,79 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(languge == "Amharic" ? 'ምስሉን እይ' : 'Preview Image'),
-        backgroundColor: CustomColors.testColor1,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Image.file(File(imagePath)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                _showConfirmationDialog(context, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => TakeMediaScreen(
-                        imagePath: imagePath,
-                        epid_number: epid_number,
+        appBar: AppBar(
+          title:
+              Text(widget.languge == "Amharic" ? 'ምስሉን እይ' : 'Preview Image'),
+          backgroundColor: CustomColors.testColor1,
+          centerTitle: true,
+          elevation: 2,
+        ),
+        body: SingleChildScrollView(
+          child: Stack(
+            children: [
+              if (_errorMessage != null)
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              if (_errorMessage == null && !_isImageLoaded)
+                const Center(child: CircularProgressIndicator()),
+              AnimatedOpacity(
+                opacity: _isImageLoaded ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 500),
+                child: Column(
+                  children: [
+                    Container(
+                      // height: double.infinity,
+                      child: Image.file(File(widget.imagePath)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                        onPressed: _isImageLoaded
+                            ? () {
+                                _showConfirmationDialog(context, () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          TakeMediaScreen(
+                                        imagePath: widget.imagePath,
+                                        epid_number: widget.epid_number,
+                                      ),
+                                    ),
+                                  );
+                                });
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: _isImageLoaded
+                              ? CustomColors.testColor1
+                              : Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          elevation: 16,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: Text(
+                          widget.languge == "Amharic" ? 'ቀጣይ' : 'Next',
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
-                  );
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor:
-                    CustomColors.testColor1, // Change the text color
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(8.0), // Adjust the border radius
+                  ],
                 ),
-                elevation: 14, // Add elevation
               ),
-              child: Text(languge == "Amharic" ? 'ቀጣይ' : 'Next'),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

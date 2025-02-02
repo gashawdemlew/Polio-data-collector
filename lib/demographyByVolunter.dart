@@ -1,8 +1,10 @@
 import 'package:camera_app/color.dart';
+import 'package:camera_app/components/appbar.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/services/locationData.dart';
 import 'package:camera_app/util/common/theme_helper.dart';
+import 'package:camera_app/volunter/new_camera.dart';
 import 'package:camera_app/volunter/vole_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +35,7 @@ class _DemographicFormState extends State<DemographicForm> {
   LanguageResources? resource;
   final TextEditingController first_name = TextEditingController();
   final TextEditingController last_name = TextEditingController();
-  // String? _selectedGender;
+
   Future<void> _loadLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
@@ -77,7 +79,6 @@ class _DemographicFormState extends State<DemographicForm> {
   @override
   void initState() {
     super.initState();
-    // getCurrentLocation();
     _loadUserDetails1();
     _loadUserDetails();
   }
@@ -108,7 +109,7 @@ class _DemographicFormState extends State<DemographicForm> {
         _selectedZone != null &&
         _selectedWoreda != null) {
       final response = await http.get(Uri.parse(
-          '${baseUrl}clinic/demoByVolunter?woreda=$_selectedWoreda&region=$_selectedRegion&zone=$_selectedZone'));
+          '${baseUrl}clinic/demoByVolunter?woreda=$_selectedWoreda®ion=$_selectedRegion&zone=$_selectedZone'));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
@@ -150,7 +151,6 @@ class _DemographicFormState extends State<DemographicForm> {
         languge2 = userDetails['selectedLanguage'];
       });
       print(userDetails);
-
       // Fetch data by phone number and assign the future to _futureVols
     });
   }
@@ -163,13 +163,17 @@ class _DemographicFormState extends State<DemographicForm> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            languge2 == "Amharic" ? "ማረጋገጫ" : "Confirmation",
+            languge2 == "Amharic"
+                ? "ማረጋገጫ"
+                : languge2 == "AfanOromo"
+                    ? "Mirkaneessaa"
+                    : "Confirmation",
           ),
           content: Text(languge2 == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge2 == "AfanOromo"
                   ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
-                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again..'),
+                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -224,16 +228,13 @@ class _DemographicFormState extends State<DemographicForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          xx == "Amharic" ? "ዴሞግራፊክ ቅጽ ሙላ" : "Demographic Form",
-          style: GoogleFonts.splineSans(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: CustomColors.testColor1,
+      backgroundColor: Colors.grey[100],
+      appBar: CustomAppBar(
+        title: xx == "Amharic"
+            ? "ዴሞግራፊክ ቅጽ ሙላ"
+            : xx == "AfanOromo"
+                ? " Guca Diimogiraafii"
+                : "Demographic Form",
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -245,13 +246,26 @@ class _DemographicFormState extends State<DemographicForm> {
               children: [
                 TextFormField(
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ስም" : "First name",
+                    xx == "Amharic"
+                        ? "ስም"
+                        : xx == "AfanOromo"
+                            ? "Maqaa"
+                            : "First name",
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return xx == "Amharic"
                           ? 'እባክዎ መጀመሪያ ስም ይግቡ'
-                          : 'Please enter first name';
+                          : xx == "AfanOromo"
+                              ? 'Maqaa jalqabaa galchi'
+                              : 'Please enter first name';
+                    }
+                    if (value.length < 3) {
+                      return xx == "Amharic"
+                          ? "ስሙ ቢያንስ 3 ፊደል መሆን አለበት"
+                          : xx == "AfanOromo"
+                              ? "Maqaan xiqqaateen qubee 3 qabaachuu qaba"
+                              : "Name must be at least 3 characters";
                     }
                     return null;
                   },
@@ -262,13 +276,27 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
                 TextFormField(
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "የአባት ስም" : "Last Name",
+                    xx == "Amharic"
+                        ? "የአባት ስም"
+                        : xx == "AfanOromo"
+                            ? "Maqaa Abbaa"
+                            : "Last Name",
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return xx == "Amharic"
                           ? 'እባክዎ የአባት ስም ይግቡ'
-                          : 'Please enter last name';
+                          : xx == "AfanOromo"
+                              ? 'Maqaa Abbaa galchi'
+                              : 'Please enter last name';
+                    }
+
+                    if (value.length < 3) {
+                      return xx == "Amharic"
+                          ? "ስሙ ቢያንስ 3 ፊደል መሆን አለበት"
+                          : xx == "AfanOromo"
+                              ? "Maqaan xiqqaateen qubee 3 qabaachuu qaba"
+                              : "Name must be at least 3 characters";
                     }
                     return null;
                   },
@@ -277,10 +305,13 @@ class _DemographicFormState extends State<DemographicForm> {
                 const SizedBox(
                   height: 16,
                 ),
-
                 DropdownButtonFormField<String>(
                   hint: Text(
-                    xx == "Amharic" ? "ጾታ ምረጥ" : "Select Gender",
+                    xx == "Amharic"
+                        ? "ጾታ ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Saala filadhu"
+                            : "Select Gender",
                   ),
                   value: _selectedGender,
                   dropdownColor: Colors.white,
@@ -296,14 +327,20 @@ class _DemographicFormState extends State<DemographicForm> {
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ጾታ ምረጥ" : "Gender",
+                    xx == "Amharic"
+                        ? "ጾታ ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Saala"
+                            : "Gender",
                     xx == "Amharic" ? "ጾታዎን ይምረጡ" : "Select Gender",
                   ),
                   validator: (value) {
                     if (value == null) {
                       return xx == "Amharic"
                           ? 'እባክዎ ጾታዎን ይምረጡ'
-                          : 'Please select your gender';
+                          : xx == "AfanOromo"
+                              ? "Saala keessan filadhaa"
+                              : 'Please select your gender';
                     }
                     return null;
                   },
@@ -312,17 +349,27 @@ class _DemographicFormState extends State<DemographicForm> {
                 TextFormField(
                   controller: phoneNo,
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ስልክ ቁጥር" : "Phone No",
+                    xx == "Amharic"
+                        ? "ስልክ ቁጥር"
+                        : xx == "AfanOromo"
+                            ? "Lakkoofsa bilbilaa"
+                            : "Phone No",
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return xx == "Amharic"
                           ? 'እባክዎ ስልክ ቁጥር ይግቡ'
-                          : 'Please enter a Phone No';
+                          : xx == "AfanOromo"
+                              ? 'Lakkoofsa bilbilaa galchi'
+                              : 'Please enter a Phone No';
                     }
                     if (value.length != 10 ||
                         !RegExp(r'^[0-9]+$').hasMatch(value)) {
-                      return 'Please enter a valid 10-digit phone number';
+                      return xx == "Amharic"
+                          ? 'እባክዎን ትክክለኛ የ10 አሃዝ ስልክ ቁጥር ያስገቡ'
+                          : xx == "AfanOromo"
+                              ? "Maaloo lakkoofsa bilbilaa qubee 10 ta'e sirrii ta'e galchi"
+                              : 'Please enter a valid 10-digit phone number';
                     }
                     return null;
                   },
@@ -333,7 +380,11 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
                 DropdownButtonFormField<String>(
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ክልል ምረጥ" : "Select Region",
+                    xx == "Amharic"
+                        ? "ክልል ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Naannoo"
+                            : "Select Region",
                   ),
                   dropdownColor: Colors.white,
                   value: _selectedRegion,
@@ -353,7 +404,11 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select a region';
+                      return xx == "Amharic"
+                          ? 'እባክዎ ክልል ይምረጡ'
+                          : xx == "AfanOromo"
+                              ? "Maaloo naannoo filadhu"
+                              : 'Please select a region';
                     }
                     return null;
                   },
@@ -364,7 +419,11 @@ class _DemographicFormState extends State<DemographicForm> {
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ዞን ምረጥ" : "Select Zone",
+                    xx == "Amharic"
+                        ? "ዞን ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Godina"
+                            : "Select Zone",
                   ),
                   value: _selectedZone,
                   items: _selectedRegion != null
@@ -384,7 +443,11 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select a zone';
+                      return xx == "Amharic"
+                          ? 'እባክዎ ዞን ይምረጡ'
+                          : xx == "AfanOromo"
+                              ? "Maaloo Godina Filadhu"
+                              : 'Please select a zone';
                     }
                     return null;
                   },
@@ -394,7 +457,11 @@ class _DemographicFormState extends State<DemographicForm> {
                 ),
                 DropdownButtonFormField<String>(
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ወረዳ ምረጥ" : "Select Woreda",
+                    xx == "Amharic"
+                        ? "ወረዳ ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Aanaa"
+                            : "Select Woreda",
                   ),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
@@ -415,7 +482,11 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select a woreda';
+                      return xx == "Amharic"
+                          ? 'እባክዎ ወረዳ ይምረጡ'
+                          : xx == "AfanOromo"
+                              ? "Maaloo Aanaa filadhu"
+                              : 'Please select a woreda';
                     }
                     return null;
                   },
@@ -426,7 +497,11 @@ class _DemographicFormState extends State<DemographicForm> {
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
                   decoration: ThemeHelper().textInputDecoration(
-                    xx == "Amharic" ? "ባለሙያ ስም ምረጥ" : "Selected Health Officer",
+                    xx == "Amharic"
+                        ? "ባለሙያ ስም ምረጥ"
+                        : xx == "AfanOromo"
+                            ? "Ofisara Fayyaa Filadhu"
+                            : "Selected Health Officer",
                   ),
                   value: selectedHealthOfficer,
                   items: healthOfficers.map((String officer) {
@@ -442,7 +517,11 @@ class _DemographicFormState extends State<DemographicForm> {
                   },
                   validator: (value) {
                     if (value == null) {
-                      return 'Please select a health officer';
+                      return xx == "Amharic"
+                          ? 'እባክዎ የጤና ባለሙያ ይምረጡ'
+                          : xx == "AfanOromo"
+                              ? "Maaloo ogeessa fayyaa filadhu"
+                              : 'Please select a health officer';
                     }
                     return null;
                   },
@@ -453,37 +532,33 @@ class _DemographicFormState extends State<DemographicForm> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     _submitForm();
-                    //   },
-                    //   child: Text('Submit'),
-                    // ),
                     SizedBox(
                       width: 300,
                       child: ElevatedButton(
                         onPressed: () {
-                          _showConfirmationDialog(context, () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => VolTakePictureScreen(
-                                  // epidNumber: epidNumber ?? '',
-                                  first_name: first_name.text,
-                                  last_name: last_name.text,
-                                  region: _selectedRegion ?? '',
-                                  zone: _selectedZone ?? '',
-                                  woreda: _selectedWoreda ?? '',
-                                  gender: _selectedGender.toString(),
-                                  phonNo: phoneNo.text,
-                                  lat: lat.toString(),
-                                  long: long.toString(),
-                                  selected_health_officer:
-                                      selectedHealthOfficer ?? '',
+                          if (_formKey.currentState!.validate()) {
+                            _showConfirmationDialog(context, () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TakePictureScreenColounter(
+                                    first_name: first_name.text,
+                                    last_name: last_name.text,
+                                    region: _selectedRegion ?? '',
+                                    zone: _selectedZone ?? '',
+                                    woreda: _selectedWoreda ?? '',
+                                    gender: _selectedGender.toString(),
+                                    phonNo: phoneNo.text,
+                                    lat: lat.toString(),
+                                    long: long.toString(),
+                                    selected_health_officer:
+                                        selectedHealthOfficer ?? '',
+                                  ),
                                 ),
-                              ),
-                            );
-                          });
+                              );
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -496,7 +571,11 @@ class _DemographicFormState extends State<DemographicForm> {
                           elevation: 14, // Add elevation
                         ),
                         child: Text(
-                          xx == "Amharic" ? "መዝግብ" : "Submit",
+                          xx == "Amharic"
+                              ? "መዝግብ"
+                              : xx == "AfanOromo"
+                                  ? "Galchuu"
+                                  : "Submit",
                         ),
                       ),
                     )

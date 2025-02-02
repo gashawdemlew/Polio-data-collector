@@ -739,9 +739,32 @@ class _StoolSpecimensFormState extends State<StoolSpecimensForm343> {
                       elevation: 14, // Add elevation
                     ),
                     // child: Text(resources?.patientDemographic()["next"] ?? ''),
-                    child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
-                    ),
+                    child: isSubmitting
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                color: Colors
+                                    .white, // Change color to match your theme
+                                strokeWidth: 3.0, // Adjust thickness
+                              ),
+                              SizedBox(
+                                  width:
+                                      10), // Space between indicator and text
+                              Text(
+                                languge == "Amharic"
+                                    ? 'እየጫነ ነው...'
+                                    : 'Loading...',
+                              ),
+                            ],
+                          )
+                        : Text(
+                            languge == "Amharic"
+                                ? 'ቀጣይ'
+                                : languge == "AfanOromo"
+                                    ? 'Ergi'
+                                    : 'Next',
+                          ),
                   ),
                 ],
               ),

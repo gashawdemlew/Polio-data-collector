@@ -36,15 +36,14 @@ class ClinicDataScreen extends StatefulWidget {
 class _ClinicDataScreenState extends State<ClinicDataScreen> {
   late Future<List<ClinicData>> futureData;
   Map<String, dynamic> userDetails = {};
+  String languge = "";
 
   @override
   void initState() {
     super.initState();
-    // Initialize futureData with a placeholder Future
     futureData = _loadUserDetails();
   }
 
-  String languge = "";
   Future<List<ClinicData>> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -55,13 +54,12 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
       'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
       'zone': prefs.getString('zone') ?? 'N/A',
       'woreda': prefs.getString('woreda') ?? 'N/A',
-      'id': prefs.getInt('id') ?? -1, // Use -1 or other default value for int
+      'id': prefs.getInt('id') ?? -1,
       'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
     };
     setState(() {
       languge = userDetails['selectedLanguage'];
     });
-    // Fetch clinic data with the user ID
     return fetchClinicData(userDetails['id']);
   }
 
@@ -82,8 +80,8 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
       appBar: AppBar(
         title: Text(
           languge == "Amharic" ? 'ያላለቀ ሊስቶች' : 'Incomplete List',
-          style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.poppins(
+              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
         ),
         backgroundColor: CustomColors.testColor1,
         leading: IconButton(
@@ -99,49 +97,83 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
           },
         ),
       ),
-      body: FutureBuilder<List<ClinicData>>(
-        future: futureData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No data available'));
-          } else {
-            final data = snapshot.data!;
-            return ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                final item = data[index];
-                return Card(
-                  elevation: 5,
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  child: ListTile(
-                    title: Text(item.id,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('Name: ${item.name}'),
-                    trailing:
-                        const Icon(Icons.arrow_forward_ios, color: Colors.teal),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              LaboratoryFinalClassificationForm(
-                            epid: item.id,
-                            type: item.name,
-                          ),
+      body: Container(
+        padding: const EdgeInsets.all(10),
+        child: FutureBuilder<List<ClinicData>>(
+          future: futureData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(
+                  child: Text('Error loading data.',
+                      style: GoogleFonts.poppins(
+                          fontSize: 16, color: Colors.red)));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(
+                child: Text(
+                  languge == "Amharic"
+                      ? 'ምንም ያልተጠናቀቀ መረጃ የለም'
+                      : 'No incomplete data available',
+                  style: GoogleFonts.poppins(fontSize: 16),
+                ),
+              );
+            } else {
+              final data = snapshot.data!;
+              return ListView.separated(
+                separatorBuilder: (context, index) => const Divider(
+                  color: Colors.grey,
+                ),
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  final item = data[index];
+                  return Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      leading: CircleAvatar(
+                        backgroundColor: CustomColors.testColor1,
+                        foregroundColor: Colors.white,
+                        child: Text(
+                          '${index + 1}',
+                          style:
+                              GoogleFonts.poppins(fontWeight: FontWeight.w600),
                         ),
-                      );
-                    },
-                  ),
-                );
-              },
-            );
-          }
-        },
+                      ),
+                      title: Text(
+                        item.id,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500, fontSize: 17),
+                      ),
+                      subtitle: Text(
+                        'Name: ${item.name}',
+                        style: GoogleFonts.poppins(fontSize: 15),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios,
+                          color: Colors.teal),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                LaboratoryFinalClassificationForm(
+                              epid: item.id,
+                              type: item.name,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -155,7 +187,7 @@ class ClinicData {
 
   factory ClinicData.fromJson(Map<String, dynamic> json) {
     return ClinicData(
-      id: json['epid_number'], // Ensure this key matches your API response
+      id: json['epid_number'],
       name: json['type'],
     );
   }

@@ -182,29 +182,81 @@ class _PatientDataPageState extends State<PatientDataPage>
                                   const SizedBox(height: 10),
 
                                   // Additional Field (e.g., Patient Age)
+
                                   Row(
                                     children: [
+                                      // Space between icon and text
                                       Expanded(
-                                          child: Row(
-                                        children: [
-                                          const Icon(Icons.location_on,
-                                              color:
-                                                  Colors.blue), // Location icon
-                                          const SizedBox(
-                                              width:
-                                                  8), // Space between icon and text
-                                          Text(
-                                            patient.region != null
-                                                ? "${patient.woreda}/ ${patient.zone}/${patient.region}"
-                                                : "Address not available",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment
+                                              .start, // Align text to the start
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.map,
+                                                    color: Colors
+                                                        .blue), // Icon for Woreda
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  patient.woreda ??
+                                                      "Woreda not available", // Use null-aware operator
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize:
+                                                        16, // Uniform font size
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors
+                                                        .black87, // Uniform color
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ))
+                                            const SizedBox(
+                                                height:
+                                                    4), // Space between text lines
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.place,
+                                                    color: Colors
+                                                        .green), // Icon for Zone
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  patient.zone ??
+                                                      "Zone not available", // Use null-aware operator
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize:
+                                                        16, // Uniform font size
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors
+                                                        .black87, // Uniform color
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                                height:
+                                                    4), // Space between text lines
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.public,
+                                                    color: Colors
+                                                        .red), // Icon for Region
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  patient.region ??
+                                                      "Region not available", // Use null-aware operator
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize:
+                                                        16, // Uniform font size
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors
+                                                        .black87, // Uniform color
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(height: 20),
@@ -236,7 +288,7 @@ class _PatientDataPageState extends State<PatientDataPage>
                                           ),
                                           child: const Icon(
                                             Icons
-                                                .view_list_outlined, // Choose an appropriate icon
+                                                .arrow_forward, // Choose an appropriate icon
                                             color: Colors.white,
                                             size: 16,
                                           ),

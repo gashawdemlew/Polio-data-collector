@@ -2,6 +2,7 @@ import 'package:camera_app/color.dart';
 import 'package:camera_app/commite/list_petients.dart';
 import 'package:camera_app/mainPage.dart';
 import 'package:camera_app/mo/api.dart';
+import 'package:camera_app/modelResults/model_detail.dart';
 import 'package:camera_app/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,10 +24,43 @@ class _EpidDataPageState extends State<EpidDataPage> {
   final TextEditingController _descriptionController = TextEditingController();
   String _selectedResult = 'Positive';
 
+  Map<String, dynamic>? _apiData;
+  bool _isLoading = true;
+  String? _error;
+
   @override
   void initState() {
     super.initState();
     _dataFuture = fetchEpidData(widget.epidNumber);
+    fetchApiData();
+  }
+
+  Future<void> fetchApiData() async {
+    final encodedEpidNumber = Uri.encodeComponent(widget.epidNumber);
+
+    try {
+      Uri.parse('"${baseUrl}ModelRoute/data/$encodedEpidNumber');
+
+      final response = await http
+          .get(Uri.parse("${baseUrl}ModelRoute/data/$encodedEpidNumber"));
+      if (response.statusCode == 200) {
+        setState(() {
+          _apiData = jsonDecode(response.body);
+        });
+      } else {
+        setState(() {
+          _error = 'Failed to load data. Status code: ${response.statusCode}';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Error during API call: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<Map<String, dynamic>> fetchEpidData(String epidNumber) async {
@@ -35,6 +69,8 @@ class _EpidDataPageState extends State<EpidDataPage> {
         Uri.parse('${baseUrl}clinic/getDataByEpidNumber/$encodedEpidNumber');
 
     final response = await http.get(url);
+
+    print(response.body);
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -204,7 +240,7 @@ class _EpidDataPageState extends State<EpidDataPage> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "ViewAll Data",
+            "AI-Model Prediction",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -231,29 +267,11 @@ class _EpidDataPageState extends State<EpidDataPage> {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
+                bottom: Radius.circular(6),
               ),
             ),
           ),
           actions: [
-            IconButton(
-              icon: Icon(Icons.notifications, size: 26),
-              onPressed: () {
-                // Implement notification functionality
-              },
-              color: Colors.white,
-            ),
-            IconButton(
-              icon: Icon(Icons.people_alt, size: 26),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => UserProfile(),
-                  ),
-                );
-              },
-              color: Colors.white,
-            ),
             SizedBox(width: 10), // Add spacing for better alignment
           ],
         ),
@@ -269,16 +287,8 @@ class _EpidDataPageState extends State<EpidDataPage> {
             );
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
-            final sharedPrefsData = snapshot.data!;
 
-            return EpidDataDisplay(
-              epidNumber: widget.epidNumber,
-              data: data,
-              onEdit: () async {
-                final sharedPrefsData = await getSharedPreferencesData();
-                _showEditModal(context, sharedPrefsData);
-              },
-            );
+            return _buildBody(data);
           } else {
             return const Center(child: Text('No data found'));
           }
@@ -286,106 +296,35 @@ class _EpidDataPageState extends State<EpidDataPage> {
       ),
     );
   }
-}
 
-class EpidDataDisplay extends StatefulWidget {
-  final Map<String, dynamic> data;
-  final VoidCallback onEdit;
-  final String epidNumber; // Add epid_number to fetch data dynamically
-
-  const EpidDataDisplay({
-    Key? key,
-    required this.data,
-    required this.onEdit,
-    required this.epidNumber, // Initialize epid_number
-  }) : super(key: key);
-
-  @override
-  _EpidDataDisplayState createState() => _EpidDataDisplayState();
-}
-
-class _EpidDataDisplayState extends State<EpidDataDisplay> {
-  Map<String, dynamic>? apiData;
-  bool isLoading = true;
-  String? errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchEpidData(); // Fetch data when the widget initializes
-  }
-
-  Future<void> fetchEpidData() async {
-    final String endpoint = "clinic/getAllMultimedia";
-
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl$endpoint?epid_number=${widget.epidNumber}'),
-      );
-
-      print('$baseUrl$endpoint?epid_number=${widget.epidNumber}');
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as List;
-        if (data.isNotEmpty) {
-          setState(() {
-            apiData = data.first;
-            isLoading = false;
-          });
-        } else {
-          setState(() {
-            errorMessage = "No data found for this EPID Number.";
-            isLoading = false;
-          });
-        }
-      } else {
-        setState(() {
-          errorMessage = "Error: ${response.reasonPhrase}";
-          isLoading = false;
-        });
-      }
-    } catch (error) {
-      setState(() {
-        errorMessage = "An error occurred: $error";
-        isLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final results = widget.data['results'] as Map<String, dynamic>?;
-    final multimediaInfo = results?['Multimedia Info'] as Map<String, dynamic>?;
-
-    // Safely extracting imagePath and videoPath from the API data or widget data
-    final imagePath =
-        apiData?['image_url'] ?? multimediaInfo?['iamge_path'] ?? "";
-    final videoPath =
-        apiData?['video_url'] ?? multimediaInfo?['viedeo_path'] ?? "";
-
+  Widget _buildBody(Map<String, dynamic> data) {
     return Container(
       color: const Color.fromARGB(251, 232, 229, 229),
       child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           Text(
-            'EPID Number: ${widget.data['epid_number']}',
+            'EPID Number: ${data['epid_number']}',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          results != null
-              ? Column(
-                  children: results.entries.map((entry) {
-                    return SectionCard(
-                      title: entry.key,
-                      data: entry.value,
-                    );
-                  }).toList(),
-                )
-              : const Text('No results available'),
+          if (data['results'] != null)
+            Column(
+              children: (data['results'] as Map<String, dynamic>)
+                  .entries
+                  .map((entry) {
+                return SectionCard(
+                  title: entry.key,
+                  data: entry.value,
+                );
+              }).toList(),
+            ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: widget.onEdit,
+            onPressed: () async {
+              final sharedPrefsData = await getSharedPreferencesData();
+              _showEditModal(context, sharedPrefsData);
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: CustomColors.testColor1,
             ),
@@ -397,54 +336,106 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
               ),
             ),
           ),
-          // Display image if imagePath is available
-          if (imagePath.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: Image.network(
-                imagePath,
-                height: 200,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              (loadingProgress.expectedTotalBytes ?? 1)
-                          : null,
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  debugPrint("Error loading image: $error");
-                  return const Text(
-                    "Failed to load image",
-                    style: TextStyle(color: Colors.red),
-                  );
-                },
-              ),
-            ),
+          // Existing multimedia display logic
+          _buildMultimedia(data),
 
-          if (videoPath.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: VideoPlayerWidget(videoUrl: videoPath),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ResultsPage(
+                    epidNumber: widget.epidNumber,
+                  ),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.testColor1,
+            ),
+            child: const Text(
+              'AI-Model Prediction',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          if (widget.data['errors'] != null)
-            Text(
-              'Errors: ${widget.data['errors']}',
-              style: TextStyle(color: Colors.red),
-            ),
+          ),
         ],
       ),
     );
   }
-}
 
+  Widget _buildDataItem(Map<String, dynamic> item) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: item.entries.map((entry) {
+            return Text('${entry.key}: ${entry.value}');
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMultimedia(Map<String, dynamic> data) {
+    final results = data['results'] as Map<String, dynamic>?;
+    final multimediaInfo = results?['Multimedia Info'] as Map<String, dynamic>?;
+
+    final imagePath =
+        _apiData?['image_url'] ?? multimediaInfo?['iamge_path'] ?? "";
+    final videoPath =
+        _apiData?['video_url'] ?? multimediaInfo?['viedeo_path'] ?? "";
+
+    return Column(
+      children: [
+        if (imagePath.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: Image.network(
+              imagePath,
+              height: 200,
+              fit: BoxFit.cover,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Center(
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            (loadingProgress.expectedTotalBytes ?? 1)
+                        : null,
+                  ),
+                );
+              },
+              errorBuilder: (context, error, stackTrace) {
+                debugPrint("Error loading image: $error");
+                return const Text(
+                  "Failed to load image",
+                  style: TextStyle(color: Colors.red),
+                );
+              },
+            ),
+          ),
+        if (videoPath.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: VideoPlayerWidget(videoUrl: videoPath),
+            ),
+          ),
+        if (data['errors'] != null)
+          Text(
+            'Errors: ${data['errors']}',
+            style: TextStyle(color: Colors.red),
+          ),
+      ],
+    );
+  }
+}
 // Placeholder widget for video player (you need to implement this)
 
 // Placeholder widget for video player (you need to implement this)

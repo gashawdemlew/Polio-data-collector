@@ -1,3 +1,4 @@
+import 'package:camera_app/camera_test.dart';
 import 'package:camera_app/home.dart';
 import 'package:camera_app/image.dart';
 import 'package:camera_app/kk.dart';
@@ -33,79 +34,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _requestCameraPermission();
+    // _requestCameraPermission();
     _loadUserInfo();
-  }
-
-  Future<void> _requestCameraPermission() async {
-    if (_isRequestingPermission)
-      return; // Return if a request is already ongoing
-    _isRequestingPermission = true;
-
-    try {
-      final status = await Permission.camera.request();
-      handlePermissionStatus(status);
-    } catch (e) {
-      debugPrint('Error requesting camera permission: $e');
-    } finally {
-      _isRequestingPermission =
-          false; // Reset the flag when the request completes
-    }
-  }
-
-  void handlePermissionStatus(PermissionStatus status) {
-    if (status.isGranted) {
-      debugPrint('Camera permission granted');
-    } else if (status.isDenied) {
-      debugPrint('Camera permission denied');
-      _showPermissionDeniedDialog();
-    } else if (status.isPermanentlyDenied) {
-      debugPrint('Camera permission permanently denied');
-      _showPermissionSettingsDialog();
-    } else {
-      debugPrint('Unhandled permission status: $status');
-    }
-  }
-
-  void _showPermissionDeniedDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Permission Required'),
-        content: const Text(
-            'Camera access is required for this feature. Please allow camera access.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPermissionSettingsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Permission Required'),
-        content: const Text(
-            'Camera access is permanently denied. Please enable it in app settings.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              openAppSettings();
-            },
-            child: const Text('Open Settings'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-        ],
-      ),
-    );
   }
 
   Future<void> _loadUserInfo() async {

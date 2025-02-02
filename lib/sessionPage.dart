@@ -1,4 +1,5 @@
 import 'package:camera_app/FollowUpExaminationForm%20.dart';
+import 'package:camera_app/camera_test.dart';
 import 'package:camera_app/clinical_history.dart';
 import 'package:camera_app/color.dart';
 import 'package:camera_app/enviroment.dart';
@@ -201,12 +202,12 @@ class _DataListPageState extends State<DataListPage> {
         return "Continue Follow Up";
       case "4":
         return "Environment Metrology Form";
-      case "5":
+      case "13":
         return "Media Screen";
 
-      case "12":
+      case "5":
         return "Continue Stool Collected Date";
-      case "13":
+      case "12":
         return "Continue Stool Recived Date";
       default:
         return "";
@@ -295,7 +296,7 @@ class _DataListPageState extends State<DataListPage> {
                           ),
                         ),
                       );
-                    } else if (progressNo == "5") {
+                    } else if (progressNo == "13") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -304,7 +305,7 @@ class _DataListPageState extends State<DataListPage> {
                           ),
                         ),
                       );
-                    } else if (progressNo == "12") {
+                    } else if (progressNo == "5") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -313,7 +314,7 @@ class _DataListPageState extends State<DataListPage> {
                           ),
                         ),
                       );
-                    } else if (progressNo == "13") {
+                    } else if (progressNo == "12") {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -405,7 +406,7 @@ class _DataListPageState extends State<DataListPage> {
                                         ),
                                       ),
                                     );
-                                  } else if (progressNo == "5") {
+                                  } else if (progressNo == "13") {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -415,7 +416,7 @@ class _DataListPageState extends State<DataListPage> {
                                         ),
                                       ),
                                     );
-                                  } else if (progressNo == "12") {
+                                  } else if (progressNo == "5") {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
