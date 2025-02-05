@@ -196,6 +196,7 @@ class DetailPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Text(data),
                 _buildSectionTitle(
                     language == "Amharic"
                         ? 'የግል መረጃ'

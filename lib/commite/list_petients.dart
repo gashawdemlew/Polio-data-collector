@@ -59,7 +59,7 @@ class _PatientDataPageState extends State<PatientDataPage>
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
+              bottom: Radius.circular(8),
             ),
           ),
           child: AppBar(
@@ -133,7 +133,7 @@ class _PatientDataPageState extends State<PatientDataPage>
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(6),
                               border: Border.all(
                                 color: Colors.grey.shade300,
                                 width: 1.5,

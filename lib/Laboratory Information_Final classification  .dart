@@ -112,12 +112,11 @@ class _LaboratoryFinalClassificationFormState
         );
 
         // Check the widget.type
-        if (widget.type == "Stool 2") {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => PolioDashboard()),
-          );
-        }
+        // if (widget.type == "Stool ") {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => PolioDashboard()),
+        );
       } else {
         print('Failed to submit form: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(

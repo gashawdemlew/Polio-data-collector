@@ -908,7 +908,7 @@ const Map<String, Map<String, List<String>>> locationData = {
     ],
     'Special Woreda': ['Argobba']
   },
-  'Benishangul-Gumuz': {
+  'benishangul gumuz': {
     'Assosa Zone': [
       'Asosa',
       'Bambasi',
@@ -1140,7 +1140,7 @@ const Map<String, Map<String, List<String>>> locationData = {
       'Tembaro Special Woreda'
     ]
   },
-  'Sour West Ethiopia Peoples Region': {
+  'South West Ethiopia Peoples Region': {
     'Keffa Zone': [
       'Bonga (town)',
       'Adiyo',
@@ -1213,13 +1213,13 @@ const Map<String, Map<String, List<String>>> locationData = {
       'Gori Gesha'
     ]
   },
-  'Gambela': {
+  'Gambella': {
     'Anyuak Zone': ['Gambela', 'Abwobo', 'Dimma', 'Gog', 'Jor'],
     'Nuer Zone': ['Akobo', 'Jikaw', 'Lare', 'Wentawo'],
     'Mezhenger Zone': ['Godere', 'Mengesh'],
     'Special woredas': ['Itang']
   },
-  'Harari': {
+  'Hareri': {
     'Special Woredas': [
       'Amir-Nur Woreda',
       'Abadir Woreda',

@@ -385,7 +385,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 },
               ),
               const SizedBox(height: 16.0),
-              TextField(
+              TextFormField(
                 controller: Date_of_birth,
                 readOnly: true,
                 onTap: () async {
@@ -407,6 +407,23 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 decoration: ThemeHelper().textInputDecoration(
                     '${resources?.patientDemographic()["dateOfBirth"] ?? ''} ',
                     '${resources?.patientDemographic()["dateOfBirth"] ?? ''} '),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select date of birth';
+                  }
+
+                  // Date validation logic (example: ensure date is not in the future)
+                  try {
+                    DateTime selectedDate = DateTime.parse(value);
+                    if (selectedDate.isAfter(DateTime.now())) {
+                      return 'Date of birth cannot be in the future';
+                    }
+                  } catch (e) {
+                    return 'Invalid date format'; // Handle cases where parsing fails
+                  }
+
+                  return null; // Return null if the date is valid
+                },
               ),
               const SizedBox(height: 16.0),
               DropdownButtonFormField<String>(

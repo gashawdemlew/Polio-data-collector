@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:camera_app/ReviewPage.dart';
 import 'package:camera_app/color.dart';
-import 'package:camera_app/mo/api.dart';
+// import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/qrcode_example.dart';
 import 'package:camera_app/stool/date_stool.collected.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,8 @@ import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+
+import 'mo/api.dart';
 
 class TakeMediaScreen extends StatefulWidget {
   final String imagePath;
@@ -416,7 +418,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
       _responseData1 = null; // Reset the response data
       _apiCallSuccessful = false; // Reset the api call status
     });
-
+    print(apiData);
     try {
       if (apiData == null) {
         setState(() {
@@ -462,7 +464,15 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
         ageGroup = "low risk age";
       }
       final inputData = {
-        'province': region.toLowerCase(),
+        'province': region.toLowerCase() == "sidama"
+            ? "snnpr"
+            : region.toLowerCase() == "Central Ethiopia Regional State"
+                ? "snnpr"
+                : region.toLowerCase() == "South West Ethiopia Peoples Region "
+                    ? "snnpr"
+                    : region.toLowerCase() == "South Ethiopia Regional State"
+                        ? "snnpr"
+                        : region.toLowerCase(),
         'district': region.toLowerCase(),
         'sex': gender.toLowerCase(),
         'age_in_years': ageInYears,
@@ -489,6 +499,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
 
       if (response.statusCode == 200) {
         _responseData1 = json.decode(response.body);
+        print("XXXXXXXXXXXXXXXXXXXXXXX ${_responseData1}");
 
         try {
           setState(() {
@@ -648,9 +659,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
 
         print('Data posted successfully');
       } else {
+        final responseBody = await response.stream.bytesToString();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Failed to post data: ${response.statusCode}')),
+          SnackBar(content: Text('Failed to post data: ${responseBody}')),
         );
         print('Failed to post data: ${response.statusCode}');
       }
@@ -798,41 +809,66 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                     '$prediction',
                     style: const TextStyle(color: Colors.black),
                   ),
+                  // ElevatedButton(
+                  //     onPressed: getApiModelData, child: Text("XXXX")),
+
+                  // ElevatedButton(onPressed: getApiModelData, child: Text("gg")),
+
                   Center(
-                    child: ElevatedButton(
-                      onPressed: message1 != ""
-                          ? isSaving
-                              ? null
-                              : () => postClinicalData(context)
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: message1 != ""
-                            ? CustomColors.testColor1
-                            : Colors.grey,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16.0, horizontal: 32.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        textStyle: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      child: isSaving
-                          ? const SizedBox(
-                              height: 24.0,
-                              width: 24.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3.0,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              languge == "Amharic" ? "መዝግብ" : "Upload",
-                              style: const TextStyle(color: Colors.white),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: message1.isEmpty
+                              ? () {
+                                  // Handle the button press when message1 is empty
+                                }
+                              : isSaving
+                                  ? null
+                                  : () => postClinicalData(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: message1.isEmpty
+                                ? Colors.grey
+                                : CustomColors.testColor1,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 32.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
+                            textStyle: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          child: isSaving
+                              ? const SizedBox(
+                                  height: 24.0,
+                                  width: 24.0,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3.0,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  languge == "Amharic" ? "መዝግብ" : "Upload",
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                        ),
+                        if (message1.isEmpty) // Show message if not found
+                          const Padding(
+                            padding: EdgeInsets.only(
+                                top: 16.0), // Adjust padding as needed
+                            child: Text(
+                              "Not Found",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],

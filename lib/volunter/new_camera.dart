@@ -408,7 +408,7 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
           ),
         );
       }
-      _showSnackBar('Blurred image saved to $path');
+      // _showSnackBar('Blurred image saved to $path');
     } catch (e) {
       _showErrorSnackBar("Error processing image: $e");
     } finally {
@@ -623,13 +623,12 @@ class ImagePreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Preview Image'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ),
+        appBar: CustomAppBar(
+            title: languge == "Amharic"
+                ? "ምስልን ቅድመ እይታ"
+                : languge == "AfanOromo"
+                    ? "dursee ilaaluu Fakkii"
+                    : "Image Preview"),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

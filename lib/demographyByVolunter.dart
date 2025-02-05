@@ -170,10 +170,10 @@ class _DemographicFormState extends State<DemographicForm> {
                     : "Confirmation",
           ),
           content: Text(languge2 == "Amharic"
-              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
+              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ምስል ይቅረጹ። ምሰሉም ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge2 == "AfanOromo"
                   ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
-                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
+                  : 'Please capture a quality and unblurred Image. If the image is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -515,16 +515,16 @@ class _DemographicFormState extends State<DemographicForm> {
                       selectedHealthOfficer = newValue;
                     });
                   },
-                  validator: (value) {
-                    if (value == null) {
-                      return xx == "Amharic"
-                          ? 'እባክዎ የጤና ባለሙያ ይምረጡ'
-                          : xx == "AfanOromo"
-                              ? "Maaloo ogeessa fayyaa filadhu"
-                              : 'Please select a health officer';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value == null) {
+                  //     return xx == "Amharic"
+                  //         ? 'እባክዎ የጤና ባለሙያ ይምረጡ'
+                  //         : xx == "AfanOromo"
+                  //             ? "Maaloo ogeessa fayyaa filadhu"
+                  //             : 'Please select a health officer';
+                  //   }
+                  //   return null;
+                  // },
                 ),
                 const SizedBox(height: 16),
                 // Text('Coordinates: Lat ($lat), Long ($long)'),

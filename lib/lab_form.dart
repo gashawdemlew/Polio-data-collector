@@ -88,6 +88,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(formData),
       );
+      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -158,7 +159,11 @@ class _StoolSpecimensFormState extends State<LabForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.languge == "Amharic" ? 'የሰገራ ውጤት' : ' Stool Result  ',
+          widget.languge == "Amharic"
+              ? 'የሰገራ ውጤት'
+              : widget.languge == "AfanOromo"
+                  ? '        bu’aa sagaraa'
+                  : ' Stool Result  ',
           style: GoogleFonts.splineSans(
               fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -181,7 +186,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
                   Text(
                     widget.languge == "Amharic"
                         ? 'የ ሰገራ ናሙና የተሰበሰበበት  ቀን'
-                        : 'Edit Your Profile'
+                        : 'Date'
                             'Date stool received by Lab: $languge',
                     style: const TextStyle(
                       fontSize: 26.0,
@@ -281,7 +286,8 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       elevation: 14,
                     ),
                     child: _isSubmitting
-                        ? Text(widget.languge == "Amharic" ? 'መዝግብ..' : 'ሹብሚት')
+                        ? Text(
+                            widget.languge == "Amharic" ? 'መዝግብ..' : 'Submit')
                         : Text("Submit"),
                   ),
                 ],

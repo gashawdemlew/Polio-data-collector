@@ -397,7 +397,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
       'zone': widget.zone,
       'gender': widget.gender,
       'phonNo': widget.phonNo,
-      "user_id": userDetails['id'],
+      // "user_id": userDetails['id'].toString(),
       'lat': _latitude ?? '0.0',
       'long': _longitude ?? '0.0',
     });
@@ -432,6 +432,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     if (response.statusCode == 201) {
       final responseBody = await response.stream.bytesToString();
       final responseData = json.decode(responseBody);
+      print(responseData);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Data submitted successfully')),
@@ -441,8 +442,10 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
         builder: (context) => PolioDashboard(),
       ));
     } else {
+      final responseBody = await response.stream.bytesToString();
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to post data: ${response.statusCode}')),
+        SnackBar(content: Text('Failed to post data: ${responseBody}')),
       );
     }
 

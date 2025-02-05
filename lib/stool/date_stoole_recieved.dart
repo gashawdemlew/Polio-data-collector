@@ -214,10 +214,10 @@ class _StoolSpecimensFormState extends State<DateStooleRecieved> {
                     : "Confirmation",
           ),
           content: Text(languge == "Amharic"
-              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
+              ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ምስል ይቅረጹ። ምስሉ ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge == "AfanOromo"
                   ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
-                  : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again..'),
+                  : 'Please capture a quality and unblurred Image. If the Image is blurred, you will be requested again..'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),

@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 
 class EpidDataPage extends StatefulWidget {
   final String epidNumber;
@@ -303,10 +304,10 @@ class _EpidDataPageState extends State<EpidDataPage> {
       child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Text(
-            'EPID Number: ${data['epid_number']}',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          // Text(
+          //   'EPID Number: ${data['epid_number']}',
+          //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          // ),
           const SizedBox(height: 16),
           if (data['results'] != null)
             Column(
@@ -319,23 +320,7 @@ class _EpidDataPageState extends State<EpidDataPage> {
                 );
               }).toList(),
             ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () async {
-              final sharedPrefsData = await getSharedPreferencesData();
-              _showEditModal(context, sharedPrefsData);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.testColor1,
-            ),
-            child: const Text(
-              'Add Decision',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+
           // Existing multimedia display logic
           _buildMultimedia(data),
 
@@ -355,6 +340,23 @@ class _EpidDataPageState extends State<EpidDataPage> {
             ),
             child: const Text(
               'AI-Model Prediction',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              final sharedPrefsData = await getSharedPreferencesData();
+              _showEditModal(context, sharedPrefsData);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: CustomColors.testColor1,
+            ),
+            child: const Text(
+              'Add Decision',
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -390,41 +392,69 @@ class _EpidDataPageState extends State<EpidDataPage> {
     final videoPath =
         _apiData?['video_url'] ?? multimediaInfo?['viedeo_path'] ?? "";
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double desiredWidth = screenWidth - 32; // Adjust for padding
+    double desiredHeight = desiredWidth; // Make it square
+
     return Column(
       children: [
+        Text(
+          "Multimedia Data",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
         if (imagePath.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: Image.network(
-              imagePath,
-              height: 200,
-              fit: BoxFit.cover,
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Center(
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            (loadingProgress.expectedTotalBytes ?? 1)
-                        : null,
-                  ),
-                );
-              },
-              errorBuilder: (context, error, stackTrace) {
-                debugPrint("Error loading image: $error");
-                return const Text(
-                  "Failed to load image",
-                  style: TextStyle(color: Colors.red),
-                );
-              },
+            child: Container(
+              width: desiredWidth,
+              height: desiredHeight,
+              child: ClipRRect(
+                borderRadius:
+                    BorderRadius.circular(8.0), // Optional rounded corners
+                child: Image.network(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    debugPrint("Error loading image: $error");
+                    return Container(
+                        color: Colors.grey[200], // Placeholder background
+                        child: Center(
+                          child: Text(
+                            "Failed to load image",
+                            style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        ));
+                  },
+                ),
+              ),
             ),
           ),
         if (videoPath.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: VideoPlayerWidget(videoUrl: videoPath),
+            child: Container(
+              width: desiredWidth,
+              height: desiredHeight,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: VideoPlayerWidget(videoUrl: videoPath),
+              ),
             ),
           ),
         if (data['errors'] != null)
@@ -436,25 +466,79 @@ class _EpidDataPageState extends State<EpidDataPage> {
     );
   }
 }
-// Placeholder widget for video player (you need to implement this)
 
-// Placeholder widget for video player (you need to implement this)
-class VideoPlayerWidget extends StatelessWidget {
+class VideoPlayerWidget extends StatefulWidget {
   final String videoUrl;
 
   const VideoPlayerWidget({Key? key, required this.videoUrl}) : super(key: key);
 
   @override
+  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
+}
+
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+  late VideoPlayerController _controller;
+  bool _isVideoLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {
+          _isVideoLoaded = true;
+        });
+      }).catchError((error) {
+        print("Error initializing video player: $error"); // Add error handling
+        setState(() {
+          _isVideoLoaded = false; // Ensure loading is stopped on error
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: Center(
-        child: Text(
-          'Video Player Placeholder\nURL: $videoUrl',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
+    return Center(
+      child: _isVideoLoaded
+          ? GestureDetector(
+              onTap: () {
+                // Toggle play/pause on tap
+                setState(() {
+                  if (_controller.value.isPlaying) {
+                    _controller.pause();
+                  } else {
+                    _controller.play();
+                  }
+                });
+              },
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    VideoPlayer(_controller),
+                    if (!_controller.value.isPlaying)
+                      Icon(
+                        Icons.play_arrow,
+                        size: 50.0,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                  ],
+                ),
+              ),
+            )
+          : _controller.value.hasError
+              ? const Text(
+                  "Error loading video",
+                  style: TextStyle(color: Colors.red),
+                )
+              : const CircularProgressIndicator(),
     );
   }
 }
@@ -468,8 +552,8 @@ class SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (data == null) {
-      return SizedBox(); // Skip if no data
+    if (data == null || title == "Multimedia Info") {
+      return SizedBox(); // Skip if no data OR title is "Multimedia Info"
     }
 
     return Container(

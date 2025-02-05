@@ -23,11 +23,12 @@ class _ResultsPageState extends State<ResultsPage> {
   void initState() {
     super.initState();
     _resultsFuture = _fetchData();
+    print(_resultsFuture);
   }
 
   Future<Map<String, dynamic>> _fetchData() async {
     final encodedEpidNumber = Uri.encodeComponent(widget.epidNumber);
-
+    print('${baseUrl}ModelRoute/data/$encodedEpidNumber');
     final response = await http
         .get(Uri.parse('${baseUrl}ModelRoute/data/$encodedEpidNumber'));
     if (response.statusCode == 200) {
@@ -113,7 +114,7 @@ class _ResultsPageState extends State<ResultsPage> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: images.length,
             itemBuilder: (context, index) {
-              return _buildRecordContainer(context, images[index],
+              return _buildRecordContainer(context, images[index], "image",
                   type: "image");
             }),
         SizedBox(height: 20),
@@ -161,7 +162,8 @@ class _ResultsPageState extends State<ResultsPage> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: methodologies.length,
             itemBuilder: (context, index) {
-              return _buildRecordContainer(context, methodologies[index],
+              return _buildRecordContainer(
+                  context, methodologies[index], "methodologies",
                   type: "method");
             }),
 
@@ -194,12 +196,12 @@ class _ResultsPageState extends State<ResultsPage> {
   }
 
   Widget _buildRecordContainer(
-      BuildContext context, Map<String, dynamic> record,
+      BuildContext context, Map<String, dynamic> record, String xx,
       {String type = ""}) {
-    final bool suspected = record['suspected'] == "suspected";
+    final bool suspected = record['prediction'] == "suspected";
     final bool confidence_interval = record['message'] == "not-suspected";
     final String message = record['message'] ?? "N/A";
-
+    print(record);
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
@@ -219,7 +221,9 @@ class _ResultsPageState extends State<ResultsPage> {
             _buildInfoRow(context, "Epid Number", record['epid_number']),
             _buildInfoRow(
                 context, "confidence interval", record['confidence_interval']),
-            _buildInfoRow(context, "suspected", record['suspected']),
+            xx == "image"
+                ? _buildInfoRow(context, "suspected", record['suspected'])
+                : _buildInfoRow(context, "suspected", record['prediction']),
             _buildInfoRow(context, "Message", message,
                 color: suspected
                     ? Colors.red

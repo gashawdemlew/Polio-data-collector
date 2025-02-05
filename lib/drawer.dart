@@ -354,29 +354,29 @@ class _Drawer45State extends State<Drawer45> {
                 );
               },
             ),
-            if (widget.userType == "Health Officer")
-              ListTile(
-                leading: Icon(Icons.add_box, color: Colors.black),
-                title: Text(
-                  widget.languge == "Amharic"
-                      ? 'አዲሰ ታካሚ መዝግብ'
-                      : widget.languge == "AfanOromo"
-                          ? "Ergaa"
-                          : 'Create New Patient',
-                  style: GoogleFonts.poppins(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+            // if (widget.userType == "Health Officer")
+            ListTile(
+              leading: Icon(Icons.add_box, color: Colors.black),
+              title: Text(
+                widget.languge == "Amharic"
+                    ? 'አዲሰ ታካሚ መዝግብ'
+                    : widget.languge == "AfanOromo"
+                        ? "Ergaa"
+                        : 'Create New Patient',
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                 ),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Patientdemographic(),
-                    ),
-                  );
-                },
               ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Patientdemographic(),
+                  ),
+                );
+              },
+            ),
             if (widget.userType == "Volunteers")
               ListTile(
                 leading: Icon(Icons.dashboard_customize, color: Colors.black),
