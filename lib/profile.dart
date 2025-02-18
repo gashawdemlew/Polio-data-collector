@@ -158,7 +158,11 @@ class _ProfilePageState extends State<UserProfile> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            languge == "Amharic" ? "የፕሮፋይል ገጽ" : "Profile Page",
+            languge == "Amharic"
+                ? "የፕሮፋይል ገጽ"
+                : languge == "AfanOromo"
+                    ? "Fuula Piroofaayilii"
+                    : "Profile Page",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -337,7 +341,11 @@ class _ProfilePageState extends State<UserProfile> {
                             elevation: 10,
                           ),
                           child: Text(
-                            languge == "Amharic" ? 'አስተካክል' : 'Update Profile',
+                            languge == "Amharic"
+                                ? 'አስተካክል'
+                                : languge == "AfanOromo"
+                                    ? 'Piroofaayilii Haaromsi'
+                                    : 'Update Profile',
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),

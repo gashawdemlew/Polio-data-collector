@@ -65,6 +65,7 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
     _animationController.forward();
   }
 
+  String lang = "";
   Map<String, dynamic> userDetails = {};
   String languge = '';
   Future<void> _loadUserDetails() async {
@@ -82,6 +83,9 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
         'id': prefs.getInt('id') ?? 'N/A',
         'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
       };
+      setState(() {
+        lang = userDetails['selectedLanguage'];
+      });
     });
 
     setState(() {
@@ -697,7 +701,13 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
       appBar: AppBar(
         title: Text(
           // Display prediction from _responseData1 or a default message
-          message1.isNotEmpty ? "Upload Multimedia Info" : 'Loading...',
+          message1.isNotEmpty
+              ? languge == "Amharic"
+                  ? 'የሚዲያ መረጃ ይስቀሉ'
+                  : languge == "AfanOromo"
+                      ? 'Odeeffannoo Meediyyaa fe\'i'
+                      : 'Upload Multimedia Info'
+              : 'Loading...',
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: CustomColors.testColor1,
@@ -792,7 +802,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                       child: Text(
                         languge == "Amharic"
                             ? 'እባክዎን ቪዲዮ እና ምስል ለመምዝገብ ትንሽ ይጠብቁ.'
-                            : 'Please wait to upload video and image',
+                            : languge == "AfanOromo"
+                                ? 'Mee viidiyoo fi suuraa fe\'uuf akka eegdan.'
+                                : 'Please wait to upload video and image',
                         style: const TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
@@ -851,7 +863,11 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                                   ),
                                 )
                               : Text(
-                                  languge == "Amharic" ? "መዝግብ" : "Upload",
+                                  languge == "Amharic"
+                                      ? "መዝግብ"
+                                      : languge == "AfanOromo"
+                                          ? "Odeeffannoo Meediyyaa fe\'i"
+                                          : "Upload",
                                   style: const TextStyle(color: Colors.white),
                                 ),
                         ),

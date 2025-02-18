@@ -294,8 +294,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: ThemeHelper().textInputDecoration(
-                      languge2 == "Amharic" ? "የይለፍ ቃል ይሙሉ" : "Enter Password"),
+                  decoration:
+                      ThemeHelper().textInputDecoration(languge2 == "Amharic"
+                          ? "የይለፍ ቃል ይሙሉ"
+                          : languge2 == "AfanOromo"
+                              ? "Jecha darbiiGalchi"
+                              : "Enter Password"),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Please Enter Password";
@@ -492,7 +496,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => userList()));
+                                  builder: (context) => UserList()));
                         } catch (e) {
                           showError(context, 'Error: $e');
                         } finally {

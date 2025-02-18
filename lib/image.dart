@@ -275,8 +275,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title:
-              Text(widget.languge == "Amharic" ? 'ምስሉን እይ' : 'Preview Image'),
+          title: Text(widget.languge == "Amharic"
+              ? 'ምስሉን እይ'
+              : widget.languge == "AfanOromo"
+                  ? 'Suuraa kaafameilaali'
+                  : 'Preview Image'),
           backgroundColor: CustomColors.testColor1,
           centerTitle: true,
           elevation: 2,

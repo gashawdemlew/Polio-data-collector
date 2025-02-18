@@ -104,7 +104,7 @@ class _BottomNavScreenState extends State<PolioDashboard> {
               label: _selectedLanguage == "Amharic"
                   ? "መገለጫ"
                   : _selectedLanguage == "AfanOromo"
-                      ? "Ibsama"
+                      ? "Piroofaayilii"
                       : "Profile",
             ),
           ],

@@ -75,7 +75,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
 
     final formData = {
       'epid_number': widget.epid,
-      'stool_recieved_date': "2024-08-03T14:30:00Z",
+      'stool_recieved_date': _stool1DateReceivedByLab?.toIso8601String(),
       'speciement_condition': _specimenCondition.toString(),
       'type': widget.type,
       'completed': 'false',

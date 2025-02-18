@@ -34,6 +34,7 @@ class _EpidDataPageState extends State<MidelResult> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
     _dataFuture = fetchEpidData(widget.epidNumber);
   }
 
@@ -51,6 +52,29 @@ class _EpidDataPageState extends State<MidelResult> {
     } else {
       throw Exception('Failed to load data: ${response.statusCode}');
     }
+  }
+
+  Map<String, dynamic> userDetails = {};
+
+  String xx = "";
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+    setState(() {
+      xx = userDetails['selectedLanguage'];
+    });
   }
 
   Future<Map<String, String>> getSharedPreferencesData() async {
@@ -78,13 +102,18 @@ class _EpidDataPageState extends State<MidelResult> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "View Model Results",
+            xx == "Amharic"
+                ? 'የሞዴል ውጤቶችን ይመልከቱ'
+                : xx == "AfanOromo"
+                    ? 'Bu’aa moodelaa ilaali'
+                    : 'View Model Results',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
+
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
@@ -200,6 +229,7 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
   void initState() {
     super.initState();
     uploadImage();
+    _loadUserDetails();
     fetchEpidData();
   }
   // Map<String, dynamic>? _apiResponse;
@@ -470,6 +500,29 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
     }
   }
 
+  Map<String, dynamic> userDetails = {};
+
+  String xx = "";
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+    setState(() {
+      xx = userDetails['selectedLanguage'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -546,7 +599,11 @@ class _EpidDataDisplayState extends State<EpidDataDisplay> {
 
   Widget buildResultTitle() {
     return Text(
-      "Response Result",
+      xx == "Amharic"
+          ? 'የምላሽ ውጤት'
+          : xx == "AfanOromo"
+              ? 'Bu’aa duubdeebii'
+              : 'Response Result',
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 24,

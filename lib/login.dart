@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:camera_app/forget_pass/confirm_password.dart';
 import 'package:camera_app/forget_password.dart';
 import 'package:camera_app/mainPage.dart';
+import 'package:camera_app/resetpassword/forgot_password_screen.dart';
 import 'package:camera_app/user_list.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -240,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onForgetPassword(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ForgetPassword()),
+      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
     );
   }
 
@@ -249,14 +250,14 @@ class _LoginPageState extends State<LoginPage> {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          backgroundColor: Colors.grey[100],
+          backgroundColor: Colors.white,
           body: Column(
             children: [
               // Custom Header Section
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
-                    vertical: 30.0, horizontal: 20.0),
+                    vertical: 10.0, horizontal: 20.0),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [CustomColors.testColor1, Color(0xFF007AFF)],
@@ -399,7 +400,7 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: _selectedLanguage == "Amharic"
                                 ? "ይለፍ ቃል"
                                 : _selectedLanguage == "AfanOromo"
-                                    ? "Jecha Iccitii [Jecha darbii]"
+                                    ? "Jecha darbii"
                                     : "Password",
                             labelStyle: const TextStyle(color: Colors.black),
                             prefixIcon: const Icon(Icons.lock),
@@ -436,13 +437,13 @@ class _LoginPageState extends State<LoginPage> {
                               _selectedLanguage == "Amharic"
                                   ? "የይለፍ ቃል ማስታወሻ"
                                   : _selectedLanguage == "AfanOromo"
-                                      ? "Jecha Iccitii Dagatee? [Jecha darbii dagattee?]"
+                                      ? "Jecha darbii dagattee?"
                                       : "Forgot Password?",
                               style: const TextStyle(color: Colors.blue),
                             ),
                           ),
                         ),
-                        const SizedBox(height: 30.0),
+                        const SizedBox(height: 20.0),
                         // Login Button
                         ElevatedButton(
                           onPressed: _isLoading
@@ -475,6 +476,15 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                         ),
                         const SizedBox(height: 20.0),
+
+                        // Logo2
+                        Center(
+                          // To center the logo
+                          child: Image.asset(
+                            'assets/im/logo2.jpg', // Replace with your actual image path
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ],
                     ),
                   ),

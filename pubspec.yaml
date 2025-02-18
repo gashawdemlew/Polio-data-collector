@@ -97,6 +97,8 @@ flutter:
      - assets/im/map.jpg
      - assets/im/heder.jpg
      - assets/im/yarie.jpg
+     - assets/im/logo2.jpg
+
 flutter_icons:
   android: true
   ios: true

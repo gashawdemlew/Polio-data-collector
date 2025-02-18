@@ -12,8 +12,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class userList extends StatelessWidget {
-  const userList({super.key});
+class UserList extends StatelessWidget {
+  const UserList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +131,103 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //  Add this function to handle user deletion
+  Future<void> _deleteUser(int userId) async {
+    final url =
+        Uri.parse('${baseUrl}user/$userId'); // Replace with your API endpoint
+    final response = await http.delete(url);
+
+    if (response.statusCode == 200) {
+      // User deleted successfully
+      print('User deleted successfully');
+      // Refresh the user list.  Very important!
+      setState(() {
+        _usersFuture = fetchUsers(); //Re-fetch users
+        _usersFuture.then((users) {
+          _allUsers = users; // Update _allUsers after refresh
+          _filteredUsers =
+              users; //  Reset filtered users, or apply filter again.
+        });
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(languge == "Amharic"
+                ? "ተጠቃሚው በተሳካ ሁኔታ ተሰርዟል"
+                : languge == "AfanOromo"
+                    ? "Fayyadamaan sun milkaa'inaan haaqameera"
+                    : 'User deleted successfully')),
+      );
+    } else {
+      // Handle error
+      print('Failed to delete user. Status code: ${response.statusCode}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(languge == "Amharic"
+                ? "ተጠቃሚውን መሰረዝ አልተሳካም"
+                : languge == "AfanOromo"
+                    ? "Fayyadamaa sana haquun hin danda'amne"
+                    : 'Failed to delete user')),
+      );
+    }
+  }
+
+  // Add delete confirmation dialog
+  Future<void> _showDeleteConfirmationDialog(int userId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // User must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(languge == "Amharic"
+              ? 'ማስጠንቀቂያ!'
+              : languge == "AfanOromo"
+                  ? 'Akeekkachiisa!'
+                  : 'Warning!'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(languge == "Amharic"
+                    ? 'ይህን ተጠቃሚ መሰረዝዎን እርግጠኛ ነዎት?'
+                    : languge == "AfanOromo"
+                        ? 'Fayyadamaa kana haquuf mirkanaa\'aa dha?'
+                        : 'Are you sure you want to delete this user?'),
+                Text(languge == "Amharic"
+                    ? 'ይህ እርምጃ መቀልበስ አይቻልም.'
+                    : languge == "AfanOromo"
+                        ? 'Tarkaanfiin kun duubatti deebi\'uu hin danda\'u.'
+                        : 'This action cannot be undone.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(languge == "Amharic"
+                  ? 'ይቅር'
+                  : languge == "AfanOromo"
+                      ? 'Dhiifama'
+                      : 'Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+            TextButton(
+              child: Text(languge == "Amharic"
+                  ? 'ሰርዝ'
+                  : languge == "AfanOromo"
+                      ? 'Haqi'
+                      : 'Delete'),
+              onPressed: () {
+                _deleteUser(userId); // Call the delete function
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,11 +240,11 @@ class _MyHomePageState extends State<MyHomePage> {
             languge == "Amharic"
                 ? "የተጠቃሚ ዝርዝር"
                 : languge == "AfanOromo"
-                    ? "Tarree Fayyadamtootaa"
+                    ? "Tarreeffama fayyadamtootaa"
                     : 'User List',
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -301,7 +398,41 @@ class _MyHomePageState extends State<MyHomePage> {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
+                                  Text(
+                                    user['user_id'].toString(),
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[700],
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
                                 ],
+                              ),
+                              // Add delete button here
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.red, // Background color
+                                  foregroundColor: Colors.white, // Text color
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8), // Padding
+                                  textStyle:
+                                      TextStyle(fontSize: 16), // Text style
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        8), // Rounded corners
+                                  ),
+                                ),
+                                onPressed: () {
+                                  // Call the delete confirmation dialog
+                                  _showDeleteConfirmationDialog(
+                                      user['user_id']);
+                                },
+                                child: Text(languge == "Amharic"
+                                    ? "ሰርዝ"
+                                    : languge == "AfanOromo"
+                                        ? "haqaa"
+                                        : 'Delete'),
                               ),
                             ],
                           ),

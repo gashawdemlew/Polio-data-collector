@@ -293,6 +293,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     _getCurrentLocation(); // Fetch location on initialization
   }
 
+  String lang = "";
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -306,6 +307,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
         'woreda': prefs.getString('woreda') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
       };
+      setState(() {
+        lang = userDetails['selectedLanguage'];
+      });
     });
   }
 
@@ -459,7 +463,11 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Upload Multimedia Info',
+          lang == "Amharic"
+              ? 'የሚዲያ መረጃ ይስቀሉ'
+              : lang == "AfanOromo"
+                  ? 'Odeeffannoo Meediyyaa fe\'i'
+                  : 'Upload Multimedia Info',
           style: TextStyle(
             color: Colors.white,
           ),
@@ -473,9 +481,13 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
               width: double.infinity,
               color: Colors.orangeAccent,
               padding: const EdgeInsets.all(8.0),
-              child: const Text(
-                "Please Wait! Uploading Image and Video…",
-                style: TextStyle(
+              child: Text(
+                lang == "Amharic"
+                    ? 'እባክዎን ቪዲዮ እና ምስል ለመምዝገብ ትንሽ ይጠብቁ.'
+                    : lang == "AfanOromo"
+                        ? 'Mee viidiyoo fi suuraa fe\'uuf akka eegdan.'
+                        : 'Please wait to upload video and image',
+                style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -516,8 +528,12 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                           'Fetching Location...',
                           style: TextStyle(color: Colors.white),
                         )
-                      : const Text(
-                          'Upload',
+                      : Text(
+                          lang == "Amharic"
+                              ? 'የሚዲያ መረጃ ይስቀሉ'
+                              : lang == "AfanOromo"
+                                  ? 'Odeeffannoo Meediyyaa fe\'i'
+                                  : 'Upload Multimedia Info',
                           style: TextStyle(
                             color: Colors.white,
                           ),

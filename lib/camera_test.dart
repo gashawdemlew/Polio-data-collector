@@ -610,7 +610,7 @@ class _ImagePreviewState extends State<ImagePreview> {
         title: widget.languge == "Amharic"
             ? "ምስልን አስቀድመው ይመልከቱ"
             : widget.languge == "AfanOromo"
-                ? "Fakkii dursee ilaali"
+                ? "Suuraa kaafameilaali"
                 : "Preview image",
       ),
       body: LayoutBuilder(

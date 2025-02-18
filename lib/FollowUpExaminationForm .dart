@@ -92,23 +92,23 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
   bool isSubmitting = false;
 
   Future<void> _submitForm() async {
-    if (_dateFollowUpExamination == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Please select Date of Follow-up Examination')),
-      );
-      return;
-    }
+    // if (_dateFollowUpExamination == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //         content: Text('Please select Date of Follow-up Examination')),
+    //   );
+    //   return;
+    // }
 
-    if (_findingsAtFollowUp == 'Lost to follow-up' &&
-        _dateOfDeathController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('If lost to follow up, please fill in Date of Death'),
-        ),
-      );
-      return;
-    }
+    // if (_findingsAtFollowUp == 'Lost to follow-up' &&
+    //     _dateOfDeathController.text.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('If lost to follow up, please fill in Date of Death'),
+    //     ),
+    //   );
+    //   return;
+    // }
 
     final url = Uri.parse('${baseUrl}clinic/followup');
 

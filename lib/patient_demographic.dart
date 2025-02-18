@@ -431,7 +431,7 @@ class _PatientdemographicState extends State<Patientdemographic> {
                   languge == "Amharic"
                       ? "ክልል ምረጥ"
                       : languge == "AfanOromo"
-                          ? "Naannoo filadhu"
+                          ? "Naannoo Filadhu"
                           : "Select Region",
                 ),
                 dropdownColor: Colors.white,
@@ -562,7 +562,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
                       ? const CircularProgressIndicator()
                       : Text(
                           isSubmitting
-                              ? (languge == "Amharic" ? 'ቀጣይ...' : 'Saving...')
+                              ? (languge == "Amharic"
+                                  ? 'ቀጣይ...'
+                                  : languge == "AfanOromo"
+                                      ? 'OlKaa’uu.'
+                                      : 'Saving...')
                               : (languge == "Amharic" ? 'ቀጣይ' : 'Next'),
                         ),
                 ),

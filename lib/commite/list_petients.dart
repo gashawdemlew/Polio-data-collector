@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class PatientDataPage extends StatefulWidget {
   @override
   _PatientDataPageState createState() => _PatientDataPageState();
@@ -21,6 +23,7 @@ class _PatientDataPageState extends State<PatientDataPage>
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
     _patients = fetchPatients();
     _tabController = TabController(length: 4, vsync: this);
   }
@@ -35,6 +38,29 @@ class _PatientDataPageState extends State<PatientDataPage>
     } else {
       throw Exception("Failed to load data");
     }
+  }
+
+  Map<String, dynamic> userDetails = {};
+
+  String xx = "";
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+    setState(() {
+      xx = userDetails['selectedLanguage'];
+    });
   }
 
   List<Patient> filterPatients(List<Patient> patients) {
@@ -64,13 +90,18 @@ class _PatientDataPageState extends State<PatientDataPage>
           ),
           child: AppBar(
             title: Text(
-              "Patient Data",
+              xx == "Amharic"
+                  ? 'የታካሚ ውሂብ'
+                  : xx == "AfanOromo"
+                      ? 'Ragaa Dhukkubsataa'
+                      : 'Patient Data',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
+
             leading: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {

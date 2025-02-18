@@ -500,7 +500,7 @@ class _DemographicFormState extends State<DemographicForm> {
                     xx == "Amharic"
                         ? "ባለሙያ ስም ምረጥ"
                         : xx == "AfanOromo"
-                            ? "Ofisara Fayyaa Filadhu"
+                            ? "Ogeessa fayyaa filadhu"
                             : "Selected Health Officer",
                   ),
                   value: selectedHealthOfficer,

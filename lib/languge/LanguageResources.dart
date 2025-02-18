@@ -81,7 +81,7 @@ class LanguageResources {
       "profile": language == "Amharic"
           ? 'የፕሮፋይል ገጽ'
           : language == "AfanOromo"
-              ? "Galmee"
+              ? "Piroofaayilii"
               : 'Profile',
       "Incomplete petient Records": language == "Amharic"
           ? ' የታካሚ መዝገቦች'
@@ -95,8 +95,11 @@ class LanguageResources {
               : 'Categories',
       "patientDemographic":
           language == "Amharic" ? 'የታካሚ መረጃ' : 'Patient Demographic',
-      "clinicalHistory":
-          language == "Amharic" ? 'ክሊኒካዊ ታሪክ' : 'Clinical History',
+      "clinicalHistory": language == "Amharic"
+          ? 'ክሊኒካዊ ታሪክ'
+          : language == "AfanOromo"
+              ? 'Seenaa Kiliinikaa'
+              : 'Clinical History',
       "stoolSpecimen": language == "Amharic" ? 'የሰገራ ናሙና' : 'Stool Specimen',
       "followUp": language == "Amharic" ? 'የክትትል ምርመራ' : 'Follow Up',
       "environmentalMethodology":
@@ -136,8 +139,16 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Odeeffannoo dhukkubsataa"
               : 'Patient Demographic',
-      "latitude": language == "Amharic" ? 'ኬክሮስ' : 'Latitude',
-      "longitude": language == "Amharic" ? 'ኬንትሮስ' : 'Longitude',
+      "latitude": language == "Amharic"
+          ? 'ኬክሮስ'
+          : language == "AfanOromo"
+              ? 'Laatiituudii'
+              : 'Latitude',
+      "longitude": language == "Amharic"
+          ? 'ኬንትሮስ'
+          : language == "AfanOromo"
+              ? 'Loongiituudii'
+              : 'Longitude',
       "epidNumber": language == "Amharic" ? 'Epid ቁጥር' : 'Epid Number',
       "name": language == "Amharic"
           ? 'ስም አስገባ'
@@ -287,17 +298,17 @@ class LanguageResources {
       "totalOpvDoses": language == "Amharic"
           ? 'አጠቃላይ የ OPV መጠኖች'
           : language == "AfanOromo"
-              ? "Dooziiwwan OPV waliigalatti"
+              ? "Doozi OPV waliigalaa"
               : 'Total OPV Doses',
       "admittedToHospital": language == "Amharic"
           ? 'ሆስፒታል ገብቷል'
           : language == "AfanOromo"
-              ? "Hospitaala ciiphsaman"
+              ? "Hospitaala ciifsame"
               : 'Admitted To Hospital',
       "DateofAdmission": language == "Amharic"
           ? 'የመግቢያ ቀን'
           : language == "AfanOromo"
-              ? "Guyyaa ciiphsaman"
+              ? "Guyyaa ciifsame"
               : 'Date of Admission',
       "MedicalRecordNo": language == "Amharic"
           ? 'የሕክምና መዝገብ ቁጥር'
@@ -402,14 +413,14 @@ class LanguageResources {
       "Losttofollowup": language == "Amharic"
           ? 'ለመከታተል ጠፋ'
           : language == "AfanOromo"
-              ? "Hordoffiin addaancite"
+              ? "Hordoffiin addaan cite"
               : 'Lost to follow-up',
       "no": language == "Amharic" ? 'አይደለም' : 'No',
       "DateofDeath": language == "Amharic" ? 'የሞት ቀን' : 'Date of Death',
       "ResidualParalysis": language == "Amharic"
           ? 'ምረጥ'
           : language == "AfanOromo"
-              ? "Laamsha’uu haftee "
+              ? "Laamshii haftee "
               : 'Residual Paralysis',
       "noResidualParalysis":
           language == "Amharic" ? 'ምንም ቀሪ ሽባ' : 'No Residual Paralysis',
@@ -422,7 +433,7 @@ class LanguageResources {
       "DateofFollowupExamination": language == "Amharic"
           ? "በክትትል ውስጥ ያሉ ግኝቶች"
           : language == "AfanOromo"
-              ? "Guyyaa qorannoo hordoffii"
+              ? "Ragaa qorannoo hordoffi"
               : 'Date of Follow-up',
       "FindingsatFollowup:": language == "Amharic"
           ? 'በክትትል ውስጥ ያሉ ግኝቶች'

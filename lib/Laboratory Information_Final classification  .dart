@@ -120,7 +120,7 @@ class _LaboratoryFinalClassificationFormState
       } else {
         print('Failed to submit form: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to register')),
+          SnackBar(content: Text('Failed to register ${response.body}')),
         );
       }
     } catch (error) {
@@ -320,7 +320,11 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       RadioListTile(
                         title: Text(
-                          ff == "Amharic" ? "ተስማሚ" : "Compatible",
+                          ff == "Amharic"
+                              ? "ተስማሚ"
+                              : ff == "AfanOromo"
+                                  ? "Compatible"
+                                  : "Compatible",
                         ),
                         value: 'Compatible',
                         groupValue: _finalCombinedITDResult,
@@ -332,7 +336,11 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       RadioListTile(
                         title: Text(
-                          ff == "Amharic" ? "የተወው" : "Discarded",
+                          ff == "Amharic"
+                              ? "የተወው"
+                              : ff == "AfanOromo"
+                                  ? "Gatame"
+                                  : "Discarded",
                         ),
                         value: 'Discarded',
                         groupValue: _finalCombinedITDResult,

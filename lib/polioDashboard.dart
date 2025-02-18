@@ -158,8 +158,8 @@ PolioAntenna is a mobile app that automates acute flaccid paralysis (AFP) survei
   ''';
 
   final String AboutPolioAntennaAPPOM = '''
-Apilikeeshiniin Pooliyoo anteenaa apilikeeshinii unkaalee ragaa waytawaa itti sassaaban, suuraa fi viidiyoo fayyadamuun hordoffii [faana dhahiinsa] dhibee laamshessaa (acute flaccid paralysis (AFP)) si’oomsudha. Dabalataanis ragaa fudhate irrati hundaa’uun Pooliyoo tahuu fi dhiisuu kan adda baasuu waan ta’eef appilikeeshinii tola ooltota hawaasaa fi ogeessota fayyaa gargaaruu irrati gahee guddaa qabudha. 
-Sassaabii odeeffannoo sirreessuudhaan, appilikeeshiniin pooliyoo anteenaa hordoffii [faana dhahiinsa] fi deebii [tarkaanfii] yeroo weeraraa kan guddisu [fooyyessu] yoo ta’u, intarfeesii fayyadamtootaaf mijatu qabaachuun isaa, tola ooltonni hawaasaa odeeffannoo murteessaa ta’e gahumsaan akka galchan kan taasisu fi tattaaffii fayyaa hawaasaa kan cimsu dha.
+Apilikeeshiniin Pooliyoo anteenaa apilikeeshinii unkaalee ragaa waytawaa itti sassaaban, suuraa fi viidiyoo fayyadamuun faana dhahiinsadhibee laamshessaa (acute flaccid paralysis (AFP))si’oomsudha. Dabalataanis ragaa fudhate irrati hundaa’uun Pooliyoo tahuu fidhiisuu kan adda baasuu waan ta’eef appilikeeshinii tola ooltota hawaasaafi ogeessota fayyaa gargaaruu irrati gahee guddaa qabudha. Sassaabii odeeffannoo sirreessuudhaan, appilikeeshiniin pooliyoo anteenaa faana dhahiinsafi tarkaanfii yerooweeraraa kan fooyyessuyoo ta’u, intarfeesii fayyadamtootaaf mijatu qabaachuun isaa, tola ooltonni hawaasaaodeeffannoo murteessaa ta’e gahumsaan akka galchan kan taasisu fi tattaaffii fayyaa hawaasaa kan cimsu dha.
+
   ''';
   final String AboutPolioAntennaAPPAM = '''
 ፖሊዮአንቴና የተንቀሳቃሽ ስልክ መተግበሪያ ነው አጣዳፊ ፍላይድ ፓራላይዝስ (AFP) በእውነተኛ ጊዜ የመልቲሚዲያ መረጃዎችን - ቅርጾችን፣ ምስሎችን እና ቪዲዮዎችን በመሰብሰብ። ለማህበረሰብ በጎ ፈቃደኞች እና የህዝብ ጤና ባለስልጣናት አስፈላጊ መሳሪያ ሆኖ የሚያገለግል የፖሊዮ ቫይረስ አፋጣኝ ምርመራዎችን ያቀርባል። የመረጃ አሰባሰብን በማሳለጥ፣ፖሊዮአንቴና የወረርሽኙን ክትትል እና ምላሽ ያሻሽላል፣ለተጠቃሚ ምቹ የሆነ በይነገጽ በጎ ፈቃደኞች ወሳኝ መረጃዎችን በብቃት እንዲያገቡ ያስችላቸዋል፣የህዝብ ጤና ጥረቶችን ያጠናክራል።  ''';
@@ -169,8 +169,8 @@ RAPPS is a project that is part of a global IDRC-funded initiative on AI for Glo
   ''';
 
   final String AboutRAPPSOM = '''
-Projectiin RAPPS qaama pirojeektii inisheetiivii sammuu [hubannoo] nam-tolchee fayyaa addunyaaf jedhuun dhaabbata IDRC jedhamuun deeggaramuudha.
-Kaayyoon isaas sammuu [hubannoo] nam-tolchee (AI)  itti gaafatamummaa qabu fayyadamuun, dandeettii fi ragaa naannoo bu’uureffachuun, akkasumas naannoowwan tajaajila gahaa hin arganne humneessuun ariitii fi gahumsa hordoffii [faana dhahiinsa] pooliyoo vaayirasii fooyyessuudha. Oddeeffannoo Dabalataaf (https:// www.polipantenna.org/)
+Projectiin RAPPS qaama pirojeektii inisheetiivii hubannoo nam-tolchee fayyaa addunyaaf jedhuun dhaabbata IDRC jedhamuun deeggaramuudha.Kaayyoon isaas hubannoo nam-tolchee (AI)  itti gaafatamummaa qabu fayyadamuun, dandeettii fi ragaa naannoo bu’uureffachuun, akkasumas naannoowwan tajaajila gahaa hin arganne humneessuun ariitii fi gahumsafaana dhahiinsapooliyoo vaayirasii fooyyessuudha. Oddeeffannoo Dabalataaf (https:// www.polipantenna.org/)
+
 
   ''';
   final String AboutRAPPSAM = '''
@@ -184,10 +184,8 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
   ''';
 
   final String AFPafm = '''
-(AFP)
-- Hordoffiin [Faana dhahiinsi] AFP tattaaffii akka addunyaati pooliyoo dhabamsiisuuf taasifamu keessatti tooftaa ijoodha. 
-- AFP jechuun daa’ima waggaa 15 gadi ta’e keessatti kutaa qaama kamiyyuu keessatti akka tasaa dadhabbii ykn laamsha’uu dha
-- Hordoffiin [Faana dhahiinsi] AFP infekshinii pooliyoo ta’uu danda’u adda baasuu fi deebii [tarkaanfii] fayyaa hawaasaa qajeelchuuf gargaara
+-Faana dhahiinsiAFP tattaaffii akka addunyaati pooliyoo dhabamsiisuuf taasifamu keessatti tooftaa ijoodha. -AFP jechuun daa’ima waggaa 15 gadi ta’e keessatti kutaa qaama kamiyyuu keessatti akka tasaa dadhabbii ykn laamsha’uu dha-Faana dhahiinsiAFP infekshinii pooliyoo ta’uu danda’u adda baasuu fi tarkaanfiifayyaa hawaasaa qajeelchuuf gargaara
+
 
 
 
@@ -410,7 +408,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                     languge == "Amharic"
                                         ? "ተጨማሪ እይ"
                                         : languge == "AfanOromo"
-                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            ? "Caalaatti Hubadhu"
                                             : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -533,7 +531,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                     languge == "Amharic"
                                         ? "ተጨማሪ እይ"
                                         : languge == "AfanOromo"
-                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            ? "Caalaatti Hubadhu"
                                             : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -614,6 +612,9 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                           const SizedBox(height: 20),
                           GestureDetector(
                             onTap: () {
+                              launchUrlString(
+                                  'https://www.who.int/news-room/fact-sheets/detail/poliomyelitis');
+
                               // Handle URL or interaction
                             },
                             child: Container(
@@ -630,7 +631,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                     languge == "Amharic"
                                         ? "ተጨማሪ እይ"
                                         : languge == "AfanOromo"
-                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            ? "Caalaatti Hubadhu"
                                             : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -676,7 +677,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                 languge == "Amharic"
                                     ? 'AFP ስለላ'
                                     : languge == "AfanOromo"
-                                        ? "  Hordoffii [faana dhahiinsa] AFP"
+                                        ? "Faana dhahiinsa AFP"
                                         : "AFP Surveillance",
                                 style: const TextStyle(
                                   fontSize: 18,
@@ -711,7 +712,8 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                           const SizedBox(height: 20),
                           GestureDetector(
                             onTap: () {
-                              // Handle additional actions or navigation
+                              launchUrlString(
+                                  'https://polioeradication.org/what-we-do/');
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -727,7 +729,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                     languge == "Amharic"
                                         ? "ተጨማሪ እይ"
                                         : languge == "AfanOromo"
-                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            ? "Caalaatti Hubadhu"
                                             : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -815,7 +817,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                           const SizedBox(height: 20),
                           GestureDetector(
                             onTap: () {
-                              // Handle additional actions or navigation
+                              launchUrlString('https://polioeradication.org/');
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -838,7 +840,7 @@ RAPPS በ AI ለአለም አቀፍ ጤና ላይ በአለምአቀፍ IDRC  �
                                     languge == "Amharic"
                                         ? "ተጨማሪ እይ"
                                         : languge == "AfanOromo"
-                                            ? "Caalaatti Baradhu [Hubadhu]"
+                                            ? "Caalaatti Hubadhu"
                                             : 'Learn More',
                                     style: TextStyle(
                                       color: Colors.white,

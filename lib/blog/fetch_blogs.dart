@@ -26,7 +26,8 @@ class FetchBlogsScreen extends StatefulWidget {
 
 class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
   List blogs = [];
-  List<bool> expanded = [];
+  bool _isLoading = true; // Add a loading indicator flag
+  String _errorMessage = ''; // Add an error message flag
 
   @override
   void initState() {
@@ -36,10 +37,30 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
 
   // Fetch blogs from the API
   Future<void> fetchBlogs() async {
-    final response = await http.get(Uri.parse('${baseUrl}user/api/posts'));
-    if (response.statusCode == 200) {
+    setState(() {
+      _isLoading = true; // Start loading
+      _errorMessage = ''; // Clear any previous error message
+    });
+
+    try {
+      final response = await http.get(Uri.parse('${baseUrl}user/api/posts'));
+      if (response.statusCode == 200) {
+        final decodedData = json.decode(response.body);
+        setState(() {
+          blogs = decodedData;
+          _isLoading = false; // Stop loading
+        });
+      } else {
+        setState(() {
+          _errorMessage =
+              'Failed to load blogs. Status code: ${response.statusCode}';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
       setState(() {
-        blogs = json.decode(response.body);
+        _errorMessage = 'An error occurred: $e';
+        _isLoading = false;
       });
     }
   }
@@ -79,6 +100,7 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(251, 232, 229, 229),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
@@ -139,19 +161,32 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
           ],
         ),
       ),
-      body: blogs.isEmpty
+      body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: blogs.length,
-              itemBuilder: (context, index) {
-                final blog = blogs[index];
-                return BlogCard(
-                  blog: blog,
-                  // onAddComment: (comment) => addComment(blog['id'], comment),
-                  onToggleLike: () => toggleLike(blog['id']),
-                );
-              },
-            ),
+          : _errorMessage.isNotEmpty
+              ? Center(
+                  child: Text(
+                    _errorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                )
+              : blogs.isEmpty
+                  ? Center(
+                      child: Text(
+                        'No blogs available yet.',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: blogs.length,
+                      itemBuilder: (context, index) {
+                        final blog = blogs[index];
+                        return BlogCard(
+                          blog: blog,
+                          onToggleLike: () => toggleLike(blog['id']),
+                        );
+                      },
+                    ),
     );
   }
 }

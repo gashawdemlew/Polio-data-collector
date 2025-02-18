@@ -48,8 +48,9 @@ class _Drawer45State extends State<Drawer45> {
     super.initState();
     _loadUserDetails1();
     initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(
+      _updateConnectionStatus,
+    );
   }
 
   @override
@@ -129,17 +130,13 @@ class _Drawer45State extends State<Drawer45> {
   Future<void> _checkConnectivityAndNavigate(BuildContext context) async {
     var connectivityResult = await _connectivity.checkConnectivity();
     if (connectivityResult.toString() != [ConnectivityResult.none].toString()) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DemographicForm(),
-        ),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => DemographicForm()));
     } else {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SMS(),
-        ),
-      );
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => SMS()));
     }
   }
 
@@ -158,9 +155,7 @@ class _Drawer45State extends State<Drawer45> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(6),
-                ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(6)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -169,11 +164,7 @@ class _Drawer45State extends State<Drawer45> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.blue,
-                      size: 40,
-                    ),
+                    child: Icon(Icons.person, color: Colors.blue, size: 40),
                   ),
                   Text(
                     " $fname $lname",
@@ -235,11 +226,9 @@ class _Drawer45State extends State<Drawer45> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => YU(),
-                    ),
-                  );
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => YU()));
                 },
               ),
             if (widget.userType == "Laboratorist")
@@ -259,16 +248,16 @@ class _Drawer45State extends State<Drawer45> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => QRViewExample(),
-                    ),
+                    MaterialPageRoute(builder: (context) => QRViewExample()),
                   );
                 },
               ),
             if (widget.userType == "Admin")
               ListTile(
-                leading: const Icon(Icons.kebab_dining_outlined,
-                    color: Colors.black),
+                leading: const Icon(
+                  Icons.kebab_dining_outlined,
+                  color: Colors.black,
+                ),
                 title: Text(
                   widget.languge == "Amharic"
                       ? 'አዲሰ ብሎግ መዝግብ'
@@ -283,16 +272,16 @@ class _Drawer45State extends State<Drawer45> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CreateBlogScreen(),
-                    ),
+                    MaterialPageRoute(builder: (context) => CreateBlogScreen()),
                   );
                 },
               ),
             if (widget.userType == "Desicion_maker_commite")
               ListTile(
-                leading:
-                    const Icon(Icons.summarize_outlined, color: Colors.black),
+                leading: const Icon(
+                  Icons.summarize_outlined,
+                  color: Colors.black,
+                ),
                 title: Text(
                   widget.languge == "Amharic"
                       ? 'ውሳኔ ያድርጉ'
@@ -307,9 +296,7 @@ class _Drawer45State extends State<Drawer45> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => PatientDataPage(),
-                    ),
+                    MaterialPageRoute(builder: (context) => PatientDataPage()),
                   );
                 },
               ),
@@ -329,11 +316,9 @@ class _Drawer45State extends State<Drawer45> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => userList(),
-                    ),
-                  );
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => UserList()));
                 },
               ),
             ListTile(
@@ -347,36 +332,34 @@ class _Drawer45State extends State<Drawer45> {
                 ),
               ),
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => UserProfile(),
-                  ),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => UserProfile()));
               },
             ),
-            // if (widget.userType == "Health Officer")
-            ListTile(
-              leading: Icon(Icons.add_box, color: Colors.black),
-              title: Text(
-                widget.languge == "Amharic"
-                    ? 'አዲሰ ታካሚ መዝግብ'
-                    : widget.languge == "AfanOromo"
-                        ? "Ergaa"
-                        : 'Create New Patient',
-                style: GoogleFonts.poppins(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
+            if (widget.userType == "Health Officer")
+              ListTile(
+                leading: Icon(Icons.add_box, color: Colors.black),
+                title: Text(
+                  widget.languge == "Amharic"
+                      ? 'አዲሰ ታካሚ መዝግብ'
+                      : widget.languge == "AfanOromo"
+                          ? "Ergaa"
+                          : 'Create New Patient',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => Patientdemographic(),
+                    ),
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Patientdemographic(),
-                  ),
-                );
-              },
-            ),
             if (widget.userType == "Volunteers")
               ListTile(
                 leading: Icon(Icons.dashboard_customize, color: Colors.black),
@@ -396,8 +379,10 @@ class _Drawer45State extends State<Drawer45> {
               ),
             if (widget.userType == "Health Officer")
               ListTile(
-                leading: Icon(Icons.format_list_bulleted_rounded,
-                    color: Colors.black),
+                leading: Icon(
+                  Icons.format_list_bulleted_rounded,
+                  color: Colors.black,
+                ),
                 title: Text(
                   widget.languge == "Amharic"
                       ? 'ያለቀ የታካሚ መዝገቦች'
@@ -411,11 +396,9 @@ class _Drawer45State extends State<Drawer45> {
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Complete(),
-                    ),
-                  );
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => Complete()));
                 },
               ),
             if (widget.userType == "Health Officer")
@@ -435,9 +418,7 @@ class _Drawer45State extends State<Drawer45> {
                 ),
                 onTap: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => DataListPage(),
-                    ),
+                    MaterialPageRoute(builder: (context) => DataListPage()),
                   );
                 },
               ),
@@ -465,11 +446,9 @@ class _Drawer45State extends State<Drawer45> {
               ),
               onTap: () {
                 _removeUserInfo();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
           ],

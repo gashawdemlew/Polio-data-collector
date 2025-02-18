@@ -246,8 +246,13 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: resources?.clinicalHistory()["clinicalHistory"] ??
-            "Clinical History",
+        // ignore: unrelated_type_equality_checks
+        title: _selectedLanguage == "Amharic"
+            ? 'ክሊኒካዊ ታሪክ ቅጽ'
+            // ignore: unrelated_type_equality_checks
+            : _selectedLanguage == "AfanOromo"
+                ? "Seenaa kiliinikaalaa"
+                : 'clinical history form',
       ),
       body: _isLanguageLoaded
           ? Container(
@@ -806,7 +811,11 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
       ),
       child: Text(
         isSubmitting
-            ? resources?.clinicalHistory()["saving"] ?? "Saving.."
+            ? _selectedLanguage == "Amharic"
+                ? "Saving"
+                : _selectedLanguage == "Afanoromo"
+                    ? "OlKaa’uu"
+                    : "Saving.."
             : resources?.clinicalHistory()["submit"] ?? 'Submit',
         style: GoogleFonts.poppins(),
       ),
