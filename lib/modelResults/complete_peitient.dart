@@ -2,6 +2,7 @@ import 'package:camera_app/FollowUpExaminationForm%20.dart';
 import 'package:camera_app/camera_test.dart';
 import 'package:camera_app/clinical_history.dart';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/commite/results.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/modelResults/model_detail.dart';
@@ -241,7 +242,7 @@ class _DataListPageState extends State<Complete>
                 ? 'ያለቁ የታካሚ መዝገቦች'
                 : languge == "AfanOromo"
                     ? "Galmee xumurame"
-                    : 'Completed Petient',
+                    : 'Completed Patient',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -365,7 +366,8 @@ class _DataListPageState extends State<Complete>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ResultsPage(
+                              builder: (context) => EpidDataPage(
+                                type: "health",
                                 epidNumber: currentData[index]['epid_number'],
                               ),
                             ),
@@ -382,7 +384,7 @@ class _DataListPageState extends State<Complete>
                           ),
                         ),
                         child: Text(
-                          "View model result",
+                          "View Detail ",
                           style: const TextStyle(
                             color: Colors.white, // Text color
                             fontSize: 16, // Font size

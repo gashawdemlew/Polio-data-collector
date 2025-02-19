@@ -13,8 +13,10 @@ import 'package:video_player/video_player.dart';
 
 class EpidDataPage extends StatefulWidget {
   final String epidNumber;
+  final String type;
 
-  const EpidDataPage({Key? key, required this.epidNumber}) : super(key: key);
+  const EpidDataPage({Key? key, required this.epidNumber, required this.type})
+      : super(key: key);
 
   @override
   State<EpidDataPage> createState() => _EpidDataPageState();
@@ -241,7 +243,7 @@ class _EpidDataPageState extends State<EpidDataPage> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "AI-Model Prediction",
+            "Case Detail",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -347,22 +349,25 @@ class _EpidDataPageState extends State<EpidDataPage> {
             ),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () async {
-              final sharedPrefsData = await getSharedPreferencesData();
-              _showEditModal(context, sharedPrefsData);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.testColor1,
-            ),
-            child: const Text(
-              'Add Decision',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+
+          widget.type == "committe"
+              ? ElevatedButton(
+                  onPressed: () async {
+                    final sharedPrefsData = await getSharedPreferencesData();
+                    _showEditModal(context, sharedPrefsData);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: CustomColors.testColor1,
+                  ),
+                  child: const Text(
+                    'Add Decision',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              : SizedBox()
         ],
       ),
     );

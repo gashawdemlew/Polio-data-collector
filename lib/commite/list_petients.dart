@@ -304,6 +304,7 @@ class _PatientDataPageState extends State<PatientDataPage>
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   EpidDataPage(
+                                                type: "committe",
                                                 epidNumber: patient.epidNumber,
                                               ),
                                             ),

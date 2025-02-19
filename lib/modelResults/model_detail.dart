@@ -43,7 +43,7 @@ class _ResultsPageState extends State<ResultsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
-        title: 'AI-Model Prediction',
+        title: 'Case detail',
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _resultsFuture,

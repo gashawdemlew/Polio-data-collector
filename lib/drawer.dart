@@ -287,7 +287,7 @@ class _Drawer45State extends State<Drawer45> {
                       ? 'ውሳኔ ያድርጉ'
                       : widget.languge == "AfanOromo"
                           ? "Murtoo kennuu"
-                          : 'make Desicion',
+                          : 'make decision',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 15,
