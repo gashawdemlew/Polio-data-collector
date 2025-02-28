@@ -210,13 +210,13 @@ class _StoolSpecimensFormState extends State<DateStooleRecieved> {
             languge == "Amharic"
                 ? "ማረጋገጫ"
                 : languge == "AfanOromo"
-                    ? "Mirkaneessaa"
+                    ? "mirkaneeffannaa"
                     : "Confirmation",
           ),
           content: Text(languge == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ምስል ይቅረጹ። ምስሉ ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge == "AfanOromo"
-                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  ? 'Maaloo suuraa qulqullina qabu fi odeeffannoo gahaa haala dhukkubsataa agarsiisu kaasaa'
                   : 'Please capture a quality and unblurred Image. If the Image is blurred, you will be requested again..'),
           actions: <Widget>[
             TextButton(
@@ -347,9 +347,16 @@ class _StoolSpecimensFormState extends State<DateStooleRecieved> {
                       ),
                     ),
                     Text(
-                      'Selected Date (Stool 2): ${_stool2DateSentToLab != null ? _stool2DateSentToLab!.toString().split(' ')[0] : "Not selected"}',
+                      languge == "Amharic"
+                          ? "ቀን ምረጥ "
+                          : languge == "AfanOromo"
+                              ? "Guyyaa filadhu"
+                              : 'Selected Date (Stool 2)',
+
+                      // ${_stool2DateSentToLab != null ? _stool2DateSentToLab!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
                       style: GoogleFonts.poppins(),
                     ),
+                    Text(_stool2DateSentToLab.toString()),
                     const SizedBox(height: 16.0),
                     ElevatedButton(
                       onPressed: isSubmitting

@@ -166,13 +166,13 @@ class _DemographicFormState extends State<DemographicForm> {
             languge2 == "Amharic"
                 ? "ማረጋገጫ"
                 : languge2 == "AfanOromo"
-                    ? "Mirkaneessaa"
+                    ? "mirkaneeffannaa"
                     : "Confirmation",
           ),
           content: Text(languge2 == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ምስል ይቅረጹ። ምሰሉም ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge2 == "AfanOromo"
-                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  ? 'Maaloo suuraa qulqullina qabu fi odeeffannoo gahaa haala dhukkubsataa agarsiisu kaasaa '
                   : 'Please capture a quality and unblurred Image. If the image is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
@@ -316,14 +316,52 @@ class _DemographicFormState extends State<DemographicForm> {
                   value: _selectedGender,
                   dropdownColor: Colors.white,
                   items: ['Male', 'Female', 'Other'].map((String gender) {
+                    String translatedGender;
+                    if (xx == "Amharic") {
+                      switch (gender) {
+                        case 'Male':
+                          translatedGender = 'ወንድ';
+                          break;
+                        case 'Female':
+                          translatedGender = 'ሴት';
+                          break;
+                        case 'Other':
+                          translatedGender = 'ሌላ';
+                          break;
+                        default:
+                          translatedGender =
+                              gender; // Fallback, should not happen
+                      }
+                    } else if (xx == "AfanOromo") {
+                      switch (gender) {
+                        case 'Male':
+                          translatedGender = 'Dhiira';
+                          break;
+                        case 'Female':
+                          translatedGender = 'Dubara';
+                          break;
+                        case 'Other':
+                          translatedGender = 'Kan biraa';
+                          break;
+                        default:
+                          translatedGender =
+                              gender; // Fallback, should not happen
+                      }
+                    } else {
+                      translatedGender = gender;
+                    }
+
                     return DropdownMenuItem<String>(
-                      value: gender,
-                      child: Text(gender),
+                      value:
+                          gender, // Keep the original 'Male', 'Female', 'Other' as the value
+                      child: Text(
+                          translatedGender), // Display the translated label
                     );
                   }).toList(),
                   onChanged: (newValue) {
                     setState(() {
-                      _selectedGender = newValue;
+                      _selectedGender =
+                          newValue; // _selectedGender will hold 'Male', 'Female', or 'Other'
                     });
                   },
                   decoration: ThemeHelper().textInputDecoration(
@@ -332,14 +370,18 @@ class _DemographicFormState extends State<DemographicForm> {
                         : xx == "AfanOromo"
                             ? "Saala"
                             : "Gender",
-                    xx == "Amharic" ? "ጾታዎን ይምረጡ" : "Select Gender",
+                    xx == "Amharic"
+                        ? "ጾታዎን ይምረጡ"
+                        : xx == "AfanOromo"
+                            ? "Maaloo saala keessan filadhaa"
+                            : "Select Gender",
                   ),
                   validator: (value) {
                     if (value == null) {
                       return xx == "Amharic"
                           ? 'እባክዎ ጾታዎን ይምረጡ'
                           : xx == "AfanOromo"
-                              ? "Saala keessan filadhaa"
+                              ? "Maaloo saala keessan filadhaa"
                               : 'Please select your gender';
                     }
                     return null;
@@ -536,6 +578,8 @@ class _DemographicFormState extends State<DemographicForm> {
                       width: 300,
                       child: ElevatedButton(
                         onPressed: () {
+                          // print(_selectedGender.toString());
+
                           if (_formKey.currentState!.validate()) {
                             _showConfirmationDialog(context, () {
                               Navigator.push(
@@ -574,7 +618,7 @@ class _DemographicFormState extends State<DemographicForm> {
                           xx == "Amharic"
                               ? "መዝግብ"
                               : xx == "AfanOromo"
-                                  ? "Galchuu"
+                                  ? "Ergi"
                                   : "Submit",
                         ),
                       ),

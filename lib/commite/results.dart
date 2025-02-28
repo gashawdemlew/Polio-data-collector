@@ -34,6 +34,8 @@ class _EpidDataPageState extends State<EpidDataPage> {
   @override
   void initState() {
     super.initState();
+
+    _loadUserDetails();
     _dataFuture = fetchEpidData(widget.epidNumber);
     fetchApiData();
   }
@@ -114,7 +116,11 @@ class _EpidDataPageState extends State<EpidDataPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Add Descion',
+                    languge == "Amharic"
+                        ? "ዉሳኔ ስጥ"
+                        : languge == "AfanOromo"
+                            ? "Murtee itti dabali"
+                            : "Add Decision",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
@@ -127,7 +133,8 @@ class _EpidDataPageState extends State<EpidDataPage> {
                         .map((result) => DropdownMenuItem(
                               value: result,
                               child: Text(
-                                result,
+                                //  Use the function here to translate the result
+                                translateResult(result, languge),
                                 style: TextStyle(color: Colors.black),
                               ),
                             ))
@@ -138,7 +145,11 @@ class _EpidDataPageState extends State<EpidDataPage> {
                       });
                     },
                     decoration: InputDecoration(
-                      labelText: 'Result',
+                      labelText: languge == "Amharic"
+                          ? "Result"
+                          : languge == "AfanOromo"
+                              ? "bu'aa"
+                              : 'Result',
                       labelStyle: TextStyle(color: Colors.grey[600]),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -152,7 +163,11 @@ class _EpidDataPageState extends State<EpidDataPage> {
                     controller: _descriptionController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      labelText: 'Description',
+                      labelText: languge == "Amharic"
+                          ? "Description"
+                          : languge == "AfanOromo"
+                              ? "Ibsa"
+                              : 'Description',
                       labelStyle: TextStyle(color: Colors.grey[600]),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -180,8 +195,13 @@ class _EpidDataPageState extends State<EpidDataPage> {
                         ),
                         elevation: 5, // Shadow for a more modern look
                       ),
-                      child: const Text(
-                        'Submit',
+                      child: Text(
+                        languge == "Amharic"
+                            ? "መዝግብ"
+                            : languge == "AfanOromo"
+                                ? "Ergi" // Correct Afan Oromo translation for Submit
+                                : 'Submit',
+
                         style: TextStyle(
                             fontSize: 16,
                             color:
@@ -196,6 +216,36 @@ class _EpidDataPageState extends State<EpidDataPage> {
         );
       },
     );
+
+// Helper Function to translate Result
+  }
+
+  String translateResult(String result, String language) {
+    if (language == "Amharic") {
+      switch (result) {
+        case 'Positive':
+          return 'Positive';
+        case 'Negative':
+          return 'Negative';
+        case 'pending':
+          return 'pending';
+        default:
+          return result;
+      }
+    } else if (language == "AfanOromo") {
+      switch (result) {
+        case 'Positive':
+          return 'Poosatiiva'; // or appropriate Afan Oromo word if available
+        case 'Negative':
+          return 'Nagatiiva'; // or appropriate Afan Oromo word if available
+        case 'pending':
+          return 'Murtoo kan Eegatu'; // or appropriate Afan Oromo word if available
+        default:
+          return result;
+      }
+    } else {
+      return result;
+    }
   }
 
   void _submitForm(Map<String, String> sharedPrefsData) async {
@@ -234,6 +284,29 @@ class _EpidDataPageState extends State<EpidDataPage> {
     }
   }
 
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,10 +316,14 @@ class _EpidDataPageState extends State<EpidDataPage> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "Case Detail",
+            languge == "Amharic"
+                ? "የታካሚ ዝርዝር ጉዳይ "
+                : languge == "AfanOromo"
+                    ? "bal’ina dhimma dhukkubsataa"
+                    : "Case Detail",
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -340,8 +417,12 @@ class _EpidDataPageState extends State<EpidDataPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: CustomColors.testColor1,
             ),
-            child: const Text(
-              'AI-Model Prediction',
+            child: Text(
+              languge == "Amharic"
+                  ? "የ ኤኣይ ሞደል ትንበያ"
+                  : languge == "AfanOromo"
+                      ? "Tilmaama moodeela AI"
+                      : "AI-Model Prediction",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -359,8 +440,12 @@ class _EpidDataPageState extends State<EpidDataPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: CustomColors.testColor1,
                   ),
-                  child: const Text(
-                    'Add Decision',
+                  child: Text(
+                    languge == "Amharic"
+                        ? "ዉሳኔ ስጥ"
+                        : languge == "AfanOromo"
+                            ? "Murtee itti dabali"
+                            : "Add Decision",
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

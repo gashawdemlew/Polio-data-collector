@@ -4,6 +4,7 @@ import 'package:camera_app/resetpassword/message.dart';
 import 'package:camera_app/util/color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
@@ -27,6 +28,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
+
     passwordVisible = false; // Initialize password visibility
     confirmPasswordVisible = false;
   }
@@ -53,11 +56,40 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
   }
 
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100], // Light background
-      appBar: CustomAppBar(title: "Reset Password"),
+      appBar: CustomAppBar(
+        title: languge == "Amharic"
+            ? "የይለፍ ቃል ዳግም አስጀምር"
+            : languge == "AfanOromo"
+                ? "jecha icciitii deebisaa"
+                : "Reset password",
+      ),
 
       body: Center(
         child: SingleChildScrollView(
@@ -75,7 +107,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               // Title
               Text(
-                "Reset Your Password",
+                languge == "Amharic"
+                    ? "የይለፍ ቃል ዳግም አስጀምር"
+                    : languge == "AfanOromo"
+                        ? "jecha icciitii deebisaa?"
+                        : "Reset Your Password",
                 style: GoogleFonts.montserrat(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -86,7 +122,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
               // Subtitle
               Text(
-                "Enter the reset code sent to your phone and your new password.",
+                languge == "Amharic"
+                    ? "ወደ ስልክ ቁጥርዎ የተላከውን ዳግም ማስጀመሪያ ኮድ እና አዲሱን የይለፍ ቃል ያስገቡ"
+                    : languge == "AfanOromo"
+                        ? "koodii reset lakkoofsa bilbila keessanii fi jecha icciitii haaraa keessan irratti ergame galchaa"
+                        : "Enter the reset code sent to your phone and your new password.",
                 style: GoogleFonts.openSans(
                   fontSize: 16,
                   color: Colors.grey[600],
@@ -100,8 +140,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 controller: otpController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: "Reset Code",
-                  hintText: "Enter the code",
+                  labelText: languge == "Amharic"
+                      ? "ኮድን ዳግም አስጀምር"
+                      : languge == "AfanOromo"
+                          ? "koodii deebisanii saagi"
+                          : "Reset Code",
+                  hintText: languge == "Amharic"
+                      ? "ኮድን ዳግም አስጀምር"
+                      : languge == "AfanOromo"
+                          ? "koodii keessan galchaa"
+                          : "Enter the code",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -115,8 +163,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 controller: passwordController,
                 obscureText: !passwordVisible,
                 decoration: InputDecoration(
-                  labelText: "New Password",
-                  hintText: "Enter new password",
+                  labelText: languge == "Amharic"
+                      ? "አዲስ የይለፍ ቃል"
+                      : languge == "AfanOromo"
+                          ? "Jecha icciitii haaraa"
+                          : "New Password",
+                  hintText: languge == "Amharic"
+                      ? "አዲሱን የይለፍ ቃልዎን ያስገቡ"
+                      : languge == "AfanOromo"
+                          ? "jecha icciitii haaraa keessan galchaa"
+                          : "Enter new password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -141,8 +197,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 controller: confirmPasswordController,
                 obscureText: !confirmPasswordVisible,
                 decoration: InputDecoration(
-                  labelText: "Confirm New Password",
-                  hintText: "Re-enter new password",
+                  labelText: languge == "Amharic"
+                      ? "አዲሱን የይለፍ ቃል ያረጋግጡ"
+                      : languge == "AfanOromo"
+                          ? "Jecha icciitii haaraa mirkaneessi"
+                          : "Confirm New Password",
+                  hintText: languge == "Amharic"
+                      ? "አዲሱን የይለፍ ቃልዎን እንደገና ያስገቡ"
+                      : languge == "AfanOromo"
+                          ? "jecha icciitii haaraa kee irra deebi'ii galchi"
+                          : "Re-enter new password",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -185,7 +249,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : Text("Reset Password",
+                    : Text(
+                        languge == "Amharic"
+                            ? "የይለፍ ቃል ዳግም አስጀምር"
+                            : languge == "AfanOromo"
+                                ? "jecha icciitii deebisaa"
+                                : "Reset Password",
                         style: TextStyle(color: Colors.white)),
               ),
             ],

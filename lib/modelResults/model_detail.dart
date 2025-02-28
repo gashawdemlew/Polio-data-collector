@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ResultsPage extends StatefulWidget {
   final String epidNumber;
@@ -22,8 +23,43 @@ class _ResultsPageState extends State<ResultsPage> {
   @override
   void initState() {
     super.initState();
+    _loadLanguage();
+    _loadUserDetails();
     _resultsFuture = _fetchData();
     print(_resultsFuture);
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
+  Future<void> _loadLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedLanguage = prefs.getString('selectedLanguage') ?? 'none';
+    if (mounted) {
+      setState(() {
+        languge = storedLanguage;
+      });
+    }
   }
 
   Future<Map<String, dynamic>> _fetchData() async {
@@ -43,7 +79,11 @@ class _ResultsPageState extends State<ResultsPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
-        title: 'Case detail',
+        title: languge == "Amharic"
+            ? "ዝርዝር ጉዳይ"
+            : languge == "AfanOromo"
+                ? "bal’ina dhimmaa"
+                : 'Case detail',
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: _resultsFuture,
@@ -94,7 +134,11 @@ class _ResultsPageState extends State<ResultsPage> {
             ),
             SizedBox(width: 8), // Space between the box and the text
             Text(
-              "Model Result Using Image",
+              languge == "Amharic"
+                  ? "ምስልን በመጠቀም የሞዴል ውጤት"
+                  : languge == "AfanOromo"
+                      ? "Fakkii fayyadamuun bu’aa moodeela"
+                      : 'Model Result Using Image',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
@@ -124,6 +168,7 @@ class _ResultsPageState extends State<ResultsPage> {
           crossAxisAlignment:
               CrossAxisAlignment.center, // Aligns items vertically
           children: [
+            // Text(languge),
             Container(
               decoration: BoxDecoration(
                 color: CustomColors.testColor1, // Background color of the box
@@ -141,12 +186,19 @@ class _ResultsPageState extends State<ResultsPage> {
               ),
             ),
             SizedBox(width: 8), // Space between the box and the text
-            Text(
-              "Model Result using Clinical History",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                fontFamily: GoogleFonts.poppins().fontFamily,
+            Expanded(
+              child: Text(
+                languge == "Amharic"
+                    ? "ክሊኒካዊ መረጃ በመጠቀም ሞዴል ውጤት"
+                    : languge == "AfanOromo"
+                        ? "Seenaa kilinikaa fayyadamuun bu’aa moodeela"
+                        : 'Model Result using Clinical History',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: GoogleFonts.poppins().fontFamily,
+                ),
+                softWrap: true, // Allow text to wrap to the next line
               ),
             ),
           ],
@@ -175,7 +227,11 @@ class _ResultsPageState extends State<ResultsPage> {
             );
           },
           child: Text(
-            "Finish",
+            languge == "Amharic"
+                ? "ጨርስ"
+                : languge == "AfanOromo"
+                    ? "xumuruu"
+                    : "Finish",
             style: TextStyle(
               fontSize: 18, // Adjust font size
               fontWeight: FontWeight.bold, // Make text bold

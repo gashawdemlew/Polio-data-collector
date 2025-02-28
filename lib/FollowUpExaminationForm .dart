@@ -66,7 +66,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
       'left_arm': 'Harka bitaa',
     },
   };
-
+  String xx = "";
   Future<void> _loadUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -78,6 +78,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
         'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
         'zone': prefs.getString('zone') ?? 'N/A',
         'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
         'id': prefs.getInt('id') ?? 'N/A',
       };
     });
@@ -164,10 +165,11 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
   }
 
   String lang = "";
-  String? xx;
+  // String xx="";
   void getLocalstorage() async {
     final SharedPreferences pref = await SharedPreferences.getInstance();
-    xx = pref.getString("selectedLanguage"); // Use getString for String values
+    xx = pref.getString("selectedLanguage") ??
+        ""; // Use getString for String values
 
     setState(() {
       lang = xx ?? "English"; // Provide a default value if xx is null
@@ -249,7 +251,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    '${widget.resources1?.followUp()["selectedDate"] ?? ''}: ${_dateFollowUpExamination != null ? DateFormat('yyyy-MM-dd').format(_dateFollowUpExamination!) : "Not selected"}',
+                    '${widget.resources1?.followUp()["selectedDate"] ?? ''}: ${_dateFollowUpExamination != null ? DateFormat('yyyy-MM-dd').format(_dateFollowUpExamination!) : widget.resources1 == "Amharic" ? 'አልተመረጠም' : widget.resources1 == "AfanOromo" ? 'Guyyaa filadhu: hin filatamne' : 'Not Selected'}',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black54,
@@ -306,7 +308,7 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 20.0),
+                  // const SizedBox(height: 20.0),
                   Text(
                     widget.resources1?.followUp()["FindingsatFollowup"] ?? '',
                     style: GoogleFonts.poppins(
@@ -361,7 +363,11 @@ class _FollowUpExaminationFormState extends State<FollowUpExaminationForm> {
                             labelText:
                                 widget.resources1?.followUp()["DateofDeath"] ??
                                     '',
-                            hintText: 'Select date of death',
+                            hintText: lang == "Amharic"
+                                ? "Select date of death"
+                                : lang == "AfanOromo"
+                                    ? "Guyyaa Du’aa filadhu"
+                                    : 'Select date of death',
                             border: const OutlineInputBorder(),
                             labelStyle: GoogleFonts.poppins(),
                           ),

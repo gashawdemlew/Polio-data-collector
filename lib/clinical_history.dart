@@ -251,7 +251,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
             ? 'ክሊኒካዊ ታሪክ ቅጽ'
             // ignore: unrelated_type_equality_checks
             : _selectedLanguage == "AfanOromo"
-                ? "Seenaa kiliinikaalaa"
+                ? "Seenaa Kiliinikaa"
                 : 'clinical history form',
       ),
       body: _isLanguageLoaded
@@ -334,7 +334,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
           ),
         ),
         Text(
-          "${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset != null ? "${_daysAfterOnset?.toLocal().year}-${_daysAfterOnset?.toLocal().month}-${_daysAfterOnset?.toLocal().day}" : resources?.stoolSpecimen()["notSelected"] ?? ""}",
+          "${resources?.stoolSpecimen()["selectedDateStool1"] ?? ""}: ${_daysAfterOnset != null ? "${_daysAfterOnset?.toLocal().year}-${_daysAfterOnset?.toLocal().month}-${_daysAfterOnset?.toLocal().day}" : _selectedLanguage == "Amharic" ? "አልተመረጠም" : _selectedLanguage == "AfanOromo" ? " hin filatamne" : "Not Selected"}",
           style: GoogleFonts.poppins(),
         ),
       ],
@@ -752,7 +752,9 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
             ),
           ),
           Text(
-            '${resources?.stoolSpecimen()["selectedDate"] ?? ""}: ${_dateOfAdmission != null ? "${_dateOfAdmission?.toLocal().year}-${_dateOfAdmission?.toLocal().month}-${_dateOfAdmission?.toLocal().day}" : "Not selected"}',
+            '${resources?.stoolSpecimen()["selectedDate"] ?? ""}: ${_dateOfAdmission != null ? "${_dateOfAdmission?.toLocal().year}-${_dateOfAdmission?.toLocal().month}-${_dateOfAdmission?.toLocal().day}" : _selectedLanguage == "Amharic" ? 'ክሊኒካዊ ታሪክ ቅጽ'
+                // ignore: unrelated_type_equality_checks
+                : _selectedLanguage == "AfanOromo" ? " hin filatamne" : 'Palease select date '}',
             style: GoogleFonts.poppins(),
           ),
           const SizedBox(height: 16.0),
@@ -813,7 +815,7 @@ class _ClinicalHistoryFormState extends State<ClinicalHistoryForm> {
         isSubmitting
             ? _selectedLanguage == "Amharic"
                 ? "Saving"
-                : _selectedLanguage == "Afanoromo"
+                : _selectedLanguage == "AfanOromo"
                     ? "OlKaa’uu"
                     : "Saving.."
             : resources?.clinicalHistory()["submit"] ?? 'Submit',

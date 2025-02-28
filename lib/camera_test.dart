@@ -50,6 +50,7 @@ class _CameraPageState extends State<TakePictureScreen>
 
   @override
   void dispose() {
+    _loadUserDetails();
     _cameraController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -129,6 +130,29 @@ class _CameraPageState extends State<TakePictureScreen>
     }
   }
 
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
@@ -137,7 +161,12 @@ class _CameraPageState extends State<TakePictureScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Camera"),
+      appBar: CustomAppBar(
+          title: languge == "Amharic"
+              ? "ካሜራ"
+              : languge == "AfanOromo"
+                  ? "kaameraa"
+                  : "Camera"),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<void>(
@@ -352,7 +381,7 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
               languge == "Amharic"
                   ? "ምስልን አደብዝዝ"
                   : languge == "AfanOromo"
-                      ? "Fakkii jajjabeessuu"
+                      ? "suuraa jaamsuu"
                       : "Blur Image",
               style: GoogleFonts.poppins(
                 color: Colors.white,
@@ -577,21 +606,33 @@ class _ImagePreviewState extends State<ImagePreview> {
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(widget.languge == "Amharic" ? 'አረጋግጥ' : 'Confirmation'),
+          title: Text(widget.languge == "Amharic"
+              ? 'አረጋግጥ'
+              : widget.languge == "AfanOromo"
+                  ? 'mirkaneeffannaa'
+                  : 'Confirmation'),
           content: Text(widget.languge == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : widget.languge == "AfanOromo"
-                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  ? 'Mee viidiyoo qulqullina hin qabne kan waa\'ee dhukkubsataa odeeffannoo barbaachisaa ta\'e osoo hin dhabin qabadhaa'
                   : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again.'),
           actions: <Widget>[
             TextButton(
-              child: Text(widget.languge == "Amharic" ? 'አጥፋ' : 'Cancel'),
+              child: Text(widget.languge == "Amharic"
+                  ? 'አጥፋ'
+                  : widget.languge == "AfanOromo"
+                      ? 'Haqi'
+                      : 'Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text(widget.languge == "Amharic" ? 'እሽ' : 'ok'),
+              child: Text(widget.languge == "Amharic"
+                  ? 'እሽ'
+                  : widget.languge == "AfanOromo"
+                      ? 'Tole'
+                      : 'ok'),
               onPressed: () {
                 Navigator.of(context).pop();
                 onConfirm();
@@ -610,7 +651,7 @@ class _ImagePreviewState extends State<ImagePreview> {
         title: widget.languge == "Amharic"
             ? "ምስልን አስቀድመው ይመልከቱ"
             : widget.languge == "AfanOromo"
-                ? "Suuraa kaafameilaali"
+                ? "Suuraa kaafame ilaali"
                 : "Preview image",
       ),
       body: LayoutBuilder(
@@ -635,32 +676,35 @@ class _ImagePreviewState extends State<ImagePreview> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
-                        onPressed: () {
-                          print("Upload button pressed!"); // ADD THIS LINE
-                          _uploadImage(widget.imagePath);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              CustomColors.testColor1, // Set background color
-                          foregroundColor: Colors.white, // Set text color
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 32, vertical: 16),
-                          textStyle: const TextStyle(fontSize: 18),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                          onPressed: () {
+                            print("Upload button pressed!"); // ADD THIS LINE
+                            _uploadImage(widget.imagePath);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                CustomColors.testColor1, // Set background color
+                            foregroundColor: Colors.white, // Set text color
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            textStyle: const TextStyle(fontSize: 18),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 5, // Add shadow
                           ),
-                          elevation: 5, // Add shadow
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text('Next'),
-                      ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : widget.languge == "AfanOromo"
+                                  ? Text('Kan itti aanu')
+                                  : widget.languge == "Amharic"
+                                      ? Text('ቀጥል')
+                                      : Text('Next')),
                     ),
                     if (_errorMessage != null)
                       Padding(

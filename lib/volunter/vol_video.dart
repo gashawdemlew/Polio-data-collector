@@ -22,6 +22,8 @@ class VolTakeMediaScreen extends StatefulWidget {
   final String imagePath;
   final String gender;
 
+  final String lang;
+
   final String phonNo;
 
   final String first_name;
@@ -38,6 +40,7 @@ class VolTakeMediaScreen extends StatefulWidget {
     super.key,
     // required this.epid_number,
     required this.imagePath,
+    required this.lang,
     required this.first_name,
     required this.last_name,
     required this.region,
@@ -68,6 +71,8 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
+
     _initializeCamera();
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
@@ -84,6 +89,28 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
         }
       });
     _animationController.forward();
+  }
+
+  Map<String, dynamic> userDetails = {};
+
+  String lang = "";
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+      };
+      setState(() {
+        lang = userDetails['selectedLanguage'] ?? "";
+      });
+    });
   }
 
   Future<void> _initializeCamera() async {
@@ -157,6 +184,7 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
         MaterialPageRoute(
           builder: (BuildContext context) => DisplayVideoScreen1(
               videoPath: video.path,
+              lang: widget.lang,
               imagePath: widget.imagePath,
               first_name: widget.first_name,
               last_name: widget.last_name,
@@ -228,13 +256,25 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
                           ),
                           ElevatedButton(
                             onPressed: _stopRecording,
-                            child: const Text('Stop Recording'),
+                            child: Text(
+                              widget.lang == "Amharic"
+                                  ? "መቅረጽ አቁም"
+                                  : widget.lang == "AfanOromo"
+                                      ? "waraabuu dhaabuu"
+                                      : "Stop Recording",
+                            ),
                           ),
                         ],
                       )
                     : ElevatedButton(
                         onPressed: _startRecording,
-                        child: const Text('Start Recording'),
+                        child: Text(
+                          widget.lang == "Amharic"
+                              ? "መቅረጽ ይጀምሩ"
+                              : widget.lang == "AfanOromo"
+                                  ? "Waraabuu Eegali"
+                                  : "Start Recording",
+                        ),
                       ),
               ],
             ),
@@ -246,6 +286,7 @@ class _TakeMediaScreenState extends State<VolTakeMediaScreen>
 }
 
 class DisplayVideoScreen1 extends StatefulWidget {
+  final String lang;
   final String imagePath;
   final String videoPath;
   final String phonNo;
@@ -262,6 +303,7 @@ class DisplayVideoScreen1 extends StatefulWidget {
   const DisplayVideoScreen1({
     super.key,
     required this.videoPath,
+    required this.lang,
     required this.imagePath,
     required this.gender,
     required this.phonNo,
@@ -289,28 +331,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
   @override
   void initState() {
     super.initState();
-    _loadUserDetails();
     _getCurrentLocation(); // Fetch location on initialization
-  }
-
-  String lang = "";
-  Future<void> _loadUserDetails() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      userDetails = {
-        'email': prefs.getString('email') ?? 'N/A',
-        'userType': prefs.getString('userType') ?? 'N/A',
-        'firstName': prefs.getString('first_name') ?? 'N/A',
-        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
-        'zone': prefs.getString('zone') ?? 'N/A',
-        'woreda': prefs.getString('woreda') ?? 'N/A',
-        'id': prefs.getInt('id') ?? 'N/A',
-      };
-      setState(() {
-        lang = userDetails['selectedLanguage'];
-      });
-    });
   }
 
   Future<void> _getCurrentLocation() async {
@@ -463,12 +484,13 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          lang == "Amharic"
+          widget.lang == "Amharic"
               ? 'የሚዲያ መረጃ ይስቀሉ'
-              : lang == "AfanOromo"
-                  ? 'Odeeffannoo Meediyyaa fe\'i'
+              : widget.lang == "AfanOromo"
+                  ? 'Odeeffannoo maltimidiyaa olkaa\'i'
                   : 'Upload Multimedia Info',
           style: TextStyle(
+            fontSize: 18,
             color: Colors.white,
           ),
         ),
@@ -482,9 +504,9 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
               color: Colors.orangeAccent,
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                lang == "Amharic"
+                widget.lang == "Amharic"
                     ? 'እባክዎን ቪዲዮ እና ምስል ለመምዝገብ ትንሽ ይጠብቁ.'
-                    : lang == "AfanOromo"
+                    : widget.lang == "AfanOromo"
                         ? 'Mee viidiyoo fi suuraa fe\'uuf akka eegdan.'
                         : 'Please wait to upload video and image',
                 style: const TextStyle(
@@ -529,10 +551,10 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen1> {
                           style: TextStyle(color: Colors.white),
                         )
                       : Text(
-                          lang == "Amharic"
+                          widget.lang == "Amharic"
                               ? 'የሚዲያ መረጃ ይስቀሉ'
-                              : lang == "AfanOromo"
-                                  ? 'Odeeffannoo Meediyyaa fe\'i'
+                              : widget.lang == "AfanOromo"
+                                  ? 'Odeeffannoo maltimidiyaa olkaa\'i'
                                   : 'Upload Multimedia Info',
                           style: TextStyle(
                             color: Colors.white,

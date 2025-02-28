@@ -438,8 +438,8 @@ class _BlurImageScreenState extends State<BlurImageScreen> {
             languge == "Amharic"
                 ? "እባከዎትን ምስሉን ብለር ያድርጉ"
                 : languge == "AfanOromo"
-                    ? "Mee Image blur godhaa"
-                    : "Please blured Image",
+                    ? "Mee suuraa tokko jaamsi"
+                    : "Please blure an  Image",
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -592,13 +592,13 @@ class ImagePreview extends StatelessWidget {
             languge == "Amharic"
                 ? "ማረጋገጫ"
                 : languge == "AfanOromo"
-                    ? "Mirkaneessaa"
+                    ? "mirkaneeffannaa"
                     : "Confirmation",
           ),
           content: Text(languge == "Amharic"
               ? 'እባክዎን ጥራት ያለው እና ያልደበዘዘ ቪዲዮ ይቅረጹ። ቪዲዮው ከተደበዘዘ እንደገና ይጠየቃሉ።'
               : languge == "AfanOromo"
-                  ? 'Odeeffannoon barbaachisu akka hin dhabamnetti suura qulqullina qabu kaasaa. '
+                  ? 'Mee viidiyoo qulqullina qabuu fi hin jajjaboo ta\'e qabadhaa. yoo viidiyoon sun jajjaboo ta\'e ammas ni gaafatama. '
                   : 'Please capture a quality and unblurred video. If the video is blurred, you will be requested again..'),
           actions: <Widget>[
             TextButton(
@@ -645,6 +645,7 @@ class ImagePreview extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (BuildContext context) => VolTakeMediaScreen(
+                              lang: languge,
                               imagePath: imagePath,
                               first_name: first_name,
                               last_name: last_name,
@@ -672,7 +673,13 @@ class ImagePreview extends StatelessWidget {
                     ),
                     elevation: 14, // Add elevation
                   ),
-                  child: const Text('Next'),
+
+                  // Kan itti aanu
+                  child: Text(languge == "Amharic"
+                      ? "ቀጣይ"
+                      : languge == "AfanOromo"
+                          ? "Kan itti aanu"
+                          : "Next"),
                 ),
               )
             ],

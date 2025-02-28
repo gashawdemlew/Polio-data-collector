@@ -225,8 +225,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       'ሌላ',
                     ] else if (languge2 == "AfanOromo") ...[
                       'Dhiira',
-                      'Dubartii',
-                      'Kan biroo',
+                      'Dubara',
+                      'Kan biraa',
                     ] else ...[
                       'Male',
                       'Female',
@@ -298,7 +298,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ThemeHelper().textInputDecoration(languge2 == "Amharic"
                           ? "የይለፍ ቃል ይሙሉ"
                           : languge2 == "AfanOromo"
-                              ? "Jecha darbiiGalchi"
+                              ? "Jecha darbii Galchi"
                               : "Enter Password"),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -313,7 +313,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 20),
                 DropdownButtonFormField<String>(
                   decoration: ThemeHelper().textInputDecoration(
-                      languge2 == "Amharic" ? "ክልል ይምረጡ" : "Select Region"),
+                      languge2 == "Amharic" ? "ክልል ይምረጡ" : languge2 == "AfanOromo" ? "Naannoo Filadhu" :"Select Region"),
                   dropdownColor: Colors.white,
                   value: _selectedRegion,
                   items: locationData.keys.map((String region) {
@@ -343,7 +343,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 DropdownButtonFormField<String>(
                   dropdownColor: Colors.white,
                   decoration: ThemeHelper().textInputDecoration(
-                      languge2 == "Amharic" ? "ዞን ይምረጡ" : "Select Zone"),
+                      languge2 == "Amharic" ? "ዞን ይምረጡ" : languge2 == "AfanOromo" ? "Godina Filadhu" : "Select Zone"),
                   value: _selectedZone,
                   items: _selectedRegion != null
                       ? locationData[_selectedRegion!]!.keys.map((String zone) {
@@ -372,7 +372,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 DropdownButtonFormField<String>(
                   decoration: ThemeHelper().textInputDecoration(
-                      languge2 == "Amharic" ? "ወረዳ ይምረጡ" : "Select Woreda"),
+                      languge2 == "Amharic" ? "ወረዳ ይምረጡ" :         languge2 == "AfanOromo" ? "Aanaa Filadhu" : "Select Woreda"),
                   dropdownColor: Colors.white,
                   value: _selectedWoreda,
                   items: _selectedRegion != null && _selectedZone != null
@@ -404,6 +404,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: ThemeHelper().textInputDecoration(
                       languge2 == "Amharic"
                           ? "የተጠቃሚ ሚና ይምረጡ"
+                          :    languge2 == "AfanOromo"
+                          ? "Gahee fayyadamaa filadhu"
                           : "Select User Role"),
                   value: selectedRole,
                   onChanged: (String? newValue) {
@@ -522,7 +524,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
                         : Text(
-                            languge2 == "Amharic" ? "መዝግብ" : "Register",
+                            languge2 == "Amharic" ? "መዝግብ" :languge2 == "AfanOromo" ? "Galmeessi" : "Register",
                           ),
                   ),
                 ),

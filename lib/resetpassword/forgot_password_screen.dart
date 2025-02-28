@@ -5,6 +5,7 @@ import 'package:camera_app/resetpassword/reset_password_screen.dart';
 import 'package:camera_app/util/color/color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -37,12 +38,45 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 
+  void initState() {
+    super.initState();
+
+    _loadUserDetails();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: CustomAppBar(
-        title: "Forgot Password",
+        title: languge == "Amharic"
+            ? "የይለፍ ቃል አስታውስ"
+            : languge == "AfanOromo"
+                ? "Jecha darbii dagattee?"
+                : "Forgot Password",
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -57,7 +91,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               SizedBox(height: 24),
               Text(
-                "Forgot Your Password?",
+                languge == "Amharic"
+                    ? ""
+                    : languge == "AfanOromo"
+                        ? "Jecha darbii dagattee?"
+                        : "Forgot Your Password?",
                 style: GoogleFonts.montserrat(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -66,7 +104,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               SizedBox(height: 12),
               Text(
-                "Enter your registered phone number and we'll send you a reset code.",
+                languge == "Amharic"
+                    ? ""
+                    : languge == "AfanOromo"
+                        ? "Lakkoofsa bilbilaa galmaa'e galchaa koodii reset isiniif ergina."
+                        : "Enter your registered phone number and we'll send you a reset code.",
                 style: GoogleFonts.openSans(
                   fontSize: 16,
                   color: Colors.grey[600],
@@ -78,8 +120,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  labelText: "Phone Number",
-                  hintText: "Enter your phone number",
+                  labelText: languge == "Amharic"
+                      ? "ስልክ ቁጥር"
+                      : languge == "AfanOromo"
+                          ? "Lakkoofsa Bilbilaa"
+                          : "Phone Number",
+                  hintText: languge == "Amharic"
+                      ? "ስልክ ቁጥር"
+                      : languge == "AfanOromo"
+                          ? "lakkoofsa bilbilaa galchaa"
+                          : "Enter Your Phone Number",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -107,9 +157,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : Text("Send Reset Code",
-                        style: TextStyle(color: Colors.white)),
-              ),
+                    : Text(
+                        languge == "Amharic"
+                            ? "የዳግም ማስጀመሪያ ኮድ ላክ"
+                            : languge == "AfanOromo"
+                                ? "Koodii reset ergaa" // Or the Afan Oromo translation for "Send Reset Code"
+                                : "Send reset code",
+                        style: TextStyle(color: Colors.white),
+                      ),
+              )
             ],
           ),
         ),

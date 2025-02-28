@@ -238,7 +238,7 @@ class _Drawer45State extends State<Drawer45> {
                   widget.languge == "Amharic"
                       ? "QR code አንብብ"
                       : widget.languge == "AfanOromo"
-                          ? "QrCode dubbisi"
+                          ? "QR koodii dubbisi"
                           : 'Read QrCode ',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
@@ -344,7 +344,7 @@ class _Drawer45State extends State<Drawer45> {
                   widget.languge == "Amharic"
                       ? 'አዲሰ ታካሚ መዝግብ'
                       : widget.languge == "AfanOromo"
-                          ? "Ergaa"
+                          ? "Dhukkubsataa haaraa galmeessi"
                           : 'Create New Patient',
                   style: GoogleFonts.poppins(
                     color: Colors.black,

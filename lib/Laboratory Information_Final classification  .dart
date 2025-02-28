@@ -159,8 +159,12 @@ class _LaboratoryFinalClassificationFormState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'True AFP:  ',
+                  Text(
+                    ff == "Amharic"
+                        ? 'አዎ'
+                        : ff == "AfanOromo"
+                            ? 'dhugaa AFP'
+                            : 'True Afp',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -171,7 +175,11 @@ class _LaboratoryFinalClassificationFormState
                     children: [
                       Expanded(
                         child: RadioListTile(
-                          title: Text(ff == "Amharic" ? 'አዎ' : 'Yes'),
+                          title: Text(ff == "Amharic"
+                              ? 'አዎ'
+                              : ff == "AfanOromo"
+                                  ? 'Eeyyee'
+                                  : 'Yes'),
                           value: 'Yes',
                           groupValue: _trueAFP,
                           onChanged: (value) {
@@ -184,7 +192,11 @@ class _LaboratoryFinalClassificationFormState
                       Expanded(
                         child: RadioListTile(
                           title: Text(
-                            ff == "Amharic" ? "አይ" : "No",
+                            ff == "Amharic"
+                                ? "አይ"
+                                : ff == "AfanOromo"
+                                    ? 'Lakki'
+                                    : "No",
                           ),
                           value: 'No',
                           groupValue: _trueAFP,
@@ -201,7 +213,9 @@ class _LaboratoryFinalClassificationFormState
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ  ውጤት:"
-                        : "Final Cell Culture Result:",
+                        : ff == "AfanOromo"
+                            ? "Bu’aa ‘cell culture’ dhumaa:"
+                            : "Final Cell Culture Result:",
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -215,7 +229,9 @@ class _LaboratoryFinalClassificationFormState
                         title: Text(
                           ff == "Amharic"
                               ? " ፖሊኦቪረስ ተጠርጣሪ"
-                              : "Suspected Poliovirus",
+                              : ff == "AfanOromo"
+                                  ? "Pooliyoo vaayirasii shakkame"
+                                  : "Suspected Poliovirus",
                         ),
                         value: 'Suspected Poliovirus',
                         groupValue: _finalCellCultureResult,
@@ -227,7 +243,11 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       RadioListTile(
                         title: Text(
-                          ff == "Amharic" ? "አልተገኘም" : "Negative",
+                          ff == "Amharic"
+                              ? "አልተገኘም"
+                              : ff == "AfanOromo"
+                                  ? "Nagatiiva"
+                                  : "Negative",
                         ),
                         value: 'Negative',
                         groupValue: _finalCellCultureResult,
@@ -255,7 +275,9 @@ class _LaboratoryFinalClassificationFormState
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ ቀን ውጤቶች :"
-                        : "Date Final Cell Culture Results:",
+                        : ff == "AfanOromo"
+                            ? " Guyyaa bu’aa ‘cell culture’ dhumaa :"
+                            : "Date Final Cell Culture Results:",
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -285,18 +307,26 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       elevation: 14,
                     ),
-                    child: Text(
-                      ff == "Amharic" ? "ቀን ይምረጡ" : "Select Date",
-                    ),
+                    child: Text(ff == "Amharic"
+                        ? 'ቀን ምርጥ'
+                        : ff == "AfanOromo"
+                            ? 'Guyyaa filadhu'
+                            : 'Select Date'),
                   ),
                   Text(
-                    'Selected Date (Final Cell Culture Results): ${_dateFinalCellCultureResults != null ? _dateFinalCellCultureResults!.toString().split(' ')[0] : "Not selected"}',
+                    ff == "Amharic"
+                        ? 'ቀን ምርጥ  : ${_dateFinalCellCultureResults != null ? _dateFinalCellCultureResults!.toString().split(' ')[0] : "ቀን ዐልተመረጠም "}'
+                        : ff == "AfanOromo"
+                            ? 'Guyyaa filadhu : ${_dateFinalCellCultureResults != null ? _dateFinalCellCultureResults!.toString().split(' ')[0] : "Hin filamne"}'
+                            : 'Selected Date : ${_dateFinalCellCultureResults != null ? _dateFinalCellCultureResults!.toString().split(' ')[0] : "Not selected"}',
                   ),
                   const SizedBox(height: 16.0),
                   Text(
                     ff == "Amharic"
                         ? "የመጨረሻ  አይቲዲ ውጤት:"
-                        : "Final Combined ITD Result:",
+                        : ff == "AfanOromo"
+                            ? "Bu'aa ITD waliigalaa:"
+                            : "Final Combined ITD Result:",
                     style: const TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold,
@@ -308,7 +338,11 @@ class _LaboratoryFinalClassificationFormState
                     children: [
                       RadioListTile(
                         title: Text(
-                          ff == "Amharic" ? "የተረጋገጠ" : "Confirmed",
+                          ff == "Amharic"
+                              ? "የተረጋገጠ"
+                              : ff == "AfanOromo"
+                                  ? "Mirkanaa’eera"
+                                  : "Confirmed",
                         ),
                         value: 'Confirmed',
                         groupValue: _finalCombinedITDResult,
@@ -323,7 +357,7 @@ class _LaboratoryFinalClassificationFormState
                           ff == "Amharic"
                               ? "ተስማሚ"
                               : ff == "AfanOromo"
-                                  ? "Compatible"
+                                  ? "Kan waliif ta'u"
                                   : "Compatible",
                         ),
                         value: 'Compatible',
@@ -352,7 +386,11 @@ class _LaboratoryFinalClassificationFormState
                       ),
                       RadioListTile(
                         title: Text(
-                          ff == "Amharic" ? " ኤፍፒ አይደለም" : "Not an AFP",
+                          ff == "Amharic"
+                              ? " ኤፍፒ አይደለም"
+                              : ff == "AfanOromo"
+                                  ? "  Akka AFP miti"
+                                  : "Not an AFP",
                         ),
                         value: 'Not an AFP',
                         groupValue: _finalCombinedITDResult,
@@ -378,7 +416,13 @@ class _LaboratoryFinalClassificationFormState
                       elevation: 14,
                     ),
                     child: Text(
-                      isSubmitting ? 'Saving...' : 'Submit',
+                      isSubmitting
+                          ? ff == "Amharic"
+                              ? "መዝግብ "
+                              : ff == "AfanOromo"
+                                  ? "Ergi"
+                                  : 'Saving...'
+                          : 'Submit',
                     ),
                   ),
                 ],

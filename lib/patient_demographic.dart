@@ -313,8 +313,8 @@ class _PatientdemographicState extends State<Patientdemographic> {
               TextFormField(
                 controller: first_name,
                 decoration: ThemeHelper().textInputDecoration(
-                    resources?.patientDemographic()["First name"] ?? '',
-                    resources?.patientDemographic()["First name"] ?? ''),
+                    resources?.patientDemographic()["name"] ?? '',
+                    resources?.patientDemographic()["name"] ?? ''),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an Patients Name';
@@ -353,17 +353,32 @@ class _PatientdemographicState extends State<Patientdemographic> {
                 },
               ),
               const SizedBox(height: 16.0),
+
               DropdownButtonFormField<String>(
                 hint: Text(
-                  languge == "Amharic"
-                      ? "ጾታ ምረጥ"
-                      : languge == "AfanOromo"
-                          ? "Saala filadhu"
+                  _selectedLanguage == "Amharic"
+                      ? "ጾታ ይምረጡ"
+                      : _selectedLanguage == "AfanOromo"
+                          ? "Saala"
                           : "Select Gender",
                 ),
                 value: _selectedGender,
                 dropdownColor: Colors.white,
-                items: ['Male', 'Female', 'Other'].map((String gender) {
+                items: [
+                  if (_selectedLanguage == "Amharic") ...[
+                    'ወንድ',
+                    'ሴት',
+                    'ሌላ',
+                  ] else if (_selectedLanguage == "AfanOromo") ...[
+                    'Dhiira',
+                    'Dubartii',
+                    'Kan biroo',
+                  ] else ...[
+                    'Male',
+                    'Female',
+                    'Other'
+                  ]
+                ].map((String gender) {
                   return DropdownMenuItem<String>(
                     value: gender,
                     child: Text(gender),
@@ -375,8 +390,12 @@ class _PatientdemographicState extends State<Patientdemographic> {
                   });
                 },
                 decoration: ThemeHelper().textInputDecoration(
-                    resources?.patientDemographic()["gender"] ?? '',
-                    resources?.patientDemographic()["gender"] ?? ''),
+                  _selectedLanguage == "Amharic"
+                      ? "ጾታ"
+                      : _selectedLanguage == "AfanOromo"
+                          ? "Salaa"
+                          : "Gender",
+                ),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select your gender';
@@ -450,7 +469,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
                   });
                 },
                 decoration: ThemeHelper().textInputDecoration(
-                  languge == "Amharic" ? "ክልል ምረጥ" : "Select Region",
+                  languge == "Amharic"
+                      ? "ክልል ምረጥ"
+                      : languge == "AfanOromo"
+                          ? "Naannoo Filadhu"
+                          : "Select Region",
                 ),
                 validator: (value) {
                   if (value == null) {
@@ -567,7 +590,11 @@ class _PatientdemographicState extends State<Patientdemographic> {
                                   : languge == "AfanOromo"
                                       ? 'OlKaa’uu.'
                                       : 'Saving...')
-                              : (languge == "Amharic" ? 'ቀጣይ' : 'Next'),
+                              : (languge == "Amharic"
+                                  ? 'ቀጣይ'
+                                  : languge == "AfanOromo"
+                                      ? 'Kan itti aanu'
+                                      : 'Next'),
                         ),
                 ),
               ),

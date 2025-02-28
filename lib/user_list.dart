@@ -244,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     : 'User List',
             style: GoogleFonts.poppins(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
           ),

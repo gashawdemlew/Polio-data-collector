@@ -353,7 +353,7 @@ class _EnvironmentMetrologyFormState extends State<EnvironmentMetrologyForm> {
         title: xx == "Amharic"
             ? "የ አካባቢ  መረጃ"
             : xx == "AfanOromo"
-                ? "Odeeffannoo Mala"
+                ? "Odeeffannoo meetirooloojii"
                 : "Metrology Information",
       ),
       body: Container(

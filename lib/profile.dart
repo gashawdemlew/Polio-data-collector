@@ -50,7 +50,7 @@ class _ProfilePageState extends State<UserProfile> {
   String phoneNo = '';
   String zone = '';
   String woreda = '';
-  String lastname = '';
+  String last_name = '';
   String region = '';
   String password = '';
 
@@ -78,7 +78,7 @@ class _ProfilePageState extends State<UserProfile> {
       phoneNo = prefs.getString('phoneNo') ?? '';
       zone = prefs.getString('zone') ?? '';
       woreda = prefs.getString('woreda') ?? '';
-      lastname = prefs.getString('last_name') ?? '';
+      last_name = prefs.getString('last_name') ?? '';
       region = prefs.getString('region') ?? '';
       password = prefs.getString('password') ?? '';
       languge = prefs.getString('selectedLanguage') ?? '';
@@ -88,7 +88,7 @@ class _ProfilePageState extends State<UserProfile> {
       _phoneNoController.text = phoneNo;
       _zoneController.text = zone;
       _woredaController.text = woreda;
-      _lastNameController.text = lastname;
+      _lastNameController.text = last_name;
       _regionController.text = region;
       _passwordController.text = password;
     });
@@ -97,6 +97,7 @@ class _ProfilePageState extends State<UserProfile> {
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
       final url = '${baseUrl}user/$id';
+      print(url);
       final response = await http.put(
         Uri.parse(url),
         headers: <String, String>{
@@ -107,19 +108,20 @@ class _ProfilePageState extends State<UserProfile> {
           'phoneNo': _phoneNoController.text,
           'zone': _zoneController.text,
           'woreda': _woredaController.text,
-          'lastname': _lastNameController.text,
+          'last_name': _lastNameController.text,
           'region': _regionController.text,
           'password': _passwordController.text,
         }),
       );
 
       if (response.statusCode == 200) {
+        print(response.body);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('first_name', _firstNameController.text);
         await prefs.setString('phoneNo', _phoneNoController.text);
         await prefs.setString('zone', _zoneController.text);
         await prefs.setString('woreda', _woredaController.text);
-        await prefs.setString('lastname', _lastNameController.text);
+        await prefs.setString('last_name', _lastNameController.text);
         await prefs.setString('region', _regionController.text);
         await prefs.setString('password', _passwordController.text);
 
@@ -128,7 +130,7 @@ class _ProfilePageState extends State<UserProfile> {
           phoneNo = _phoneNoController.text;
           zone = _zoneController.text;
           woreda = _woredaController.text;
-          lastname = _lastNameController.text;
+          last_name = _lastNameController.text;
           region = _regionController.text;
           password = _passwordController.text;
         });
@@ -189,7 +191,7 @@ class _ProfilePageState extends State<UserProfile> {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
+                bottom: Radius.circular(10),
               ),
             ),
           ),
@@ -273,7 +275,11 @@ class _ProfilePageState extends State<UserProfile> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  languge == "Amharic" ? 'አስተካክል' : 'Edit Your Profile',
+                  languge == "Amharic"
+                      ? 'አስተካክል'
+                      : languge == "AfanOromo"
+                          ? 'Piroofaayila kee gulaali'
+                          : 'Edit Your Profile',
                   style: const TextStyle(
                       fontSize: 24, fontWeight: FontWeight.bold),
                 ),
@@ -286,44 +292,71 @@ class _ProfilePageState extends State<UserProfile> {
                       children: <Widget>[
                         _buildTextField(
                           controller: _firstNameController,
-                          label: languge == "Amharic" ? "ስም" : "First Name",
+                          label: languge == "Amharic"
+                              ? "ስም"
+                              : languge == "AfanOromo"
+                                  ? "Maqaa"
+                                  : "First Name",
                           icon: Icons.person,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _lastNameController,
-                          label: languge == "Amharic" ? "የአባት ስም" : "Last Name",
+                          label: languge == "Amharic"
+                              ? "የአባት ስም"
+                              : languge == "AfanOromo"
+                                  ? "Maqaa Abbaa"
+                                  : "Last Name",
                           icon: Icons.person_outline,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _phoneNoController,
-                          label:
-                              languge == "Amharic" ? "ስልክ ቁጥር" : "Phone Number",
+                          label: languge == "Amharic"
+                              ? "ስልክ ቁጥር"
+                              : languge == "AfanOromo"
+                                  ? "Lakkoofsa bilbilaa"
+                                  : "Phone Number",
                           icon: Icons.phone,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _zoneController,
-                          label: languge == "Amharic" ? "ዞን" : "Zone",
+                          label: languge == "Amharic"
+                              ? "ዞን"
+                              : languge == "AfanOromo"
+                                  ? "Godina"
+                                  : "Zone",
                           icon: Icons.location_on,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _woredaController,
-                          label: languge == "Amharic" ? "ወረዳ" : "Woreda",
+                          label: languge == "Amharic"
+                              ? "ወረዳ"
+                              : languge == "AfanOromo"
+                                  ? "Aanaa"
+                                  : "Woreda",
                           icon: Icons.map,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _regionController,
-                          label: languge == "Amharic" ? "ክልል" : "Region",
+                          label: languge == "Amharic"
+                              ? "ክልል"
+                              : languge == "AfanOromo"
+                                  ? "Naannoo"
+                                  : "Region",
                           icon: Icons.map_outlined,
                         ),
                         const SizedBox(height: 10),
                         _buildTextField(
                           controller: _passwordController,
-                          label: languge == "Amharic" ? "ፓስወርድ" : "Password",
+                          label: languge == "Amharic"
+                              ? "ፓስወርድ"
+                              : languge == "AfanOromo"
+                                  ? "Jecha darbii"
+                                  : "Password",
                           icon: Icons.lock,
                           obscureText: true,
                         ),

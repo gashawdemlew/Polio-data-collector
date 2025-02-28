@@ -137,7 +137,7 @@ class LanguageResources {
       "Patientdemographic": language == "Amharic"
           ? 'የታካሚ መረጃ መዝግብ'
           : language == "AfanOromo"
-              ? "Odeeffannoo dhukkubsataa"
+              ? "Diimogiraafii Dhukkubsataa"
               : 'Patient Demographic',
       "latitude": language == "Amharic"
           ? 'ኬክሮስ'
@@ -227,6 +227,11 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Seenaa kiliinikaalaa"
               : 'clinical history form',
+      "submit": language == "Amharic"
+          ? 'አስገባ'
+          : language == "AfanOromo"
+              ? "Ergi"
+              : 'Submit',
       "dateAfterOnset": language == "Amharic"
           ? 'ከተጀመረ በኋላ ቀናት'
           : language == "AfanOromo"
@@ -240,7 +245,7 @@ class LanguageResources {
       "feverAtOnset": language == "Amharic"
           ? 'በመጀመሪያው የተነሳብል እንቅልፍ'
           : language == "AfanOromo"
-              ? "Ho’a qaamaa guyyaa itti jalqabee"
+              ? "Yeroo jalqabe Ho’i qaamaa hammami?"
               : 'Fever at Onset',
       "yes": language == "Amharic"
           ? 'አዎ'
@@ -255,17 +260,17 @@ class LanguageResources {
       "flaccidAndSuddenParalysis": language == "Amharic"
           ? 'ደካማ እና ድንገተኛ ፓራላይሲስ'
           : language == "AfanOromo"
-              ? "Dadhabbii fi tasa laamsha’uu"
+              ? "Laamsha’uu fi akka tasaa laamsha’uu?"
               : 'Flaccid and Sudden Paralysis',
       "paralysisProgressed": language == "Amharic"
           ? 'ፓራሎስ የተሻሻለ ቀን <=3'
           : language == "AfanOromo"
-              ? "Jijjiirama laamsha’uu <= guyyaa 3"
+              ? "Guyyaa <=3 laamsha’uun dabalaa dhufee"
               : 'Paralysis Progressed <=3 Day',
       "asymmetric": language == "Amharic"
           ? 'ያልተመጣጠነ'
           : language == "AfanOromo"
-              ? "Walqixaafi walfakkaataa kan hin taane"
+              ? "Assiimeetrikii dhaa?"
               : 'Asymmetric',
       "siteOfParalysis": language == "Amharic"
           ? 'የፓራሎስ ቦታ'
@@ -285,7 +290,7 @@ class LanguageResources {
       "leftLeg": language == "Amharic"
           ? 'የግራ እግር'
           : language == "AfanOromo"
-              ? "Bakka laamsha’e"
+              ? "Miila Bitaa"
               : 'Left Leg',
       "rightLeg": language == "Amharic"
           ? 'የቀኝ እግር'
@@ -294,11 +299,13 @@ class LanguageResources {
               : 'Right Leg',
       "EntertotalOPVdose": language == "Amharic"
           ? 'አጠቃላይ የ OPV መጠን ያስገቡ'
-          : 'Enter total OPV dose',
+          : language == "AfanOromo"
+              ? 'Doozii OPV waliigalaa galchi'
+              : 'Enter total OPV dose',
       "totalOpvDoses": language == "Amharic"
           ? 'አጠቃላይ የ OPV መጠኖች'
           : language == "AfanOromo"
-              ? "Doozi OPV waliigalaa"
+              ? "Doozii OPV waliigalaa"
               : 'Total OPV Doses',
       "admittedToHospital": language == "Amharic"
           ? 'ሆስፒታል ገብቷል'
@@ -313,7 +320,7 @@ class LanguageResources {
       "MedicalRecordNo": language == "Amharic"
           ? 'የሕክምና መዝገብ ቁጥር'
           : language == "AfanOromo"
-              ? "Lakkoofsa galmee yaalaa"
+              ? "Lakkoofsa Kaardii"
               : 'MedicalRecordNo',
       "FacilityName": language == "Amharic"
           ? 'የመገልገያ ስም'
@@ -350,15 +357,31 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Sagaraa 2ffaa"
               : 'Stool 2',
-      "selectDate": language == "Amharic" ? 'ቀን ይምረጡ' : 'Select Date',
-      "selectedDate": language == "Amharic" ? 'የተመረጠ ቀን' : 'Selected Date',
-      "notSelected": language == "Amharic" ? 'አልተመረጠም' : 'Not Selected',
+      "selectDate": language == "Amharic"
+          ? 'ቀን ይምረጡ'
+          : language == "AfanOromo"
+              ? "Guyyaa filadhu"
+              : 'Select Date',
+      "selectedDate": language == "Amharic"
+          ? 'የተመረጠ ቀን'
+          : language == "AfanOromo"
+              ? 'Guyyaa filadhu'
+              : 'Selected Date',
+      "notSelected": language == "Amharic"
+          ? 'አልተመረጠም'
+          : language == "AfanOromo"
+              ? 'hin filatamne'
+              : 'Not Selected',
       "selectedDateStool1": language == "Amharic"
           ? 'የተመረጠ ቀን (ሰገራ 1)'
-          : 'Selected Date (Stool 1)',
+          : language == "AfanOromo"
+              ? 'Guyyaa filadhu'
+              : 'Selected Date (Stool 1)',
       "selectedDateStool2": language == "Amharic"
-          ? 'የተመረጠ ቀን (ሰገራ 2)'
-          : 'Selected Date (Stool 2)',
+          ? 'የተመረጠ ቀን (ሰገራ 1)'
+          : language == "AfanOromo"
+              ? 'Guyyaa filadhu'
+              : 'Selected Date (Stool 1)',
       "stoolSpecimenSentToLab": language == "Amharic"
           ? 'የሰገራ ናሙና ወደ ላቦ ተልኳል'
           : 'Stool Specimen Sent To Lab',
@@ -415,8 +438,17 @@ class LanguageResources {
           : language == "AfanOromo"
               ? "Hordoffiin addaan cite"
               : 'Lost to follow-up',
+      "notSelected": language == "Amharic"
+          ? 'አልተመረጠም'
+          : language == "AfanOromo"
+              ? 'Guyyaa filadhu: hin filatamne'
+              : 'Not Selected',
       "no": language == "Amharic" ? 'አይደለም' : 'No',
-      "DateofDeath": language == "Amharic" ? 'የሞት ቀን' : 'Date of Death',
+      "DateofDeath": language == "Amharic"
+          ? 'የሞት ቀን'
+          : language == "AfanOromo"
+              ? 'Guyyaa Du’aa'
+              : 'Date of Death',
       "ResidualParalysis": language == "Amharic"
           ? 'ምረጥ'
           : language == "AfanOromo"
@@ -460,7 +492,7 @@ class LanguageResources {
       "tempreture": language == "Amharic"
           ? '          የሙቀት መጠን'
           : language == "AfanOromo"
-              ? "Ho’ina "
+              ? "Ho’a "
               : 'tempreture',
       "city": language == "Amharic" ? 'ከተማ' : 'City',
       "latitude": language == "Amharic" ? 'ኬክሮስ' : 'Latitude',
@@ -468,7 +500,7 @@ class LanguageResources {
       "humidity": language == "Amharic"
           ? 'እርጥበት'
           : language == "AfanOromo"
-              ? "Jiidhina qilleensaa "
+              ? "Jiidhiinsa "
               : 'humidity',
       "snow": language == "Amharic" ? 'በረዶ' : 'Smow',
       "rainfall": language == "Amharic"

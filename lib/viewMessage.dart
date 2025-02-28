@@ -315,7 +315,11 @@ class AnotherPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      languge == "Amharic" ? 'ሰገራ ምርምራ 1' : 'Stool 1',
+                      languge == "Amharic"
+                          ? 'ሰገራ ምርምራ 1'
+                          : languge == "AfanOromo"
+                              ? '     Sagaraa 1ffaa'
+                              : 'Stool 1',
                       style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -344,7 +348,11 @@ class AnotherPage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      languge == "Amharic" ? 'ሰገራ ምርምራ 2' : 'Stool 2',
+                      languge == "Amharic"
+                          ? 'ሰገራ ምርምራ 2'
+                          : languge == "AfanOromo"
+                              ? '     Sagaraa 2ffaa'
+                              : 'Stool 2',
                       style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

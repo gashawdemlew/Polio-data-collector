@@ -140,7 +140,7 @@ class _DemographiVolPageState extends State<DemographiVolPage>
           userDetails['selectedLanguage'] == 'Amharic'
               ? 'የበጎ ፍቃደኛ መረጃዎች'
               : userDetails['selectedLanguage'] == 'AfanOromo'
-                  ? "Galmee Hawaasummaa [Diimograafii]"
+                  ? "Galmee Hawaasummaa "
                   : 'Demographic Records',
           style: GoogleFonts.poppins(
             color: Colors.white,

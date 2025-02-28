@@ -32,7 +32,31 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
   @override
   void initState() {
     super.initState();
+    _loadUserDetails();
     fetchBlogs();
+  }
+
+  Map<String, dynamic> userDetails = {};
+  String languge = '';
+  Future<void> _loadUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      userDetails = {
+        'email': prefs.getString('email') ?? 'N/A',
+        'userType': prefs.getString('userType') ?? 'N/A',
+        'firstName': prefs.getString('first_name') ?? 'N/A',
+        'phoneNo': prefs.getString('phoneNo') ?? 'N/A',
+        'zone': prefs.getString('zone') ?? 'N/A',
+        'woreda': prefs.getString('woreda') ?? 'N/A',
+        'id': prefs.getInt('id') ?? 'N/A',
+        'selectedLanguage': prefs.getString('selectedLanguage') ?? 'N/A',
+      };
+    });
+
+    setState(() {
+      languge = userDetails['selectedLanguage'];
+    });
   }
 
   // Fetch blogs from the API
@@ -107,7 +131,11 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
           iconTheme: IconThemeData(color: Colors.white), // Set icon color here
 
           title: Text(
-            "Blog  Page",
+            languge == "Amharic"
+                ? 'ብሎግ ገጽ'
+                : languge == "AfanOromo"
+                    ? 'Fuula biloogii'
+                    : 'Blog Page',
             style: GoogleFonts.poppins(
               color: Colors.white,
               fontSize: 20,
@@ -134,7 +162,7 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.vertical(
-                bottom: Radius.circular(20),
+                bottom: Radius.circular(10),
               ),
             ),
           ),
@@ -182,6 +210,7 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
                       itemBuilder: (context, index) {
                         final blog = blogs[index];
                         return BlogCard(
+                          lang: languge,
                           blog: blog,
                           onToggleLike: () => toggleLike(blog['id']),
                         );
@@ -193,10 +222,12 @@ class _FetchBlogsScreenState extends State<FetchBlogsScreen> {
 
 class BlogCard extends StatefulWidget {
   final Map blog;
+  final String lang;
   final VoidCallback onToggleLike;
 
   BlogCard({
     required this.blog,
+    required this.lang,
     required this.onToggleLike,
   });
 
@@ -373,7 +404,11 @@ class _BlogCardState extends State<BlogCard> {
                         ),
                         SizedBox(width: 4),
                         Text(
-                          'Like (${blog['likes'] ?? 0})',
+                          widget.lang == "Amharic"
+                              ? "ዉደድ"
+                              : widget.lang == "AfanOromo"
+                                  ? "akka"
+                                  : "Like (${blog['likes'] ?? 0})",
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                       ],
@@ -393,7 +428,11 @@ class _BlogCardState extends State<BlogCard> {
                         Icon(Icons.comment, color: Colors.grey, size: 22),
                         SizedBox(width: 4),
                         Text(
-                          'Comments (${comments.length})',
+                          widget.lang == "Amharic"
+                              ? "አስተያየት ስጥ"
+                              : widget.lang == "AfanOromo"
+                                  ? "yaada kennuu"
+                                  : 'Comments (${comments.length})',
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                       ],

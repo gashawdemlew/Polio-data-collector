@@ -79,7 +79,11 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          languge == "Amharic" ? 'ያላለቀ ሊስቶች' : 'Incomplete List',
+          languge == "Amharic"
+              ? 'ያላለቀ ሊስቶች'
+              : languge == "AfanOromo"
+                  ? 'Tarreeffama guutuu hin taane'
+                  : 'Incomplete List',
           style: GoogleFonts.poppins(
               fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
         ),
@@ -113,8 +117,10 @@ class _ClinicDataScreenState extends State<ClinicDataScreen> {
               return Center(
                 child: Text(
                   languge == "Amharic"
-                      ? 'ምንም ያልተጠናቀቀ መረጃ የለም'
-                      : 'No incomplete data available',
+                      ? 'ምንም  መረጃ የለም'
+                      : languge == "AfanOromo"
+                          ? 'Ragaan hin jiru'
+                          : 'No incomplete data available',
                   style: GoogleFonts.poppins(fontSize: 16),
                 ),
               );

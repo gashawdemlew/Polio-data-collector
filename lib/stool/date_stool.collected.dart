@@ -269,7 +269,7 @@ class _StoolSpecimensFormState extends State<DateStoolcollected> {
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      '${resources?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DaysAfterOnset != null ? _stool2DaysAfterOnset!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
+                      '${resources?.stoolSpecimen()["selectedDateStool2"] ?? ""}: ${_stool2DateCollected != null ? _stool2DateCollected!.toString().split(' ')[0] : resources?.stoolSpecimen()["notSelected"] ?? ""}',
                       style: GoogleFonts.poppins(),
                     ),
                     const SizedBox(height: 16.0),

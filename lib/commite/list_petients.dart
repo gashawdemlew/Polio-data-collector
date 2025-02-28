@@ -117,6 +117,7 @@ class _PatientDataPageState extends State<PatientDataPage>
               labelColor: Colors.white, // Set active tab text color
               unselectedLabelColor:
                   Colors.white54, // Set inactive tab text color
+              isScrollable: true, // Add this line!
               onTap: (index) {
                 setState(() {
                   if (index == 0) {
@@ -130,11 +131,55 @@ class _PatientDataPageState extends State<PatientDataPage>
                   }
                 });
               },
-              tabs: const [
-                Tab(text: "All"),
-                Tab(text: "Pending"),
-                Tab(text: "Positive"),
-                Tab(text: "Negative"),
+              tabs: [
+                Tab(
+                  child: Text(
+                    xx == "Amharic"
+                        ? "ሁልም"
+                        : xx == "AfanOromo"
+                            ? "Hunda"
+                            : "All",
+                    overflow: TextOverflow.fade, // Optional: Add fade effect
+                    softWrap: false, // Optional: Prevent text from wrapping
+                    maxLines: 1, // Optional: Limit to one line
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    xx == "Amharic"
+                        ? "በመጠባበቅ ላይ ያለ"
+                        : xx == "AfanOromo"
+                            ? "Murtoo kan Eegatu"
+                            : "Pending",
+                    overflow: TextOverflow.fade, // Optional: Add fade effect
+                    softWrap: false, // Optional: Prevent text from wrapping
+                    maxLines: 1, // Optional: Limit to one line
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    xx == "Amharic"
+                        ? "አዎንታዊ"
+                        : xx == "AfanOromo"
+                            ? "Poosatiiva"
+                            : "Positive",
+                    overflow: TextOverflow.fade, // Optional: Add fade effect
+                    softWrap: false, // Optional: Prevent text from wrapping
+                    maxLines: 1, // Optional: Limit to one line
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    xx == "Amharic"
+                        ? "አሉታዊ"
+                        : xx == "AfanOromo"
+                            ? "Nagatiiva"
+                            : "Negative",
+                    overflow: TextOverflow.fade, // Optional: Add fade effect
+                    softWrap: false, // Optional: Prevent text from wrapping
+                    maxLines: 1, // Optional: Limit to one line
+                  ),
+                ),
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:camera_app/Laboratory%20Information_Final%20classification%20%20.dart';
 import 'package:camera_app/color.dart';
+import 'package:camera_app/components/appbar.dart';
 import 'package:camera_app/languge/LanguageResources.dart';
 import 'package:camera_app/mo/api.dart';
 import 'package:camera_app/polioDashboard.dart';
@@ -81,7 +82,7 @@ class _StoolSpecimensFormState extends State<LabForm> {
       'completed': 'false',
       'user_id': userDetails['id'],
     };
-
+    print(formData);
     try {
       final response = await http.post(
         Uri.parse('${baseUrl}clinic/registerStool'),
@@ -157,17 +158,12 @@ class _StoolSpecimensFormState extends State<LabForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.languge == "Amharic"
-              ? 'የሰገራ ውጤት'
-              : widget.languge == "AfanOromo"
-                  ? '        bu’aa sagaraa'
-                  : ' Stool Result  ',
-          style: GoogleFonts.splineSans(
-              fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-        ),
-        backgroundColor: CustomColors.testColor1,
+      appBar: CustomAppBar(
+        title: widget.languge == "Amharic"
+            ? 'የሰገራ ውጤት'
+            : widget.languge == "AfanOromo"
+                ? '        bu’aa sagaraa'
+                : ' Stool Result  ',
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -186,8 +182,9 @@ class _StoolSpecimensFormState extends State<LabForm> {
                   Text(
                     widget.languge == "Amharic"
                         ? 'የ ሰገራ ናሙና የተሰበሰበበት  ቀን'
-                        : 'Date'
-                            'Date stool received by Lab: $languge',
+                        : widget.languge == "AfanOromo"
+                            ? 'Guyyaa sagaraa laaboraatooriin argamu'
+                            : 'Date stool received by Lab',
                     style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
@@ -216,20 +213,33 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                       elevation: 14,
                     ),
-                    child: Text("Select Date"),
+                    child: Text(widget.languge == "Amharic"
+                        ? 'ቀን ምርጥ'
+                        : widget.languge == "AfanOromo"
+                            ? 'Guyyaa filadhu'
+                            : 'Select Date'),
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    _stool1DateReceivedByLab != null
-                        ? 'Selected Date: ${_stool1DateReceivedByLab!.toLocal().toString().split(' ')[0]}'
-                        : 'No date selected',
+                    widget.languge == "Amharic"
+                        ? _stool1DateReceivedByLab != null
+                            ? 'ቀን : ${_stool1DateReceivedByLab!.toLocal().toString().split(' ')[0]}'
+                            : 'ቀን አልተመረጠም'
+                        : widget.languge == "AfanOromo"
+                            ? _stool1DateReceivedByLab != null
+                                ? 'Guyyaa filadhu: ${_stool1DateReceivedByLab!.toLocal().toString().split(' ')[0]}'
+                                : 'Guyyaan hin filamne'
+                            : _stool1DateReceivedByLab != null
+                                ? 'Selected Date: ${_stool1DateReceivedByLab!.toLocal().toString().split(' ')[0]}'
+                                : 'No date selected',
                   ),
                   const SizedBox(height: 16.0),
                   Text(
                     widget.languge == "Amharic"
                         ? 'የናሙና ሁኔታ'
-                        : 'Specimen Condition'
-                            "Specimen Condition",
+                        : widget.languge == "AfanOromo"
+                            ? 'Haala Saamudaa'
+                            : "Specimen Condition",
                     style: const TextStyle(
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
@@ -240,8 +250,11 @@ class _StoolSpecimensFormState extends State<LabForm> {
                     children: [
                       Expanded(
                         child: RadioListTile(
-                          title:
-                              Text(widget.languge == "Amharic" ? 'ጥሩ' : 'Good'),
+                          title: Text(widget.languge == "Amharic"
+                              ? 'ጥሩ'
+                              : widget.languge == "AfanOromo"
+                                  ? 'Gaarii'
+                                  : 'Good'),
                           value: 'Good',
                           groupValue: _specimenCondition,
                           onChanged: (value) {
@@ -253,8 +266,11 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       ),
                       Expanded(
                         child: RadioListTile(
-                          title:
-                              Text(widget.languge == "Amharic" ? 'መጥፎ' : 'Bad'),
+                          title: Text(widget.languge == "Amharic"
+                              ? 'መጥፎ'
+                              : widget.languge == "AfanOromo"
+                                  ? 'Badaa'
+                                  : 'Bad'),
                           value: 'Bad',
                           groupValue: _specimenCondition,
                           onChanged: (value) {
@@ -286,9 +302,16 @@ class _StoolSpecimensFormState extends State<LabForm> {
                       elevation: 14,
                     ),
                     child: _isSubmitting
-                        ? Text(
-                            widget.languge == "Amharic" ? 'መዝግብ..' : 'Submit')
-                        : Text("Submit"),
+                        ? Text(widget.languge == "Amharic"
+                            ? 'መዝግብ..'
+                            : widget.languge == "AfanOromo"
+                                ? 'Ergi..'
+                                : 'Submit')
+                        : Text(widget.languge == "Amharic"
+                            ? 'መዝግብ'
+                            : widget.languge == "AfanOromo"
+                                ? 'Ergi'
+                                : 'Submit'),
                   ),
                 ],
               ),

@@ -94,7 +94,7 @@ class QRCodeScreen extends StatelessWidget {
         'filePath': filePath, // Corrected: Now sending a file path
       });
 
-          Navigator.of(context).push(
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ResultsPage(
             epidNumber: epid_number,
@@ -117,8 +117,11 @@ class QRCodeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-          title:
-              languge == "Amharic" ? 'የተፈጠረው QR  ምስል' : 'Genereted QR Code '),
+          title: languge == "Amharic"
+              ? 'የተፈጠረው QR  ምስል'
+              : languge == "AfanOromo"
+                  ? 'QR koodii Madde'
+                  : 'Genereted QR Code '),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -161,7 +164,9 @@ class QRCodeScreen extends StatelessWidget {
               child: Text(
                 languge == "Amharic"
                     ? 'ጋለርይ ላይ አስቀምጥ'
-                    : 'Save Image Into Gallery',
+                    : languge == "AfanOromo"
+                        ? 'Suuraa kana Gaalarii keessa olka’i'
+                        : 'Save Image Into Gallery',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

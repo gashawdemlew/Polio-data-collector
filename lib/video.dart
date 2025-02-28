@@ -247,7 +247,7 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
                               languge == "Amharic"
                                   ? "መቅረጽ አቁም"
                                   : languge == "AfanOromo"
-                                      ? "Waraabbii Dhaabi"
+                                      ? "waraabuu dhaabuu"
                                       : "Stop Recording",
                             ),
                           ),
@@ -270,7 +270,7 @@ class _TakeMediaScreenState extends State<TakeMediaScreen>
                           languge == "Amharic"
                               ? "መቅረጽ ይጀምሩ"
                               : languge == "AfanOromo"
-                                  ? "Waraabbii Jalqabi"
+                                  ? "Waraabuu Eegali"
                                   : "Start Recording",
                         ),
                       ),
@@ -705,7 +705,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
               ? languge == "Amharic"
                   ? 'የሚዲያ መረጃ ይስቀሉ'
                   : languge == "AfanOromo"
-                      ? 'Odeeffannoo Meediyyaa fe\'i'
+                      ? 'odeeffannoo maltimidiyaa olkaa’uu'
                       : 'Upload Multimedia Info'
               : 'Loading...',
           style: const TextStyle(color: Colors.white),
@@ -866,7 +866,7 @@ class _DisplayVideoScreenState extends State<DisplayVideoScreen> {
                                   languge == "Amharic"
                                       ? "መዝግብ"
                                       : languge == "AfanOromo"
-                                          ? "Odeeffannoo Meediyyaa fe\'i"
+                                          ? "Fe’i"
                                           : "Upload",
                                   style: const TextStyle(color: Colors.white),
                                 ),
